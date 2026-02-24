@@ -71,14 +71,6 @@ export function ProjectCard({
       </p>
 
       <div className="relative z-10 mt-6 flex items-center gap-4 text-sm text-white/60">
-        {repo.language && (
-          <span className="flex items-center gap-1.5">
-            <span
-              className={`h-3 w-3 rounded-full ${languageColors[repo.language] ?? "bg-gray-400"}`}
-            />
-            {repo.language}
-          </span>
-        )}
         {repo.stargazers_count > 0 && (
           <span className="flex items-center gap-1">
             <Star size={14} />
@@ -93,14 +85,17 @@ export function ProjectCard({
         )}
       </div>
 
-      {repo.topics && repo.topics.length > 0 && (
+      {repo.languages && repo.languages.length > 0 && (
         <div className="relative z-10 mt-4 flex flex-wrap gap-2">
-          {repo.topics.slice(0, 5).map((topic) => (
+          {repo.languages.map((lang) => (
             <span
-              key={topic}
-              className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-medium text-white/80 backdrop-blur-sm transition-colors group-hover:bg-white/20"
+              key={lang}
+              className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-medium text-white/80 backdrop-blur-sm transition-colors group-hover:bg-white/20"
             >
-              {topic}
+              <span
+                className={`h-2 w-2 rounded-full ${languageColors[lang] ?? "bg-gray-400"}`}
+              />
+              {lang}
             </span>
           ))}
         </div>

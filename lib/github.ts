@@ -8,6 +8,32 @@ export interface GitHubRepo {
   stargazers_count: number;
   forks_count: number;
   topics: string[];
+  languages: string[];
+}
+
+async function fetchRepoLanguages(repoName: string): Promise<string[]> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${siteConfig.githubUsername}/${repoName}/languages`,
+      {
+        headers: {
+          Accept: "application/vnd.github.v3+json",
+        },
+        next: { revalidate: 3600 },
+      }
+    );
+
+    if (!res.ok) return [];
+
+    const langs: Record<string, number> = await res.json();
+    // Sort by bytes written (descending) and return top 3 language names
+    return Object.entries(langs)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([name]) => name);
+  } catch {
+    return [];
+  }
 }
 
 export async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
@@ -29,9 +55,19 @@ export async function fetchGitHubRepos(): Promise<GitHubRepo[]> {
 
     const repos: GitHubRepo[] = await res.json();
 
-    return repos
+    const filtered = repos
       .filter((repo) => !repo.name.startsWith(".") && repo.description)
       .slice(0, 6);
+
+    // Fetch languages for each repo in parallel
+    const reposWithLanguages = await Promise.all(
+      filtered.map(async (repo) => ({
+        ...repo,
+        languages: await fetchRepoLanguages(repo.name),
+      }))
+    );
+
+    return reposWithLanguages;
   } catch (error) {
     console.warn("Failed to fetch GitHub repos, using fallback projects", error);
     return [];
