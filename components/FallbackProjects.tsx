@@ -33,7 +33,7 @@ export function FallbackProjects() {
           </ul>
 
           <div className="mt-6 flex flex-wrap gap-2">
-            {project.tech.map((t) => (
+            {project.tech.slice(0, 3).map((t) => (
               <span
                 key={t}
                 className="rounded-full bg-accent-secondary/10 px-2.5 py-0.5 text-xs font-medium text-accent-secondary"
