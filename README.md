@@ -37,7 +37,7 @@ A personal portfolio website showcasing software development projects, technical
 
 ## Resume
 
-The resume is hosted on Google Docs and served as a direct PDF download. No file needs to be added to the repo.
+The resume is hosted on Google Docs and served as a direct PDF download.
 
 [Download Resume (PDF)](https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/export?format=pdf)
 
@@ -45,7 +45,7 @@ The Hero section download button uses this same URL. To update the resume, simpl
 
 ## Deployment
 
-This project is configured as a Next.js static export and is ready to deploy on [Vercel](https://vercel.com/). Connect the GitHub repository to a Vercel project and deployments will trigger automatically on every push to `main`.
+Deployment instructions will be added once the site is ready to go live.
 
 ## Social
 
