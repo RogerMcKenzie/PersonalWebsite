@@ -37,14 +37,14 @@ export function Resume() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-8"
+          className="mx-auto mt-8 w-full max-w-5xl"
         >
           <div className="overflow-hidden rounded-2xl bg-white shadow-lg">
-            <div className="relative aspect-[8.5/11] w-full">
+            <div className="relative w-full">
               <iframe
                 src={siteConfig.resumePreviewUrl}
                 title="Roger McKenzie Resume"
-                className="absolute inset-0 h-full w-full"
+                className="h-[620px] w-full sm:h-[760px] lg:h-[860px]"
                 loading="lazy"
               />
             </div>

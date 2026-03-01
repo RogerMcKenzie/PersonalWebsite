@@ -67,7 +67,7 @@ export function ProjectCard({
       </div>
 
       <p className="relative z-10 mt-3 flex-grow text-white/70">
-        {repo.description}
+        {repo.description ?? "No description provided."}
       </p>
 
       <div className="relative z-10 mt-6 flex items-center gap-4 text-sm text-white/60">

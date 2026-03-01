@@ -15,7 +15,7 @@ export function ProjectsHeader() {
         Featured Projects
       </h2>
       <p className="mt-4 max-w-2xl text-white/70">
-        Recent repositories from{" "}
+        Pinned repositories from{" "}
         <a
           href={siteConfig.social.github}
           target="_blank"
