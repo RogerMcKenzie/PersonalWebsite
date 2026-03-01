@@ -200,15 +200,15 @@ export function Content() {
                   </p>
                   <ul className="mt-4 space-y-3">
                     <li className="flex items-start gap-2.5 text-sm text-foreground">
-                      <span className="mt-1.5 h-2 w-2 rounded-full bg-accent-secondary" />
+                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent-secondary" />
                       Hands-on software tutorials
                     </li>
                     <li className="flex items-start gap-2.5 text-sm text-foreground">
-                      <span className="mt-1.5 h-2 w-2 rounded-full bg-accent" />
+                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />
                       Project build breakdowns
                     </li>
                     <li className="flex items-start gap-2.5 text-sm text-foreground">
-                      <span className="mt-1.5 h-2 w-2 rounded-full bg-accent-tertiary" />
+                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent-tertiary" />
                       Career and internship lessons
                     </li>
                   </ul>
