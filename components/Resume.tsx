@@ -1,13 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { siteConfig } from "@/lib/data";
 import { SlantedDivider } from "./SectionDivider";
 
+// Dynamically import ResumeViewer with SSR disabled — react-pdf needs browser APIs
+const ResumeViewer = dynamic(() => import("./ResumeViewer"), {
+  ssr: false,
+  loading: () => (
+    <div style={{ minHeight: 600, display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8" }}>
+      Loading viewer&hellip;
+    </div>
+  ),
+});
+
 export function Resume() {
   return (
-    <section id="resume" className="relative bg-[#eff6ff] py-20 sm:py-28 overflow-hidden">
+    <section id="resume" className="relative bg-[#eff6ff] pt-4 pb-[50px] sm:pt-6 sm:pb-[70px] overflow-hidden">
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]" />
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <motion.div
@@ -37,17 +48,10 @@ export function Resume() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mx-auto mt-8 w-full max-w-5xl"
+          className="mx-auto mt-4 w-full max-w-6xl"
         >
           <div className="overflow-hidden rounded-2xl bg-white shadow-lg">
-            <div className="relative w-full">
-              <iframe
-                src={siteConfig.resumePreviewUrl}
-                title="Roger McKenzie Resume"
-                className="h-[620px] w-full sm:h-[760px] lg:h-[860px]"
-                loading="lazy"
-              />
-            </div>
+            <ResumeViewer pdfUrl={siteConfig.resumeUrl} />
           </div>
         </motion.div>
       </div>
