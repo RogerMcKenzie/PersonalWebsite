@@ -12,7 +12,7 @@ export default function ProjectsPage() {
   return (
     <>
       <Navbar />
-      <main className="bg-background">
+      <main className="flex-1 bg-background">
         <ProjectsExplorer />
       </main>
       <Footer />

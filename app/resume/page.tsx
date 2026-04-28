@@ -13,7 +13,7 @@ export default function ResumePage() {
   return (
     <>
       <Navbar />
-      <main className="bg-background">
+      <main className="flex-1 bg-background">
         <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
