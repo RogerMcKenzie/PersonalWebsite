@@ -1,69 +1,96 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { SlantedDivider } from "./SectionDivider";
+import { BookOpen, Cloud, GraduationCap } from "lucide-react";
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-50px" },
-  transition: { duration: 0.5 },
 };
 
 export function About() {
   return (
-    <section id="about" className="relative bg-muted py-20 sm:py-28 overflow-hidden">
-      <div className="absolute inset-0 bg-dot-pattern opacity-[0.04] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-        <motion.h2
-          {...fadeInUp}
-          className="section-heading font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl"
-        >
-          About Me
-        </motion.h2>
-
-        <div className="mt-12 grid items-center gap-10 lg:grid-cols-2">
-          {/* Profile photo — left on desktop */}
-          <motion.div
-            {...fadeInUp}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="flex items-center justify-center"
-          >
-            <div className="relative h-80 w-full max-w-sm overflow-hidden rounded-2xl border border-white/60 bg-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md lg:h-96">
-              <Image
-                src="/profile.jpg"
-                alt="Roger McKenzie"
-                fill
-                priority
-                sizes="(min-width: 1024px) 24rem, (min-width: 640px) 20rem, 100vw"
-                className="object-cover object-top"
-              />
-            </div>
+    <section id="about" className="bg-background py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.2fr_1fr]">
+          <motion.div {...fadeUp} transition={{ duration: 0.5 }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber">
+              About Me
+            </p>
+            <h2 className="mt-3 font-serif-display text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
+              Building with Purpose
+            </h2>
           </motion.div>
 
-          {/* Text column — right on desktop */}
           <motion.div
-            {...fadeInUp}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-6"
+            {...fadeUp}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-4 text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            <p className="text-lg leading-relaxed text-muted-foreground">
+            <p>
               I&apos;m a Computer Science student at the University of Florida
               with a passion for building software that solves real problems.
-              From engineering A/B testing platforms at Amazon to creating Chrome
-              extensions powered by AI, I love turning ideas into polished,
-              user-focused products.
+              I&apos;ve had the opportunity to work as a Software Engineering
+              Intern at Amazon, where I contributed to large-scale systems
+              used by millions.
             </p>
-            <p className="text-lg leading-relaxed text-muted-foreground">
-              When I&apos;m not coding, you&apos;ll find me creating tech
-              content on YouTube, exploring the latest in cloud computing and
-              deep learning, or mentoring the next generation of developers.
+            <p>
+              I&apos;m especially interested in cloud technologies, AI, and
+              product development. Through my YouTube channel, I share what
+              I&apos;m learning and building to help others grow in tech.
             </p>
+          </motion.div>
+
+          <motion.div
+            {...fadeUp}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="rounded-2xl border border-border bg-card p-5 sm:p-6"
+          >
+            <InfoRow
+              icon={<GraduationCap size={18} className="text-amber" />}
+              label="University of Florida"
+              value="Computer Science"
+            />
+            <Divider />
+            <InfoRow
+              icon={<Cloud size={18} className="text-amber" />}
+              label="Interests"
+              value="Cloud, AI, Full-Stack"
+            />
+            <Divider />
+            <InfoRow
+              icon={<BookOpen size={18} className="text-amber" />}
+              label="Currently"
+              value="Building | Learning | Sharing"
+            />
           </motion.div>
         </div>
       </div>
-      <SlantedDivider bgColor="#ffffff" />
     </section>
   );
+}
+
+function InfoRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-start gap-3 py-3">
+      <span className="mt-0.5">{icon}</span>
+      <div>
+        <p className="text-sm font-semibold text-foreground">{label}</p>
+        <p className="text-sm text-muted-foreground">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function Divider() {
+  return <div className="h-px bg-border" />;
 }
