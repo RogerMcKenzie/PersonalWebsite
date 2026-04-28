@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Download, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { navLinks, siteConfig } from "@/lib/data";
 
 function Logo() {
@@ -32,10 +32,10 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto] items-center px-4 sm:px-6 md:grid-cols-[1fr_auto_1fr]">
         <Logo />
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 justify-self-center md:flex">
           {navLinks.map((link) => {
             const active = isLinkActive(link.href, pathname);
             return (
@@ -59,26 +59,7 @@ export function Navbar() {
           })}
         </nav>
 
-        <a
-          href={siteConfig.resumeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm transition-colors hover:bg-accent-hover md:inline-flex"
-        >
-          View Resume
-          <Download size={16} />
-        </a>
-
         <div className="flex items-center gap-2 md:hidden">
-          <a
-            href={siteConfig.resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-sm font-semibold text-accent-foreground"
-          >
-            Resume
-            <Download size={14} />
-          </a>
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
@@ -88,6 +69,8 @@ export function Navbar() {
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
+
+        <div aria-hidden="true" className="hidden md:block" />
       </div>
 
       <AnimatePresence>

@@ -45,6 +45,7 @@ body {
 
 html {
   scroll-behavior: smooth;
+  background: var(--cream);
 }
 
 @layer base {
