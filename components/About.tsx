@@ -33,7 +33,7 @@ export function About() {
             <div className="relative h-80 w-full max-w-sm overflow-hidden rounded-2xl border border-white/60 bg-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md lg:h-96">
               <Image
                 src="/profile.jpg"
-                alt="Roger McKenzie"
+                alt="Roger McKenzie — Computer Science student at the University of Florida and software developer"
                 fill
                 priority
                 sizes="(min-width: 1024px) 24rem, (min-width: 640px) 20rem, 100vw"
