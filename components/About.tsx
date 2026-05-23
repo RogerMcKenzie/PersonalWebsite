@@ -27,13 +27,11 @@ export function About() {
                 I&apos;m a Computer Science student at the University of Florida
                 with a passion for building software that solves real problems.
                 I&apos;ve had the opportunity to work as a Software Engineering
-                Intern at Amazon, where I contributed to large-scale systems
-                used by millions.
+                Intern at Amazon.
               </p>
               <p>
                 I&apos;m especially interested in cloud technologies, AI, and
-                product development. Through my YouTube channel, I share what
-                I&apos;m learning and building to help others grow in tech.
+                product development.
               </p>
             </Reveal>
 
@@ -66,9 +64,9 @@ export function About() {
               Experience
             </div>
             <div className="grid divide-y divide-border">
-              {experiences.slice(0, 3).map((experience) => (
+              {experiences.slice(0, 4).map((experience) => (
                 <div
-                  key={`${experience.company}-${experience.role}`}
+                  key={`${experience.company}-${experience.role}-${experience.period}`}
                   className="grid gap-3 py-5 sm:grid-cols-[0.55fr_1fr]"
                 >
                   <div>
