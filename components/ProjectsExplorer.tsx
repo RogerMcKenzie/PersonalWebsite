@@ -49,17 +49,7 @@ export function ProjectsExplorer() {
   return (
     <>
       <section className="relative isolate overflow-hidden bg-ink text-accent-foreground">
-        <div className="absolute inset-y-0 right-0 w-full opacity-55 lg:w-[58%]">
-          <Image
-            src="/profile.jpg"
-            alt=""
-            fill
-            priority
-            sizes="(min-width: 1024px) 58vw, 100vw"
-            className="object-cover object-[62%_center]"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,24,39,1)_0%,rgba(17,24,39,0.92)_34%,rgba(17,24,39,0.5)_66%,rgba(17,24,39,0.18)_100%)]" />
-        </div>
+
 
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
           <Reveal>

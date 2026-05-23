@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Download, Sparkles, Youtube } from "lucide-react";
 import { FaAmazon } from "react-icons/fa";
 import { siteConfig } from "@/lib/data";
@@ -14,90 +14,94 @@ const fadeUp = {
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
-  const { scrollY } = useScroll();
-  const imageY = useTransform(scrollY, [0, 700], [0, 70]);
-  const imageScale = useTransform(scrollY, [0, 700], [1, 1.06]);
 
   return (
     <section className="relative isolate overflow-hidden bg-ivory">
-      <motion.div
-        aria-hidden
-        className="absolute inset-0 z-0"
-        style={reduceMotion ? undefined : { y: imageY, scale: imageScale }}
-      >
-        <Image
-          src="/profile.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[63%_center]"
-        />
-      </motion.div>
-      <div
-        aria-hidden
-        className="absolute inset-0 z-0 bg-[linear-gradient(90deg,rgba(251,248,240,0.98)_0%,rgba(251,248,240,0.94)_36%,rgba(251,248,240,0.48)_66%,rgba(251,248,240,0.08)_100%)]"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 z-0 h-36 bg-[linear-gradient(180deg,rgba(247,244,236,0)_0%,rgba(247,244,236,1)_100%)]"
-      />
+      <div className="relative z-10 mx-auto flex min-h-[calc(88svh-4rem)] max-w-7xl flex-col justify-center px-4 pb-8 pt-16 sm:px-6 sm:pb-10 lg:py-20">
+        
+        <div className="flex flex-col-reverse gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          {/* Text Content */}
+          <div className="max-w-2xl flex-1">
+            <motion.p
+              {...fadeUp}
+              transition={{ duration: 0.5 }}
+              className="text-xs font-semibold uppercase tracking-[0.22em] text-warm"
+            >
+              Software Developer &amp; Content Creator
+            </motion.p>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(88svh-4rem)] max-w-7xl flex-col justify-end px-4 pb-8 pt-16 sm:px-6 sm:pb-10 lg:justify-center lg:py-20">
-        <div className="max-w-3xl">
-          <motion.p
-            {...fadeUp}
-            transition={{ duration: 0.5 }}
-            className="text-xs font-semibold uppercase tracking-[0.22em] text-warm"
-          >
-            Software Developer &amp; Content Creator
-          </motion.p>
+            <motion.h1
+              {...fadeUp}
+              transition={{
+                duration: 0.65,
+                delay: 0.05,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="mt-4 font-serif-display text-5xl font-semibold leading-[1.02] text-foreground sm:text-7xl lg:text-8xl"
+            >
+              Roger McKenzie
+            </motion.h1>
 
-          <motion.h1
-            {...fadeUp}
-            transition={{
-              duration: 0.65,
-              delay: 0.05,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="mt-4 max-w-3xl font-serif-display text-5xl font-semibold leading-[1.02] text-foreground sm:text-7xl lg:text-8xl"
-          >
-            Roger McKenzie
-          </motion.h1>
+            <motion.p
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.12 }}
+              className="mt-6 text-lg leading-relaxed text-muted-foreground sm:text-xl"
+            >
+              Computer Science student at the University of Florida who builds
+              useful software and shares what I learn through tech content.
+            </motion.p>
 
-          <motion.p
-            {...fadeUp}
-            transition={{ duration: 0.6, delay: 0.12 }}
-            className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
-          >
-            Computer Science student at the University of Florida who builds
-            useful software and shares what I learn through tech content.
-          </motion.p>
+            <motion.div
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.18 }}
+              className="mt-8 flex flex-wrap items-center gap-3"
+            >
+              <AnimatedAnchor href="/projects" showArrow>
+                Explore Projects
+              </AnimatedAnchor>
+              <AnimatedAnchor
+                href={siteConfig.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="secondary"
+              >
+                <Download size={16} />
+                Download Resume
+              </AnimatedAnchor>
+            </motion.div>
+          </div>
 
+          {/* Profile Image Container */}
           <motion.div
             {...fadeUp}
-            transition={{ duration: 0.6, delay: 0.18 }}
-            className="mt-8 flex flex-wrap items-center gap-3"
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto w-full max-w-sm flex-1 lg:max-w-md"
           >
-            <AnimatedAnchor href="/projects" showArrow>
-              Explore Projects
-            </AnimatedAnchor>
-            <AnimatedAnchor
-              href={siteConfig.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="secondary"
-            >
-              <Download size={16} />
-              Download Resume
-            </AnimatedAnchor>
+            <div className="relative aspect-square w-full">
+              {/* Depth Box */}
+              <div className="absolute -bottom-4 -right-4 top-4 left-4 rounded-xl bg-warm/20 sm:-bottom-6 sm:-right-6 sm:top-6 sm:left-6" />
+              <div className="absolute -bottom-2 -right-2 top-2 left-2 rounded-xl bg-warm/40 sm:-bottom-3 sm:-right-3 sm:top-3 sm:left-3" />
+              
+              {/* Image */}
+              <div className="relative h-full w-full overflow-hidden rounded-xl border border-border bg-muted shadow-2xl">
+                <Image
+                  src="/profile.jpg"
+                  alt="Roger McKenzie"
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 450px, 100vw"
+                  className="object-cover object-center"
+                />
+              </div>
+            </div>
           </motion.div>
         </div>
 
+        {/* Proof Section */}
         <motion.div
           {...fadeUp}
           transition={{ duration: 0.6, delay: 0.28 }}
-          className="mt-14 grid border-y border-border/80 bg-ivory/75 backdrop-blur-sm sm:grid-cols-3"
+          className="mt-16 grid border-y border-border/80 bg-paper/50 sm:grid-cols-3 lg:mt-24"
         >
           <ProofRow
             icon={<FaAmazon className="text-[#ff9900]" size={20} />}
