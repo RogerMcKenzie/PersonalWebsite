@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { ArrowRight, Download, Sparkles, Youtube } from "lucide-react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { Download, Sparkles, Youtube } from "lucide-react";
 import { FaAmazon } from "react-icons/fa";
 import { siteConfig } from "@/lib/data";
+import { AnimatedAnchor } from "@/components/ui/AnimatedAnchor";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -12,102 +13,104 @@ const fadeUp = {
 };
 
 export function Hero() {
+  const reduceMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const imageY = useTransform(scrollY, [0, 700], [0, 70]);
+  const imageScale = useTransform(scrollY, [0, 700], [1, 1.06]);
+
   return (
-    <section className="relative overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 pt-10 sm:px-6 sm:pt-14 lg:pt-16">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
-          <div className="relative z-10">
-            <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.5 }}
-              className="text-xs font-semibold uppercase tracking-[0.22em] text-amber"
-            >
-              Hello, I&apos;m
-            </motion.p>
+    <section className="relative isolate overflow-hidden bg-ivory">
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 z-0"
+        style={reduceMotion ? undefined : { y: imageY, scale: imageScale }}
+      >
+        <Image
+          src="/profile.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[63%_center]"
+        />
+      </motion.div>
+      <div
+        aria-hidden
+        className="absolute inset-0 z-0 bg-[linear-gradient(90deg,rgba(251,248,240,0.98)_0%,rgba(251,248,240,0.94)_36%,rgba(251,248,240,0.48)_66%,rgba(251,248,240,0.08)_100%)]"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 z-0 h-36 bg-[linear-gradient(180deg,rgba(247,244,236,0)_0%,rgba(247,244,236,1)_100%)]"
+      />
 
-            <motion.h1
-              {...fadeUp}
-              transition={{ duration: 0.6, delay: 0.05 }}
-              className="mt-3 font-serif-display text-5xl font-semibold leading-[1.02] text-foreground sm:text-6xl lg:text-7xl"
-            >
-              Roger McKenzie
-            </motion.h1>
+      <div className="relative z-10 mx-auto flex min-h-[calc(88svh-4rem)] max-w-7xl flex-col justify-end px-4 pb-8 pt-16 sm:px-6 sm:pb-10 lg:justify-center lg:py-20">
+        <div className="max-w-3xl">
+          <motion.p
+            {...fadeUp}
+            transition={{ duration: 0.5 }}
+            className="text-xs font-semibold uppercase tracking-[0.22em] text-warm"
+          >
+            Software Developer &amp; Content Creator
+          </motion.p>
 
-            <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mt-5 text-2xl font-medium text-foreground sm:text-3xl"
-            >
-              Software Developer &amp; Content Creator
-            </motion.p>
+          <motion.h1
+            {...fadeUp}
+            transition={{
+              duration: 0.65,
+              delay: 0.05,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="mt-4 max-w-3xl font-serif-display text-5xl font-semibold leading-[1.02] text-foreground sm:text-7xl lg:text-8xl"
+          >
+            Roger McKenzie
+          </motion.h1>
 
-            <motion.p
-              {...fadeUp}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg"
-            >
-              Computer Science student at the University of Florida who builds
-              useful software and shares what I learn through tech content.
-            </motion.p>
-
-            <motion.div
-              {...fadeUp}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-8 flex flex-wrap items-center gap-3"
-            >
-              <a
-                href="/projects"
-                className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground shadow-sm transition-colors hover:bg-accent-hover"
-              >
-                Explore Projects
-                <ArrowRight size={16} />
-              </a>
-              <a
-                href={siteConfig.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
-              >
-                Download Resume
-                <Download size={16} />
-              </a>
-            </motion.div>
-          </div>
+          <motion.p
+            {...fadeUp}
+            transition={{ duration: 0.6, delay: 0.12 }}
+            className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl"
+          >
+            Computer Science student at the University of Florida who builds
+            useful software and shares what I learn through tech content.
+          </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="relative aspect-square w-full overflow-hidden rounded-3xl border border-border bg-cream shadow-[0_30px_60px_-30px_rgba(15,23,42,0.25)]"
+            {...fadeUp}
+            transition={{ duration: 0.6, delay: 0.18 }}
+            className="mt-8 flex flex-wrap items-center gap-3"
           >
-            <Image
-              src="/profile.jpg"
-              alt="Roger McKenzie"
-              fill
-              priority
-              sizes="(min-width: 1024px) 36rem, (min-width: 640px) 28rem, 100vw"
-              className="object-cover object-center"
-            />
+            <AnimatedAnchor href="/projects" showArrow>
+              Explore Projects
+            </AnimatedAnchor>
+            <AnimatedAnchor
+              href={siteConfig.resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="secondary"
+            >
+              <Download size={16} />
+              Download Resume
+            </AnimatedAnchor>
           </motion.div>
         </div>
 
         <motion.div
           {...fadeUp}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-10 grid grid-cols-1 gap-2 rounded-2xl border border-border bg-card/70 p-3 sm:grid-cols-3 sm:p-4"
+          transition={{ duration: 0.6, delay: 0.28 }}
+          className="mt-14 grid border-y border-border/80 bg-ivory/75 backdrop-blur-sm sm:grid-cols-3"
         >
-          <PillRow
+          <ProofRow
             icon={<FaAmazon className="text-[#ff9900]" size={20} />}
             title="Amazon Experience"
             subtitle="Software Engineering Intern"
           />
-          <PillRow
-            icon={<Sparkles size={20} className="text-foreground" />}
+          <ProofRow
+            icon={<Sparkles size={20} className="text-warm" />}
             title="AI Products"
             subtitle="Building useful tools"
           />
-          <PillRow
-            icon={<Youtube size={20} className="text-amber" />}
+          <ProofRow
+            icon={<Youtube size={20} className="text-warm" />}
             title="Tech Content"
             subtitle="Sharing on YouTube"
           />
@@ -117,7 +120,7 @@ export function Hero() {
   );
 }
 
-function PillRow({
+function ProofRow({
   icon,
   title,
   subtitle,
@@ -127,8 +130,8 @@ function PillRow({
   subtitle: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl px-3 py-2 sm:px-4">
-      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-muted">
+    <div className="flex items-center gap-3 border-border px-4 py-4 sm:border-r sm:last:border-r-0">
+      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-paper/80">
         {icon}
       </span>
       <div className="min-w-0">

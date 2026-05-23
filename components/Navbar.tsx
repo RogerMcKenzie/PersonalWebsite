@@ -3,14 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { navLinks, siteConfig } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-3">
-      <span className="flex h-9 w-9 items-center justify-center rounded-md bg-foreground font-display text-sm font-bold text-accent-foreground">
+    <Link href="/" className="group flex items-center gap-3">
+      <span className="flex h-9 w-9 items-center justify-center rounded-md bg-foreground font-display text-sm font-bold text-accent-foreground transition-transform duration-300 group-hover:-rotate-3">
         RM
       </span>
       <span className="font-medium text-foreground">{siteConfig.name}</span>
@@ -29,9 +30,10 @@ function isLinkActive(href: string, pathname: string) {
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname() || "/";
+  const reduceMotion = useReducedMotion();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-ivory/88 backdrop-blur-xl">
       <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto] items-center px-4 sm:px-6 md:grid-cols-[1fr_auto_1fr]">
         <Logo />
 
@@ -44,27 +46,37 @@ export function Navbar() {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
-                className={`relative rounded-md px-3 py-2 text-sm transition-colors ${
+                className={cn(
+                  "relative rounded-md px-3 py-2 text-sm transition-colors",
                   active
                     ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                    : "text-muted-foreground hover:text-foreground",
+                )}
               >
-                {link.label}
+                <span className="relative z-10">{link.label}</span>
                 {active && (
-                  <span className="absolute inset-x-3 -bottom-[10px] h-0.5 rounded-full bg-amber" />
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-x-2 -bottom-[10px] h-0.5 rounded-full bg-warm"
+                    transition={
+                      reduceMotion
+                        ? { duration: 0 }
+                        : { type: "spring", stiffness: 520, damping: 38 }
+                    }
+                  />
                 )}
               </a>
             );
           })}
         </nav>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 justify-self-end md:hidden">
           <button
             type="button"
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-foreground transition-colors hover:bg-muted"
+            onClick={() => setIsOpen((value) => !value)}
+            className="flex h-10 w-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-muted"
             aria-label="Toggle menu"
+            aria-expanded={isOpen}
           >
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -76,25 +88,33 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-border bg-background md:hidden"
+            initial={reduceMotion ? false : { opacity: 0, y: -8, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, height: 0 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden border-t border-border bg-ivory md:hidden"
           >
             <div className="flex flex-col gap-1 px-4 py-3">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noopener noreferrer" : undefined}
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const active = isLinkActive(link.href, pathname);
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener noreferrer" : undefined}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                      active
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    )}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
             </div>
           </motion.div>
         )}

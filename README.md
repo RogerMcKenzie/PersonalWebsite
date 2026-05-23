@@ -4,30 +4,35 @@ A personal portfolio website showcasing software development projects, technical
 
 ## Tech Stack
 
-- **Framework:** [Next.js 15](https://nextjs.org/) (App Router, static export)
+- **Framework:** [Next.js 16](https://nextjs.org/) (App Router, static export)
 - **Language:** TypeScript
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Animations:** [Framer Motion](https://www.framer.com/motion/)
 - **Icons:** [React Icons](https://react-icons.github.io/react-icons/) + [Lucide React](https://lucide.dev/)
 - **Theming:** [next-themes](https://github.com/pacocoursey/next-themes) (light / dark mode)
-- **Fonts:** Space Grotesk (headings) + Inter (body) via `next/font/google`
-- **Linting:** ESLint + Prettier
+- **Fonts:** Fraunces (display) + Inter (body) via `next/font/google`
+- **Linting:** ESLint + TypeScript ESLint
 
 ## Project Structure
 
 ```
 /app
-  layout.tsx        # Root layout — metadata, fonts, ThemeProvider
+  layout.tsx        # Root layout — metadata, fonts, structured data
   page.tsx          # Single-page entry — renders all sections
+  /projects         # Project explorer page
+  /photography      # Photography journal page
+  /resume           # Resume preview page
 /components
-  Navbar.tsx        # Sticky nav with social icons and mobile hamburger
-  Hero.tsx          # Full-viewport intro with resume download
-  About.tsx         # Education, certifications, and skills
-  Experience.tsx    # Vertical timeline of work history
-  Projects.tsx      # Project cards with tech stack badges
-  Content.tsx       # YouTube embed section
+  Navbar.tsx        # Sticky nav with animated active states
+  Hero.tsx          # Editorial image-led intro with resume download
+  About.tsx         # Education and experience highlights
+  FeaturedProjects.tsx
+  ProjectsExplorer.tsx
+  PhotographyGallery.tsx
+  Content.tsx       # YouTube feed/fallback content section
   Footer.tsx        # Social links footer
-  ThemeToggle.tsx   # Light / dark mode toggle
+  /motion           # Shared page and reveal transitions
+  /ui               # Shared animated links and segmented filters
 /lib
   data.ts           # All site content as typed TypeScript objects
 /public

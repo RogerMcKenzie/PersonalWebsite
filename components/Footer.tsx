@@ -14,21 +14,21 @@ const displayEmail = "roger@rogermckenzie.dev";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-cream">
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-8 text-center sm:px-6 md:grid-cols-3 md:items-center md:text-left">
-        <div className="flex flex-col items-center gap-1 md:items-start">
+    <footer className="border-t border-border bg-ink text-accent-foreground">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_auto_1fr] md:items-center">
+        <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-foreground font-display text-sm font-bold text-accent-foreground">
+            <span className="flex h-9 w-9 items-center justify-center rounded-md bg-ivory font-display text-sm font-bold text-ink">
               RM
             </span>
-            <span className="font-medium text-foreground">{siteConfig.name}</span>
+            <span className="font-medium">{siteConfig.name}</span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white/62">
             Software Developer &amp; Content Creator
           </p>
           <a
             href={siteConfig.url}
-            className="text-sm text-amber hover:text-amber-hover"
+            className="w-fit text-sm text-warm transition-colors hover:text-white"
           >
             rogermckenzie.dev
           </a>
@@ -36,20 +36,20 @@ export function Footer() {
 
         <a
           href={`mailto:${displayEmail}`}
-          className="inline-flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center justify-start gap-2 text-sm text-white/70 transition-colors hover:text-white md:justify-center"
         >
           <Mail size={16} />
           {displayEmail}
         </a>
 
-        <div className="flex items-center justify-center gap-6 md:justify-end">
+        <div className="flex items-center gap-5 md:justify-end">
           {socials.map(({ icon: Icon, href, label }) => (
             <a
               key={label}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white"
               aria-label={label}
             >
               <Icon size={18} />

@@ -79,7 +79,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${fraunces.variable} min-h-svh bg-cream font-sans antialiased`}
+        className={`${inter.variable} ${fraunces.variable} min-h-svh bg-background font-sans antialiased`}
       >
         <div className="flex min-h-svh flex-col bg-background">{children}</div>
       </body>

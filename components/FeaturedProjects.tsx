@@ -1,37 +1,29 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
 import { featuredProjects, type FeaturedProject } from "@/lib/data";
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-50px" },
-};
+import { Reveal } from "@/components/motion/Reveal";
+import { AnimatedAnchor } from "@/components/ui/AnimatedAnchor";
 
 export function FeaturedProjects() {
   return (
-    <section id="projects" className="bg-background py-16 sm:py-20">
+    <section id="projects" className="bg-mist py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <motion.div
-          {...fadeUp}
-          transition={{ duration: 0.5 }}
-          className="flex items-end justify-between gap-3"
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber">
-            Featured Projects
-          </p>
-          <a
-            href="/projects"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber hover:text-amber-hover"
-          >
+        <Reveal className="flex flex-col gap-4 border-b border-foreground/15 pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-warm">
+              Featured Projects
+            </p>
+            <h2 className="mt-3 font-serif-display text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
+              Products with a point of view
+            </h2>
+          </div>
+          <AnimatedAnchor href="/projects" variant="quiet" showArrow>
             View all projects
-            <ArrowRight size={16} />
-          </a>
-        </motion.div>
+          </AnimatedAnchor>
+        </Reveal>
 
-        <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {featuredProjects.map((project, idx) => (
             <ProjectCard key={project.slug} project={project} index={idx} />
           ))}
@@ -48,24 +40,35 @@ function ProjectCard({
   project: FeaturedProject;
   index: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.a
-      href={project.liveUrl ?? `/projects#${project.slug}`}
-      initial={{ opacity: 0, y: 24 }}
+      href={project.caseStudyUrl ?? `/projects#${project.slug}`}
+      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.18)]"
+      whileHover={reduceMotion ? undefined : { y: -6 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.08,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="group flex min-h-full flex-col overflow-hidden rounded-lg border border-foreground/10 bg-paper shadow-[0_20px_55px_-42px_rgba(17,24,39,0.55)] transition-colors hover:border-foreground/25"
     >
       <ProjectCover project={project} />
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="font-serif-display text-2xl font-semibold text-foreground">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-warm">
+          {project.role}
+        </p>
+        <h3 className="mt-2 font-serif-display text-2xl font-semibold text-foreground">
           {project.title}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
           {project.description}
         </p>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-5 flex flex-wrap gap-2">
           {project.tech.map((tag) => (
             <span
               key={tag}
@@ -85,8 +88,8 @@ export function ProjectCover({ project }: { project: FeaturedProject }) {
     <div
       className={`relative flex aspect-[16/10] items-center justify-center overflow-hidden ${project.coverClass} ${project.coverTextClass ?? "text-white"}`}
     >
-      <div className="absolute inset-3 rounded-xl border border-white/10" />
-      <div className="relative px-6 text-center">
+      <div className="absolute inset-3 rounded-md border border-white/15 opacity-80 transition-transform duration-500 group-hover:scale-[0.98]" />
+      <div className="relative px-6 text-center transition-transform duration-500 group-hover:-translate-y-1">
         <div className="font-serif-display text-3xl font-semibold leading-tight">
           {project.title}
         </div>

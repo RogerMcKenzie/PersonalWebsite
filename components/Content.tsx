@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Play } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Play } from "lucide-react";
 import { featuredContent, siteConfig, type ContentVideo } from "@/lib/data";
+import { Reveal } from "@/components/motion/Reveal";
+import { AnimatedAnchor } from "@/components/ui/AnimatedAnchor";
 
 const youtubeUploadsFeedUrl =
   "https://www.youtube.com/feeds/videos.xml?channel_id=UCJhcT-FAakAVf55H2HmfeuA";
@@ -50,12 +52,6 @@ function formatDate(value?: string) {
   }).format(date);
 }
 
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-50px" },
-};
-
 export function Content() {
   const [videos, setVideos] = useState<RemoteVideo[]>([]);
 
@@ -71,7 +67,9 @@ export function Content() {
             id: item.guid || `${id}-${i}`,
             title: item.title ?? "",
             url: item.link ?? siteConfig.social.youtube,
-            thumbnailUrl: item.thumbnail || (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : ""),
+            thumbnailUrl:
+              item.thumbnail ||
+              (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : ""),
             date: formatDate(item.pubDate),
           };
         });
@@ -84,28 +82,29 @@ export function Content() {
   }, []);
 
   return (
-    <section id="content" className="bg-background py-16 sm:py-20">
+    <section id="content" className="bg-background py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <motion.div
-          {...fadeUp}
-          transition={{ duration: 0.5 }}
-          className="flex items-end justify-between gap-3 border-b border-border pb-4"
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber">
-            Latest Content
-          </p>
-          <a
+        <Reveal className="flex flex-col gap-4 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-warm">
+              Latest Content
+            </p>
+            <h2 className="mt-3 font-serif-display text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
+              Building in public
+            </h2>
+          </div>
+          <AnimatedAnchor
             href={siteConfig.social.youtube}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber hover:text-amber-hover"
+            variant="quiet"
+            showArrow
           >
             View all on YouTube
-            <ArrowRight size={16} />
-          </a>
-        </motion.div>
+          </AnimatedAnchor>
+        </Reveal>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {videos.length > 0
             ? videos.map((video, i) => (
                 <RemoteVideoCard key={video.id} video={video} index={i} />
@@ -126,16 +125,20 @@ function FeaturedVideoCard({
   video: ContentVideo;
   index: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.a
       href={video.url}
       target="_blank"
       rel="noopener noreferrer"
-      initial={{ opacity: 0, y: 24 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
+      whileHover={reduceMotion ? undefined : { y: -6 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.18)]"
+      className="group flex min-h-full flex-col overflow-hidden rounded-lg border border-border bg-paper transition-colors hover:border-foreground/25"
     >
       <div
         className={`relative flex aspect-video items-center justify-center overflow-hidden ${video.thumbnailClass}`}
@@ -143,16 +146,9 @@ function FeaturedVideoCard({
         <span className="px-6 text-center font-display text-2xl font-bold leading-tight text-white drop-shadow">
           {video.badge}
         </span>
-        <span className="absolute inset-0 flex items-center justify-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-foreground shadow-lg transition-transform group-hover:scale-110">
-            <Play size={22} className="ml-0.5" fill="currentColor" />
-          </span>
-        </span>
+        <PlayButton />
       </div>
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="font-semibold text-foreground">{video.title}</h3>
-        <p className="mt-1 text-xs text-muted-foreground">{video.date}</p>
-      </div>
+      <VideoText title={video.title} date={video.date} />
     </motion.a>
   );
 }
@@ -164,39 +160,50 @@ function RemoteVideoCard({
   video: RemoteVideo;
   index: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.a
       href={video.url}
       target="_blank"
       rel="noopener noreferrer"
-      initial={{ opacity: 0, y: 24 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
+      whileHover={reduceMotion ? undefined : { y: -6 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.99 }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(15,23,42,0.18)]"
+      className="group flex min-h-full flex-col overflow-hidden rounded-lg border border-border bg-paper transition-colors hover:border-foreground/25"
     >
       <div className="relative aspect-video overflow-hidden bg-muted">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={video.thumbnailUrl}
           alt={video.title}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <span className="absolute inset-0 flex items-center justify-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-foreground shadow-lg transition-transform group-hover:scale-110">
-            <Play size={22} className="ml-0.5" fill="currentColor" />
-          </span>
-        </span>
+        <PlayButton />
       </div>
-      <div className="flex flex-1 flex-col p-5">
-        <h3 className="line-clamp-2 font-semibold text-foreground">
-          {video.title}
-        </h3>
-        {video.date && (
-          <p className="mt-1 text-xs text-muted-foreground">{video.date}</p>
-        )}
-      </div>
+      <VideoText title={video.title} date={video.date} />
     </motion.a>
+  );
+}
+
+function PlayButton() {
+  return (
+    <span className="absolute inset-0 flex items-center justify-center">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-foreground shadow-lg transition-transform duration-300 group-hover:scale-110">
+        <Play size={22} className="ml-0.5" fill="currentColor" />
+      </span>
+    </span>
+  );
+}
+
+function VideoText({ title, date }: { title: string; date?: string }) {
+  return (
+    <div className="flex flex-1 flex-col p-5">
+      <h3 className="line-clamp-2 font-semibold text-foreground">{title}</h3>
+      {date && <p className="mt-1 text-xs text-muted-foreground">{date}</p>}
+    </div>
   );
 }

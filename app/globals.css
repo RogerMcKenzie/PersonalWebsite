@@ -4,13 +4,16 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-cream: var(--cream);
-  --color-cream-deep: var(--cream-deep);
+  --color-ivory: var(--ivory);
+  --color-paper: var(--paper);
+  --color-mist: var(--mist);
+  --color-sage: var(--sage);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-accent-foreground: var(--accent-foreground);
-  --color-amber: var(--amber);
-  --color-amber-hover: var(--amber-hover);
+  --color-warm: var(--warm);
+  --color-warm-hover: var(--warm-hover);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
@@ -21,20 +24,23 @@
 }
 
 :root {
-  --background: #fdf8ed;
-  --foreground: #1a1d2e;
-  --cream: #f5ecd6;
-  --cream-deep: #efe4c4;
-  --accent: #0a1628;
-  --accent-hover: #1a2942;
+  --background: #f7f4ec;
+  --foreground: #131722;
+  --ivory: #fbf8f0;
+  --paper: #ffffff;
+  --mist: #e8eef0;
+  --sage: #d9e3dc;
+  --ink: #111827;
+  --accent: #111827;
+  --accent-hover: #233044;
   --accent-foreground: #ffffff;
-  --amber: #a07c4e;
-  --amber-hover: #8a6a3f;
-  --muted: #f1ecdd;
-  --muted-foreground: #5a5d6e;
-  --border: #e7decd;
-  --card: #ffffff;
-  --card-foreground: #1a1d2e;
+  --warm: #b56a3c;
+  --warm-hover: #934f2f;
+  --muted: #ece7da;
+  --muted-foreground: #5d6472;
+  --border: #d8d1c2;
+  --card: #fbf8f0;
+  --card-foreground: #131722;
 }
 
 body {
@@ -45,16 +51,47 @@ body {
 
 html {
   scroll-behavior: smooth;
-  background: var(--cream);
+  background: var(--background);
+  color-scheme: light;
 }
 
 @layer base {
   * {
     border-color: var(--border);
   }
+
+  ::selection {
+    background: color-mix(in oklab, var(--warm) 28%, transparent);
+    color: var(--ink);
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--warm);
+    outline-offset: 3px;
+  }
 }
 
 .font-serif-display {
   font-family: var(--font-display), "Times New Roman", serif;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+}
+
+.editorial-grid {
+  background-image:
+    linear-gradient(to right, rgba(17, 24, 39, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(17, 24, 39, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
 }

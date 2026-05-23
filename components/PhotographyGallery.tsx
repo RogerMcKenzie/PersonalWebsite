@@ -2,17 +2,24 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Camera, MapPin, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ArrowRight, Camera, Images, MapPin, X } from "lucide-react";
 import { photos, type Photo, type PhotoCategory } from "@/lib/data";
+import { Reveal } from "@/components/motion/Reveal";
+import {
+  SegmentedFilter,
+  type SegmentOption,
+} from "@/components/ui/SegmentedFilter";
 
-const filters: ("All" | PhotoCategory)[] = [
-  "All",
-  "Travel",
-  "Street",
-  "Portrait",
-  "Nature",
-  "Architecture",
+type FilterValue = "All" | PhotoCategory;
+
+const allFilters: SegmentOption<FilterValue>[] = [
+  { label: "All", value: "All" },
+  { label: "Travel", value: "Travel" },
+  { label: "Street", value: "Street" },
+  { label: "Portrait", value: "Portrait" },
+  { label: "Nature", value: "Nature" },
+  { label: "Architecture", value: "Architecture" },
 ];
 
 const sizeClass: Record<NonNullable<Photo["size"]> | "default", string> = {
@@ -23,8 +30,15 @@ const sizeClass: Record<NonNullable<Photo["size"]> | "default", string> = {
 };
 
 export function PhotographyGallery() {
-  const [active, setActive] = useState<"All" | PhotoCategory>("All");
+  const [active, setActive] = useState<FilterValue>("All");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const hasPhotos = photos.length > 0;
+  const filters = useMemo(() => {
+    const categories = new Set(photos.map((photo) => photo.category));
+    return allFilters.filter(
+      (filter) => filter.value === "All" || categories.has(filter.value),
+    );
+  }, []);
 
   const filtered = useMemo(
     () =>
@@ -51,61 +65,58 @@ export function PhotographyGallery() {
 
   return (
     <>
-      <section className="bg-background pt-12 sm:pt-16">
+      <section className="bg-sage py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber">
-            Through My Lens
-          </p>
-          <h1 className="mt-3 font-serif-display text-6xl font-semibold leading-[1.02] text-foreground sm:text-7xl">
-            Photography
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            A personal collection - moments I&apos;ve captured between lines
-            of code. Every frame tells a small story.
-          </p>
+          <Reveal>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-warm">
+              Through My Lens
+            </p>
+            <h1 className="mt-3 font-serif-display text-6xl font-semibold leading-[1.02] text-foreground sm:text-7xl">
+              Photography
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              A personal collection - moments I&apos;ve captured between lines
+              of code. Every frame tells a small story.
+            </p>
+          </Reveal>
         </div>
       </section>
 
-      <section className="bg-background py-10 sm:py-14">
+      <section className="bg-background py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="flex flex-wrap gap-2">
-            {filters.map((f) => {
-              const isActive = active === f;
-              return (
-                <button
-                  key={f}
-                  type="button"
-                  onClick={() => setActive(f)}
-                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "border-accent bg-accent text-accent-foreground"
-                      : "border-border bg-card text-foreground hover:bg-muted"
-                  }`}
-                >
-                  {f}
-                </button>
-              );
-            })}
-          </div>
+          {hasPhotos ? (
+            <>
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <SegmentedFilter
+                  options={filters}
+                  value={active}
+                  onChange={setActive}
+                  ariaLabel="Photo category"
+                  layoutId="photo-filter-active"
+                />
+                <p className="text-sm text-muted-foreground">
+                  Showing {filtered.length} photo
+                  {filtered.length === 1 ? "" : "s"}
+                </p>
+              </div>
 
-          <p className="mt-6 text-sm text-muted-foreground">
-            Showing {filtered.length} photo{filtered.length === 1 ? "" : "s"}
-          </p>
-
-          <div className="mt-6 grid auto-rows-[200px] grid-cols-2 gap-3 sm:auto-rows-[260px] sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {filtered.map((photo, idx) => (
-              <PhotoTile
-                key={photo.src}
-                photo={photo}
-                onClick={() => setOpenIndex(idx)}
-              />
-            ))}
-          </div>
-
-          {filtered.length === 0 && (
-            <div className="mt-10 rounded-2xl border border-dashed border-border bg-card p-12 text-center text-muted-foreground">
-              No photos in this category yet.
-            </div>
+              <motion.div
+                layout
+                className="mt-8 grid auto-rows-[200px] grid-cols-2 gap-3 sm:auto-rows-[260px] sm:gap-4 md:grid-cols-3 lg:grid-cols-4"
+              >
+                <AnimatePresence mode="popLayout">
+                  {filtered.map((photo, idx) => (
+                    <PhotoTile
+                      key={photo.src}
+                      photo={photo}
+                      onClick={() => setOpenIndex(idx)}
+                    />
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            </>
+          ) : (
+            <EmptyPhotographyState />
           )}
         </div>
       </section>
@@ -129,6 +140,35 @@ export function PhotographyGallery() {
   );
 }
 
+function EmptyPhotographyState() {
+  return (
+    <Reveal>
+      <div className="grid gap-8 border-y border-border py-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+        <div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+            <Images size={22} />
+          </div>
+          <h2 className="mt-5 font-serif-display text-4xl font-semibold text-foreground sm:text-5xl">
+            Photo journal coming soon
+          </h2>
+        </div>
+        <div className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p>
+            I&apos;m selecting the first set of images now. This space will become
+            a quieter record of travel, portraits, street scenes, and the small
+            moments that catch my eye.
+          </p>
+          <div className="mt-6 grid gap-3 text-sm sm:grid-cols-3">
+            <span className="border-t border-border pt-3">Travel</span>
+            <span className="border-t border-border pt-3">Portraits</span>
+            <span className="border-t border-border pt-3">Street</span>
+          </div>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
 function PhotoTile({
   photo,
   onClick,
@@ -137,14 +177,17 @@ function PhotoTile({
   onClick: () => void;
 }) {
   const span = sizeClass[photo.size ?? "default"];
+  const reduceMotion = useReducedMotion();
 
   return (
     <motion.button
       type="button"
+      layout
       onClick={onClick}
-      whileHover={{ y: -3 }}
+      whileHover={reduceMotion ? undefined : { y: -4 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.99 }}
       transition={{ duration: 0.2 }}
-      className={`group relative overflow-hidden rounded-2xl border border-border bg-cream ${span}`}
+      className={`group relative overflow-hidden rounded-lg border border-border bg-muted ${span}`}
     >
       <Image
         src={photo.src}
@@ -235,7 +278,7 @@ function Lightbox({
             className="relative w-full max-w-5xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl bg-black">
+            <div className="relative aspect-[3/2] w-full overflow-hidden rounded-lg bg-black">
               <Image
                 src={photo.src}
                 alt={photo.alt}
