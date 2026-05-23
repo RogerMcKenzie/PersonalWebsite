@@ -95,7 +95,7 @@ export function ProjectsExplorer() {
             </p>
           </div>
 
-          <motion.div layout className="mt-8 grid gap-5">
+          <motion.div className="mt-8 grid gap-5">
             <AnimatePresence mode="popLayout">
               {filtered.map((project, index) => (
                 <ProjectRow
