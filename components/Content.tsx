@@ -90,7 +90,7 @@ export function Content() {
               Latest Content
             </p>
             <h2 className="mt-3 font-serif-display text-4xl font-semibold leading-tight text-foreground sm:text-5xl">
-              Building in public
+              Creating cool content
             </h2>
           </div>
           <AnimatedAnchor
