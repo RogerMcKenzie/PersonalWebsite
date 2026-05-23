@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { featuredProjects, type FeaturedProject } from "@/lib/data";
 import { Reveal } from "@/components/motion/Reveal";
@@ -84,6 +85,21 @@ function ProjectCard({
 }
 
 export function ProjectCover({ project }: { project: FeaturedProject }) {
+  if (project.coverImage) {
+    return (
+      <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden bg-muted">
+        <Image
+          src={project.coverImage}
+          alt={`${project.title} cover`}
+          fill
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+        />
+        <div className="pointer-events-none absolute inset-0 rounded-md border border-foreground/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      </div>
+    );
+  }
+
   return (
     <div
       className={`relative flex aspect-[16/10] items-center justify-center overflow-hidden ${project.coverClass} ${project.coverTextClass ?? "text-white"}`}

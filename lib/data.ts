@@ -81,6 +81,8 @@ export interface FeaturedProject {
   coverClass: string;
   /** Optional accent color for the cover. */
   coverTextClass?: string;
+  /** Optional image URL for the cover. */
+  coverImage?: string;
 }
 
 export const featuredProjects: FeaturedProject[] = [
@@ -126,6 +128,7 @@ export const featuredProjects: FeaturedProject[] = [
     impact: "1K+ users",
     coverClass: "bg-gradient-to-br from-[#f6e6c4] to-[#e8c98a]",
     coverTextClass: "text-[#3a2a18]",
+    coverImage: "/projects/jennas-recipes.jpg",
   },
 ];
 
