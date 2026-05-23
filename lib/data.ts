@@ -126,6 +126,7 @@ export const featuredProjects: FeaturedProject[] = [
     role: "Full Stack Developer",
     timeline: "Oct - Dec 2023",
     impact: "1K+ users",
+    liveUrl: "https://jennarecipes.vercel.app",
     coverClass: "bg-gradient-to-br from-[#f6e6c4] to-[#e8c98a]",
     coverTextClass: "text-[#3a2a18]",
     coverImage: "/projects/jennas-recipes.jpg",

@@ -45,7 +45,9 @@ function ProjectCard({
 
   return (
     <motion.a
-      href={project.caseStudyUrl ?? `/projects#${project.slug}`}
+      href={project.caseStudyUrl ?? project.liveUrl ?? `/projects#${project.slug}`}
+      target={!project.caseStudyUrl && project.liveUrl ? "_blank" : undefined}
+      rel={!project.caseStudyUrl && project.liveUrl ? "noopener noreferrer" : undefined}
       initial={reduceMotion ? false : { opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       whileHover={reduceMotion ? undefined : { y: -6 }}
