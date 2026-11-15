@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "personalwebsite",
+  "compatibility_date": "2026-11-13",
+  "observability": { "enabled": true },
+  "build": { "command": "npm run build" },
+  "assets": { "directory": "./site" },
+  "previews": {}
+}
