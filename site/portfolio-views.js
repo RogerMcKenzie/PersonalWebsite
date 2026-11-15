@@ -49,7 +49,17 @@ const menuPreviews={
  contact:{text:EMAIL}
 };
 
-function homeView(){
+function mobileHomeView(){
+ return `<div class="mobile-home"><img class="mobile-portrait" src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" fetchpriority="high"><div class="mobile-introduction"><h1>Roger McKenzie</h1><p>Software developer<br>and content creator</p><a class="mobile-home-action" href="#work" data-view="work">See my apps${ICON.right}</a></div></div>`;
+}
+function mobileListView(kind,{listIndex}){
+ const {label,items}=lists[kind];
+ if(kind==='about')return `<section class="mobile-about mobile-page"><h1>${label}</h1><img src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" loading="lazy">${items.map(item=>`<section><h2>${item.name}</h2><p>${item.text}</p></section>`).join('')}${socialLinks}</section>`;
+ return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.work?'open':''}><summary>${item.name}${ICON.down}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
+}
+
+function homeView({mobile}){
+ if(mobile)return mobileHomeView();
  return `<div class="lcd-live"><img class="lcd-feed" src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" fetchpriority="high"><span class="lcd-where lcd-narrow lcd-shadow">Gainesville, FL</span><span class="lcd-status lcd-shadow" aria-hidden="true"><span class="lcd-rec"></span><span class="lcd-batt"><b></b></span></span><div class="lcd-focus" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="lcd-who lcd-shadow"><h1>Roger McKenzie</h1><p>Software developer and content creator</p></div><button class="lcd-menu-btn" data-open-menu aria-haspopup="true">${ICON.menu}Menu</button></div>`;
 }
 function previewHTML(item){
@@ -59,7 +69,8 @@ function previewHTML(item){
   +(item.url?`<a class="lcd-cta" href="${item.url}" ${external}>${item.cta}${ICON.out}</a>`:'')
   +(item.links?socialLinks:'');
 }
-function listView(kind,{listIndex}){
+function listView(kind,{listIndex,mobile}){
+ if(mobile)return mobileListView(kind,{listIndex});
  const {label,items}=lists[kind];const index=listIndex[kind];
  return `<div class="lcd-list" data-list="${kind}"><h1 class="lcd-sr">${label}</h1><ul aria-label="${label}">${items.map((item,i)=>`<li><button data-item="${i}" aria-current="${i===index}">${item.name}</button></li>`).join('')}</ul><div class="lcd-preview" aria-live="polite">${previewHTML(items[index])}</div></div>`;
 }
@@ -95,7 +106,7 @@ function videoView({videoIndex}){
 }
 function viewHTML(view,state){
  const {photoMode}=state;
- if(view==='home')return homeView();
+ if(view==='home')return homeView(state);
  if(view==='about'||view==='work')return listView(view,state);
  if(view==='photos')return photoMode==='index'?indexView(state):photoMode==='play'?videoView(state):slideshowView(state);
  if(view==='resume')return resumeView();
