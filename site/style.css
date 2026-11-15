@@ -1,4 +1,4 @@
-:root { --ground:#ddd8d1;--cream:#f6f3eb;--ink:#20221f;--muted:#67685e;--line:#cbc9bf;--shell:#282a27;--shell-light:#3a3c37;--white:#f5f1e9;--accent:#d74328;--accent-dark:#ae321c;--amber:#b96c39;--radius:24px;--screen-radius:12px;--space:8px;--font:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--shadow:0 28px 48px #3d342a46,0 5px 9px #211d1845;--speed:240ms;--ease:cubic-bezier(.2,.7,.2,1); }
+:root { --ground:#ddd8d1;--cream:#f6f3eb;--ink:#20221f;--shell:#282a27;--white:#f5f1e9;--accent:#d74328;--radius:24px;--screen-radius:12px;--font:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--shadow:0 28px 48px #3d342a46,0 5px 9px #211d1845;--speed:240ms;--ease:cubic-bezier(.2,.7,.2,1); }
 * { box-sizing:border-box; }
 html { color-scheme:light; }
 body { margin:0;background:var(--ground);color:var(--ink);font-family:var(--font);font-size:16px;-webkit-font-smoothing:antialiased; }
@@ -45,7 +45,7 @@ svg { width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6;stro
   .stage { display:none; }
 }
 /* Refinements share the existing camera layout and semantic palette. */
-.refined { --tracking: 0; --control-surface: #343630; --control-edge: #505347; --preview-surface: #e9e4d8; --preview-paper: #faf8f1; --preview-ink: #30372b; --state-text: #42533b; --selected-text: #ffac94; --dialog-backdrop: #151811b8; --press-duration: 120ms; --enter-duration: 200ms; --exit-duration: 160ms; --move-ease: cubic-bezier(.4,0,.2,1); --press-scale: .97; --inner-radius: 8px; --small-type: 12px; --body-type: 16px; }
+.refined { --tracking: 0; --control-surface: #343630; --control-edge: #505347; --selected-text: #ffac94; --dialog-backdrop: #151811b8; --press-duration: 120ms; --enter-duration: 200ms; --move-ease: cubic-bezier(.4,0,.2,1); --press-scale: .97; --inner-radius: 8px; }
 .refined .camera { background:var(--shell); }
 .refined .screen { border-radius:var(--inner-radius); box-shadow:none; }
 html:has(.refined) { view-transition-name:none; }
@@ -53,6 +53,5 @@ html:has(.refined) { view-transition-name:none; }
   .refined .stage { padding-top:24px; }
   .refined .screen { border-radius:var(--inner-radius); }
 }
-.refined { --muted:#5e6156; }
 .refined figure { margin:0; }
 
