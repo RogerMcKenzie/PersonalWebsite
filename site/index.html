@@ -1,134 +1,53 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ddd8d1">
-  <title>Roger McKenzie | Software &amp; Photography</title>
-  <meta name="description" content="Roger McKenzie. Software developer, photographer, and content creator at the University of Florida. Explore my photography, projects, and experience.">
-  <meta property="og:type" content="profile">
-  <meta property="og:title" content="Roger McKenzie | Software &amp; Photography">
-  <meta property="og:description" content="Software developer, photographer and content creator at the University of Florida. Apps I’ve built, photographs, résumé and contact.">
-  <meta property="og:image" content="assets/profile.jpg">
-  <meta property="og:image:alt" content="Portrait of Roger McKenzie">
-  <meta property="profile:first_name" content="Roger">
-  <meta property="profile:last_name" content="McKenzie">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Roger McKenzie | Software &amp; Photography">
-  <meta name="twitter:description" content="Software developer, photographer and content creator at the University of Florida.">
-  <meta name="twitter:image" content="assets/profile.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Roger McKenzie","jobTitle":"Software developer","description":"Software developer, photographer and content creator. Information Systems student at the University of Florida with minors in Computer Science and Statistics.","image":"assets/profile.jpg","email":"mailto:McKenzieRoger83@gmail.com","homeLocation":{"@type":"Place","name":"Gainesville, Florida"},"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida"},"worksFor":{"@type":"Organization","name":"The Agency at UF"},"knowsAbout":["Software engineering","TypeScript","AWS","React","Next.js","Photography"],"sameAs":["https://github.com/RogerMcKenzie","https://www.linkedin.com/in/rogermckenzie/","https://www.youtube.com/@RogerMcKenzie1"]}</script>
-  <link rel="icon" type="image/svg+xml" href="assets/aperture.svg">
-  <link rel="preload" as="image" href="assets/camera/zv-e10-rear.webp" type="image/webp">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="camera.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..700&amp;display=swap">
-  <link rel="stylesheet" href="lcd.css">
-</head>
-<body class="refined camera-v2">
-  <a class="skip" href="#display-content">Skip to content</a>
-  <main class="stage">
-  <div class="camera" aria-label="Roger McKenzie’s personal website">
-  <img class="camera-shell" src="assets/camera/zv-e10-rear.webp" alt="" width="2400" height="1350" fetchpriority="high" aria-hidden="true">
-  <div class="mobile-top-plate" aria-hidden="true"></div>
-  <section class="screen-bezel">
-  <div class="screen">
-  <div class="lcd" id="lcd">
-  <div id="display-content" class="lcd-view" tabindex="-1">
-    <article class="lcd-static">
-      <h1>Roger McKenzie</h1>
-      <p>Software developer and content creator in Gainesville, Florida. I study Information Systems at the University of Florida.</p>
-
-      <section id="about">
-        <h2>About me</h2>
-        <p>I’m from Miami and the first in my family to go to college. I study Information Systems at the University of Florida, with minors in Computer Science and Statistics.</p>
-        <p>Software engineering intern at Amazon in Arlington, Virginia, in 2025 and 2026. Lead developer at The Agency at UF since April 2026.</p>
-        <p>Off the clock: cooking, climbing, gaming and tinkering with a home server. I also make videos about tech on YouTube.</p>
-      </section>
-
-      <section id="work">
-        <h2>Apps I’ve built</h2>
-        <h3>Studio Stack</h3>
-        <p>Production scheduling, brief intake and gear reservations for The Agency at UF. As lead developer I built the cloud backend with role-based sign-in and workflow tracking. Built with TypeScript, AWS Lambda, PostgreSQL and S3.</p>
-        <h3>ResMatch</h3>
-        <p>Tailors a résumé to the job description you’re applying for. Built with Next.js, TypeScript and OpenAI.</p>
-        <h3>SnapCal</h3>
-        <p>A Chrome extension that turns events on a webpage into Google Calendar entries, with a preview to check before saving. Built with Gemini and Google Calendar.</p>
-        <h3><a href="https://jennarecipes.vercel.app">Jenna’s Recipes</a></h3>
-        <p>Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits. Built with React, TypeScript and MUI.</p>
-      </section>
-
-      <section id="photos">
-        <h2>Photographs</h2>
-        <figure>
-          <img src="assets/photography/sunset-cathedral.jpg" width="1574" height="2200" alt="Orange sunset over a cathedral silhouette and city rooftops" loading="lazy">
-          <figcaption>Cathedral sunset, Washington, DC, 2026</figcaption>
-        </figure>
-        <figure>
-          <img src="assets/photography/terrace-lights.jpg" width="2200" height="1650" alt="Rooftop terrace with string lights over a city at night" loading="lazy">
-          <figcaption>Terrace lights, 2026</figcaption>
-        </figure>
-        <figure>
-          <img src="assets/photography/caesars-palace.jpg" width="768" height="1024" alt="Caesars Palace entrance at golden hour with crowds on the Las Vegas Strip" loading="lazy">
-          <figcaption>Caesars Palace, Las Vegas, NV, 2026</figcaption>
-        </figure>
-        <figure>
-          <img src="assets/photography/north-beach-night.jpg" width="768" height="1024" alt="North Beach street scene at night with neon signs and city lights" loading="lazy">
-          <figcaption>North Beach nights, San Francisco, CA, 2026</figcaption>
-        </figure>
-        <p>Video: <a href="https://www.youtube.com/watch?v=hrOAiSEx3Ww">AfroTech 2025</a>, Houston, TX. More on <a href="https://www.youtube.com/@RogerMcKenzie1">YouTube</a>.</p>
-      </section>
-
-      <section id="resume">
-        <h2>Résumé</h2>
-        <p>Two software engineering internships at Amazon, and lead developer at The Agency at UF. <a href="https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/edit">Open in Google Docs</a> or <a href="https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/export?format=pdf">download the PDF</a>.</p>
-
-        <h3>Education</h3>
-        <p>University of Florida, Gainesville. B.S.B.A. in Information Systems, minors in Computer Science and Statistics. Graduating April 2028.</p>
-        <p>Certifications: AWS Certified Cloud Practitioner, AWS Certified AI Practitioner, NVIDIA Fundamentals of Deep Learning.</p>
-
-        <h3>Software Development Engineer Intern, Amazon</h3>
-        <p>Arlington, Virginia. May to August 2026.</p>
-        <ul>
-          <li>Designed the AWS infrastructure, security and data layers for a serverless machine-learning recommendation service that replaced a manually tuned evaluator-ranking heuristic, reducing manual evaluator outreach by 37%.</li>
-          <li>Built the CDK infrastructure package and production CI/CD pipeline from scratch, including an encrypted DynamoDB feature store migrated from a legacy table with zero downtime.</li>
-          <li>Hardened S3 inference-log storage with blocked public access, TLS, rotating customer-managed KMS keys, versioning and retention policies.</li>
-          <li>Architected a cross-account inference API (Fastify, TypeScript, Lambda) with SigV4 IAM authorization, Zod validation and per-client throttling, and took it through Amazon’s Application Security Review and Operational Readiness Review.</li>
-        </ul>
-
-        <h3>Software Development Engineer Intern, Amazon</h3>
-        <p>Arlington, Virginia. May to August 2025.</p>
-        <ul>
-          <li>Built APEX, a full-stack A/B testing platform (React, TypeScript, tRPC, AWS Lambda, CloudFront, CDK) that replaced manual experiment planning for email and SMS campaigns reaching over 1 million prospective candidates.</li>
-          <li>Engineered experiment creation with validated multi-arm forms, up to 100 treatment variations and live sample-size feedback at 80% power and 95% confidence.</li>
-          <li>Improved frontend reliability by removing flaky tests, raising code-coverage thresholds and writing Vitest and React Testing Library suites.</li>
-        </ul>
-
-        <h3>Lead Developer, The Agency at UF</h3>
-        <p>Gainesville, Florida. April 2026 to present.</p>
-        <ul>
-          <li>Leads the architecture and delivery of two internal platforms, Studio Stack and Research Resourcing, which replaced spreadsheet coordination across three agency departments.</li>
-          <li>Built Studio Stack’s cloud backend on Cognito, API Gateway, Lambda, RDS PostgreSQL and S3, for role-based sign-in, workflow tracking, brief intake and production scheduling.</li>
-          <li>Built a Slack-integrated AI resourcing agent (TypeScript, Lambda, DynamoDB, OpenAI API) that ranks researchers by availability and qualifications and syncs approvals to Excel, cutting turnaround from hours to seconds.</li>
-        </ul>
-
-        <h3>Skills</h3>
-        <p>Languages: TypeScript, JavaScript, Python, C++, Java, SQL. Cloud and tools: AWS (Lambda, API Gateway, S3, DynamoDB, RDS, Cognito, IAM, CloudWatch, CDK), Docker, Git, Vercel. Frameworks: React, Next.js, Node.js, Fastify, FastAPI, tRPC, Tailwind CSS, Zod.</p>
-      </section>
-
-      <section id="contact">
-        <h2>Get in touch</h2>
-        <p>Email me about internships, collaborations or photo work: <a href="mailto:McKenzieRoger83@gmail.com">McKenzieRoger83@gmail.com</a></p>
-        <p><a href="https://github.com/RogerMcKenzie">GitHub</a> · <a href="https://www.linkedin.com/in/rogermckenzie/">LinkedIn</a> · <a href="https://www.youtube.com/@RogerMcKenzie1">YouTube</a></p>
-      </section>
-    </article>
-  </div>
-  </div>
-  </div>
-  </section>
-  </div>
-  </main>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#ddd8d1"><meta name="description" content="Roger McKenzie. Software developer, photographer, and content creator at the University of Florida. Explore my photography, projects, and experience."><title>Roger McKenzie | Software &amp; Photography</title><meta property="og:type" content="profile"><meta property="og:title" content="Roger McKenzie | Software &amp; Photography"><meta property="og:description" content="Software developer, photographer and content creator at the University of Florida. Apps I’ve built, photographs, résumé and contact."><meta property="og:image" content="assets/profile.jpg"><meta property="og:image:alt" content="Portrait of Roger McKenzie"><meta property="profile:first_name" content="Roger"><meta property="profile:last_name" content="McKenzie"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Roger McKenzie | Software &amp; Photography"><meta name="twitter:description" content="Software developer, photographer and content creator at the University of Florida."><meta name="twitter:image" content="assets/profile.jpg"><link rel="alternate" type="text/plain" href="llms.txt" title="Plain-text summary"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"ProfilePage","@id":"#page","name":"Roger McKenzie | Software & Photography","mainEntity":{"@id":"#roger"}},{"@type":"Person","name":"Roger McKenzie","jobTitle":"Software developer","description":"Software developer, photographer and content creator. Information Systems student at the University of Florida with minors in Computer Science and Statistics.","image":"assets/profile.jpg","email":"mailto:McKenzieRoger83@gmail.com","homeLocation":{"@type":"Place","name":"Gainesville, Florida"},"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","sameAs":"https://www.ufl.edu"},"worksFor":{"@type":"Organization","name":"The Agency at UF"},"knowsAbout":["Software engineering","TypeScript","Python","AWS","AWS CDK","Serverless","React","Next.js","Machine learning infrastructure","Photography","Videography"],"sameAs":["https://github.com/RogerMcKenzie","https://www.linkedin.com/in/rogermckenzie/","https://www.youtube.com/@RogerMcKenzie1"],"@id":"#roger","hasCredential":[{"@type":"EducationalOccupationalCredential","name":"AWS Certified Cloud Practitioner"},{"@type":"EducationalOccupationalCredential","name":"AWS Certified AI Practitioner"},{"@type":"EducationalOccupationalCredential","name":"NVIDIA Fundamentals of Deep Learning"}],"hasOccupation":[{"@type":"Role","roleName":"Lead Developer","startDate":"2026-04","hasOccupation":{"@type":"Occupation","name":"Software developer"},"description":"Lead developer at The Agency at UF"},{"@type":"Role","roleName":"Software Development Engineer Intern, Amazon","startDate":"2026-05","endDate":"2026-08","hasOccupation":{"@type":"Occupation","name":"Software engineer"}},{"@type":"Role","roleName":"Software Development Engineer Intern, Amazon","startDate":"2025-05","endDate":"2025-08","hasOccupation":{"@type":"Occupation","name":"Software engineer"}}]},{"@type":"SoftwareApplication","name":"Studio Stack","description":"Production scheduling, brief intake and gear reservations for The Agency at UF, with a cloud backend on AWS.","applicationCategory":"BusinessApplication","creator":{"@id":"#roger"}},{"@type":"SoftwareApplication","name":"ResMatch","description":"Tailors a résumé to the job description you’re applying for.","applicationCategory":"BusinessApplication","creator":{"@id":"#roger"}},{"@type":"SoftwareApplication","name":"SnapCal","description":"A Chrome extension that turns events on a webpage into Google Calendar entries.","applicationCategory":"BrowserApplication","creator":{"@id":"#roger"}},{"@type":"SoftwareApplication","name":"Jenna’s Recipes","description":"Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits.","applicationCategory":"LifestyleApplication","creator":{"@id":"#roger"},"url":"https://jennarecipes.vercel.app"},{"@type":"ImageObject","contentUrl":"assets/photography/sunset-cathedral.jpg","name":"Cathedral sunset","creator":{"@id":"#roger"},"copyrightHolder":{"@id":"#roger"},"dateCreated":"2026","contentLocation":{"@type":"Place","name":"Washington, DC"}},{"@type":"ImageObject","contentUrl":"assets/photography/terrace-lights.jpg","name":"Terrace lights","creator":{"@id":"#roger"},"copyrightHolder":{"@id":"#roger"},"dateCreated":"2026"},{"@type":"ImageObject","contentUrl":"assets/photography/caesars-palace.jpg","name":"Caesars Palace","creator":{"@id":"#roger"},"copyrightHolder":{"@id":"#roger"},"dateCreated":"2026","contentLocation":{"@type":"Place","name":"Las Vegas, NV"}},{"@type":"ImageObject","contentUrl":"assets/photography/north-beach-night.jpg","name":"North Beach nights","creator":{"@id":"#roger"},"copyrightHolder":{"@id":"#roger"},"dateCreated":"2026","contentLocation":{"@type":"Place","name":"San Francisco, CA"}},{"@type":"VideoObject","name":"AfroTech 2025","description":"A short video from AfroTech 2025 in Houston, Texas.","thumbnailUrl":"https://i.ytimg.com/vi/hrOAiSEx3Ww/oardefault.jpg","embedUrl":"https://www.youtube.com/embed/hrOAiSEx3Ww","url":"https://www.youtube.com/watch?v=hrOAiSEx3Ww","creator":{"@id":"#roger"}}]}</script><link rel="icon" type="image/svg+xml" href="assets/aperture.svg"><script>document.documentElement.classList.add("js")</script><link rel="preload" as="image" href="assets/camera/zv-e10-rear.webp?v=rear-layout-20261115-2" type="image/webp"><script>if(matchMedia("(min-width: 1001px)").matches&&!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("camera-3d-boot");setTimeout(function(){document.documentElement.classList.remove("camera-3d-boot")},2500)}</script><link rel="stylesheet" href="style.css?v=rear-layout-20261115-2"><link rel="stylesheet" href="camera.css?v=extras-20261115-3"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..700&amp;display=swap"><link rel="stylesheet" href="lcd.css?v=lcd-20261115-16"><script src="app.js?v=extras-20261115-3" defer></script><script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script><script type="module" src="camera3d.js?v=extras-20261115-2"></script></head>
+<body class="refined camera-v2"><a class="skip" href="#display-content">Skip to content</a><main class="stage"><div class="camera" aria-label="Roger McKenzie’s personal website"><img class="camera-shell" src="assets/camera/zv-e10-rear.webp?v=rear-layout-20261115-2" alt="" width="2400" height="1350" fetchpriority="high" aria-hidden="true"><div class="mobile-top-plate" aria-hidden="true"></div><section class="screen-bezel"><div class="screen"><div class="lcd" id="lcd"><div id="display-content" class="lcd-view" tabindex="-1"><article class="lcd-static">
+<h1>Roger McKenzie</h1>
+<p>Software developer and content creator in Gainesville, Florida. I study Information Systems at the University of Florida.</p>
+<section id="about"><h2>About me</h2>
+<p>I’m from Miami and the first in my family to go to college. I study Information Systems at the University of Florida, with minors in Computer Science and Statistics.</p>
+<p>Software engineering intern at Amazon in Arlington, Virginia, in 2025 and 2026. Lead developer at The Agency at UF since April 2026.</p>
+<p>Off the clock: cooking, climbing, gaming and tinkering with a home server. I also make videos about tech on YouTube.</p></section>
+<section id="work"><h2>Apps I’ve built</h2>
+<h3>Studio Stack</h3><p>Production scheduling, brief intake and gear reservations for The Agency at UF. As lead developer I built the cloud backend with role-based sign-in and workflow tracking. Built with TypeScript, AWS Lambda, PostgreSQL and S3.</p>
+<h3>ResMatch</h3><p>Tailors a résumé to the job description you’re applying for. Built with Next.js, TypeScript and OpenAI.</p>
+<h3>SnapCal</h3><p>A Chrome extension that turns events on a webpage into Google Calendar entries, with a preview to check before saving. Built with Gemini and Google Calendar.</p>
+<h3><a href="https://jennarecipes.vercel.app">Jenna’s Recipes</a></h3><p>Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits. Built with React, TypeScript and MUI.</p></section>
+<section id="photos"><h2>Photographs</h2>
+<figure><img src="assets/photography/sunset-cathedral.jpg" alt="Orange sunset over a cathedral silhouette and city rooftops" loading="lazy"><figcaption>Cathedral sunset, Washington, DC, 2026</figcaption></figure>
+<figure><img src="assets/photography/terrace-lights.jpg" alt="Rooftop terrace with string lights over a city at night" loading="lazy"><figcaption>Terrace lights, 2026</figcaption></figure>
+<figure><img src="assets/photography/caesars-palace.jpg" alt="Caesars Palace entrance at golden hour with crowds on the Las Vegas Strip" loading="lazy"><figcaption>Caesars Palace, Las Vegas, NV, 2026</figcaption></figure>
+<figure><img src="assets/photography/north-beach-night.jpg" alt="North Beach street scene at night with neon signs and city lights" loading="lazy"><figcaption>North Beach nights, San Francisco, CA, 2026</figcaption></figure>
+<p>Video: <a href="https://www.youtube.com/watch?v=hrOAiSEx3Ww">AfroTech 2025</a>, Houston, TX. More on <a href="https://www.youtube.com/@RogerMcKenzie1">YouTube</a>.</p></section>
+<section id="resume"><h2>Résumé</h2>
+<p>Two software engineering internships at Amazon, and lead developer at The Agency at UF. <a href="https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/edit">Open in Google Docs</a> or <a href="https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/export?format=pdf">download the PDF</a>.</p>
+<h3>Education</h3>
+<p>University of Florida, Gainesville. B.S.B.A. in Information Systems, minors in Computer Science and Statistics. Graduating April 2028.</p>
+<p>Certifications: AWS Certified Cloud Practitioner, AWS Certified AI Practitioner, NVIDIA Fundamentals of Deep Learning.</p>
+<h3>Software Development Engineer Intern, Amazon</h3>
+<p>Arlington, Virginia. May to August 2026.</p>
+<ul>
+<li>Designed the AWS infrastructure, security and data layers for a serverless machine-learning recommendation service that replaced a manually tuned evaluator-ranking heuristic, reducing manual evaluator outreach by 37%.</li>
+<li>Built the CDK infrastructure package and production CI/CD pipeline from scratch, including an encrypted DynamoDB feature store migrated from a legacy table with zero downtime.</li>
+<li>Hardened S3 inference-log storage with blocked public access, TLS, rotating customer-managed KMS keys, versioning and retention policies.</li>
+<li>Architected a cross-account inference API (Fastify, TypeScript, Lambda) with SigV4 IAM authorization, Zod validation and per-client throttling, and took it through Amazon’s Application Security Review and Operational Readiness Review.</li>
+</ul>
+<h3>Software Development Engineer Intern, Amazon</h3>
+<p>Arlington, Virginia. May to August 2025.</p>
+<ul>
+<li>Built APEX, a full-stack A/B testing platform (React, TypeScript, tRPC, AWS Lambda, CloudFront, CDK) that replaced manual experiment planning for email and SMS campaigns reaching over 1 million prospective candidates.</li>
+<li>Engineered experiment creation with validated multi-arm forms, up to 100 treatment variations and live sample-size feedback at 80% power and 95% confidence.</li>
+<li>Improved frontend reliability by removing flaky tests, raising code-coverage thresholds and writing Vitest and React Testing Library suites.</li>
+</ul>
+<h3>Lead Developer, The Agency at UF</h3>
+<p>Gainesville, Florida. April 2026 to present.</p>
+<ul>
+<li>Leads the architecture and delivery of two internal platforms, Studio Stack and Research Resourcing, which replaced spreadsheet coordination across three agency departments.</li>
+<li>Built Studio Stack’s cloud backend on Cognito, API Gateway, Lambda, RDS PostgreSQL and S3, for role-based sign-in, workflow tracking, brief intake and production scheduling.</li>
+<li>Built a Slack-integrated AI resourcing agent (TypeScript, Lambda, DynamoDB, OpenAI API) that ranks researchers by availability and qualifications and syncs approvals to Excel, cutting turnaround from hours to seconds.</li>
+</ul>
+<h3>Skills</h3>
+<p>Languages: TypeScript, JavaScript, Python, C++, Java, SQL. Cloud and tools: AWS (Lambda, API Gateway, S3, DynamoDB, RDS, Cognito, IAM, CloudWatch, CDK), Docker, Git, Vercel. Frameworks: React, Next.js, Node.js, Fastify, FastAPI, tRPC, Tailwind CSS, Zod.</p></section>
+<section id="contact"><h2>Get in touch</h2>
+<p>Email me about internships, collaborations or photo work: <a href="mailto:McKenzieRoger83@gmail.com">McKenzieRoger83@gmail.com</a></p>
+<p><a href="https://github.com/RogerMcKenzie">GitHub</a> · <a href="https://www.linkedin.com/in/rogermckenzie/">LinkedIn</a> · <a href="https://www.youtube.com/@RogerMcKenzie1">YouTube</a></p></section>
+</article></div><nav id="camera-menu" class="lcd-menu" aria-label="Menu" hidden><span class="lcd-batt" aria-hidden="true"><b></b></span><ul><li style="--i:0"><button data-view="about">About me</button></li><li style="--i:1"><button data-view="work">Apps I’ve built</button></li><li style="--i:2"><button data-view="photos">Photographs</button></li><li style="--i:3"><button data-view="resume">Résumé</button></li><li style="--i:4"><button data-view="contact">Get in touch</button></li></ul><div class="lcd-preview" aria-hidden="true"><img id="menu-preview-image" alt="" width="250" height="150"><p id="menu-preview-text"></p></div></nav><nav class="lcd-nav" aria-label="Site sections"><button data-view="about">About</button><button data-view="work">Work</button><button data-view="photos">Photos</button><button data-view="resume">Résumé</button><button data-view="contact">Contact</button></nav></div></div></section><aside class="controls" aria-label="Explore the portfolio"><button id="menu-toggle" class="hardware-button hardware-menu" aria-controls="camera-menu" aria-expanded="false"><span class="control-label">MENU</span></button><button class="hardware-button hardware-playback" type="button" aria-label="Play back Roger’s videos"><span class="control-label"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m10 9 5 3-5 3z"/></svg></span></button><nav class="dial" aria-label="Portfolio sections"><div class="dial-indicator" id="dial-indicator"></div><button class="dial-item dial-top" data-view="about"><span class="control-label">About</span></button><button class="dial-item dial-right" data-view="work"><span class="control-label">Work</span></button><button class="dial-item dial-bottom" data-view="photos"><span class="control-label">Photos</span></button><button class="dial-item dial-left" data-view="resume" aria-label="Résumé"><span class="control-label">Résumé</span></button><button class="dial-center" data-view="home" aria-label="Return home"><span class="control-label">HOME</span></button></nav><div class="browse"><button class="round-button" id="previous" aria-label="Previous section"><span class="control-label"><svg viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></svg></span></button><span>Browse</span><button class="round-button" id="next" aria-label="Next section"><span class="control-label"><svg viewBox="0 0 24 24"><path d="m10 5 7 7-7 7"/></svg></span></button></div></aside><span class="camera-signature" aria-hidden="true">RM</span></div></main></body></html>
