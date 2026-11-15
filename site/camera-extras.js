@@ -7,7 +7,7 @@
 // Model coordinates: glTF nodes under the "ZV-E10" root are in centimetres. Blender (x, y, z)
 // becomes glTF (x, z, -y): +Y is up, +Z is the front (lens), +X is the hinge side.
 
-const EMAIL = 'McKenzieRoger83@gmail.com';
+const EMAIL = 'roger@rogermckz.dev';
 const YOUTUBE = 'https://www.youtube.com/@RogerMcKenzie1';
 const HW = 11.52 / 2;                       // half body width (cm)
 const DOOR_OPEN = -1.75;                    // port doors swing out about 100 degrees
