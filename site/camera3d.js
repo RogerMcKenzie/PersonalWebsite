@@ -30,6 +30,10 @@ const PRESSABLE = [
   ['#next', 'Delete_Button', 0.07],
   ['.dial-center', 'Wheel_Center', 0.08],
   ['.dial-item', 'Control_Wheel', 0.05],
+  // Top plate (camera-extras.js)
+  ['.cx-shutter', 'Shutter_Button', 0.12],
+  ['.cx-movie', 'Movie_Button', 0.05],
+  ['.cx-c1', 'C1_Button', 0.05],
 ];
 
 // Orange wheel segment points at the active section (radians about the wheel axis).
@@ -64,10 +68,11 @@ function maybeStart() {
 }
 
 async function start({ intro }) {
-  const [THREE, { GLTFLoader }, { attachCameraInterface }] = await Promise.all([
+  const [THREE, { GLTFLoader }, { attachCameraInterface }, { attachCameraExtras }] = await Promise.all([
     import('three'),
     import('three/addons/loaders/GLTFLoader.js'),
     import('./camera-screen.js'),
+    import('./camera-extras.js'),
   ]);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
@@ -291,8 +296,8 @@ async function start({ intro }) {
     tiltButton.setAttribute('aria-label', rest.pitch ? 'Tilt back' : 'Tilt to see the top');
     request();
   };
-  // Top-plate and hinge-side controls arrive in camera-extras.js.
-  const extras = null;
+  // Top-plate and hinge-side controls (null with an older model that lacks the parts).
+  const extras = attachCameraExtras(THREE, { model, pivot, view, camera, surfaces, request, rest, goTo, reduced: REDUCED });
 
   // Back to the rear screen view, the short way round, undoing zoom, doors and the flipped screen.
   homeButton.addEventListener('click', () => {
