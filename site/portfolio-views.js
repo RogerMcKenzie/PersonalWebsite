@@ -90,7 +90,8 @@ function indexView(state){
  const {photoTab}=state;
  return `<div class="lcd-page lcd-index"><h1 class="lcd-sr">Photographs</h1><div class="lcd-tabs lcd-narrow" role="tablist"><button role="tab" data-photo-tab="photos" aria-selected="${photoTab==='photos'}" class="${photoTab==='photos'?'is-on':''}">${ICON.photo}Photos</button><button role="tab" data-photo-tab="videos" aria-selected="${photoTab==='videos'}" class="${photoTab==='videos'?'is-on':''}">${ICON.video}Videos</button></div><div class="lcd-thumbs">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
 }
-function resumeView(){
+function resumeView({mobile}){
+ if(mobile)return `<section class="mobile-resume mobile-page"><h1>Résumé</h1><div class="mobile-resume-actions"><a class="lcd-cta" href="${RESUME}/edit" ${external}>Open résumé${ICON.out}</a><a class="lcd-plain" href="${RESUME}/export?format=pdf">Download PDF${ICON.down}</a></div><details class="mobile-resume-preview"><summary>Preview here${ICON.down}</summary><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" loading="lazy" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></details></section>`;
  return `<div class="lcd-resume"><div class="lcd-resume-top"><h1>Résumé</h1><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open in Google Docs</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">${ICON.down}Download PDF</a></div><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>`;
 }
 function contactView(){
@@ -105,7 +106,7 @@ function viewHTML(view,state){
  if(view==='home')return homeView(state);
  if(view==='about'||view==='work')return listView(view,state);
  if(view==='photos')return photoMode==='index'?indexView(state):photoMode==='play'?videoView(state):slideshowView(state);
- if(view==='resume')return resumeView();
+ if(view==='resume')return resumeView(state);
  return contactView();
 }
 

@@ -1,4 +1,4 @@
-import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=mobile-fit-20261115-1';
+import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=mobile-close-20261115-1';
 
 const views=['home','about','work','photos','resume','contact'];
 const navViews=new Set(['about','work','photos','resume','contact']);
