@@ -19,12 +19,25 @@
   <meta name="twitter:image" content="assets/profile.jpg">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Roger McKenzie","jobTitle":"Software developer","description":"Software developer, photographer and content creator. Information Systems student at the University of Florida with minors in Computer Science and Statistics.","image":"assets/profile.jpg","email":"mailto:McKenzieRoger83@gmail.com","homeLocation":{"@type":"Place","name":"Gainesville, Florida"},"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida"},"worksFor":{"@type":"Organization","name":"The Agency at UF"},"knowsAbout":["Software engineering","TypeScript","AWS","React","Next.js","Photography"],"sameAs":["https://github.com/RogerMcKenzie","https://www.linkedin.com/in/rogermckenzie/","https://www.youtube.com/@RogerMcKenzie1"]}</script>
   <link rel="icon" type="image/svg+xml" href="assets/aperture.svg">
-  <link rel="stylesheet" href="base.css">
+  <link rel="preload" as="image" href="assets/camera/zv-e10-rear.webp" type="image/webp">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="camera.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..700&amp;display=swap">
+  <link rel="stylesheet" href="lcd.css">
 </head>
-<body>
-  <a class="skip" href="#content">Skip to content</a>
-  <main id="content" tabindex="-1">
-    <article class="page">
+<body class="refined camera-v2">
+  <a class="skip" href="#display-content">Skip to content</a>
+  <main class="stage">
+  <div class="camera" aria-label="Roger McKenzie’s personal website">
+  <img class="camera-shell" src="assets/camera/zv-e10-rear.webp" alt="" width="2400" height="1350" fetchpriority="high" aria-hidden="true">
+  <div class="mobile-top-plate" aria-hidden="true"></div>
+  <section class="screen-bezel">
+  <div class="screen">
+  <div class="lcd" id="lcd">
+  <div id="display-content" class="lcd-view" tabindex="-1">
+    <article class="lcd-static">
       <h1>Roger McKenzie</h1>
       <p>Software developer and content creator in Gainesville, Florida. I study Information Systems at the University of Florida.</p>
 
@@ -111,6 +124,11 @@
         <p><a href="https://github.com/RogerMcKenzie">GitHub</a> · <a href="https://www.linkedin.com/in/rogermckenzie/">LinkedIn</a> · <a href="https://www.youtube.com/@RogerMcKenzie1">YouTube</a></p>
       </section>
     </article>
+  </div>
+  </div>
+  </div>
+  </section>
+  </div>
   </main>
 </body>
 </html>

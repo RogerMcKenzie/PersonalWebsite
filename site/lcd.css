@@ -1,0 +1,32 @@
+/* Camera LCD. Desktop draws the screen at a fixed 620 × 465 and scales it to the camera’s LCD.
+   Phones get a flowing version of the same screen. */
+.camera-v2 { --lcd-bg:#0b0b0c; --lcd-raise:#18181a; --lcd-ink:#f2f2f0; --lcd-soft:#a3a3a6; --lcd-red:#c8102e; --lcd-focus:#3ddc68; --lcd-track:#3a3a3d; --lcd-font:"Archivo",system-ui,sans-serif; --lcd-out:cubic-bezier(.22,1,.36,1); }
+.camera-v2 .screen, .camera-v2.refined .screen { position:relative; padding:0; min-height:0; background:var(--lcd-bg); color:var(--lcd-ink); border-radius:2px; box-shadow:none; overflow:hidden; display:block; }
+.camera-v2 .screen::before { display:none; }
+.camera-v2 .lcd { position:relative; width:620px; height:465px; overflow:hidden; background:var(--lcd-bg); color:var(--lcd-ink); font-family:var(--lcd-font); font-size:16px; line-height:1.5; font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased; transform-origin:0 0; }
+.camera-v2 :where(.lcd) :is(h1,h2,h3,p,ul,dl,dd) { margin:0; padding:0; }
+.camera-v2 .lcd h1, .camera-v2 .lcd h2 { text-wrap:balance; letter-spacing:0; }
+.camera-v2 :where(.lcd) button { font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; text-align:left; }
+.camera-v2 .lcd :is(button,a):focus-visible { outline:2px solid var(--lcd-ink); outline-offset:3px; }
+.camera-v2 :where(.lcd) svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+.camera-v2 .lcd-view { position:absolute; inset:0; outline:none; }
+.camera-v2 .lcd-view > .view { position:absolute; inset:0; animation:none; }
+/* Plain copy of the site in the HTML, for crawlers, readers and no-JS visitors. The camera interface replaces it once JavaScript runs. */
+.js .camera-v2 .lcd-static { display:none; }
+.camera-v2 .lcd-static { position:absolute; inset:0; overflow-y:auto; padding:24px 28px 72px; font-size:15px; line-height:1.55; }
+.camera-v2 .lcd-static h1 { font-size:28px; margin:0 0 8px; }
+.camera-v2 .lcd-static h2 { font-size:20px; margin:32px 0 8px; }
+.camera-v2 .lcd-static h3 { font-size:16px; margin:16px 0 4px; }
+.camera-v2 .lcd-static p { margin:0 0 8px; max-width:60ch; color:var(--lcd-soft); }
+.camera-v2 .lcd-static a { color:var(--lcd-ink); }
+.camera-v2 .lcd-static figure { margin:0 0 16px; }
+.camera-v2 .lcd-static img { display:block; width:100%; max-width:360px; height:auto; }
+.camera-v2 .lcd-static figcaption { margin-top:4px; font-size:13px; color:var(--lcd-soft); }
+.camera-v2 .lcd-static ul { margin:0 0 8px; padding-left:20px; max-width:60ch; color:var(--lcd-soft); }
+.camera-v2 .lcd-static li { margin-bottom:4px; }
+/* Phones and narrow windows: the same screen, flowing instead of fixed. */
+@media (max-width:1000px) {
+  .camera-v2 .screen { min-height:0; }
+  .camera-v2 .lcd { width:auto; height:auto; min-height:560px; zoom:1 !important; }
+  .camera-v2 .lcd-view, .camera-v2 .lcd-view > .view, .camera-v2 .lcd-static { position:relative; inset:auto; }
+}

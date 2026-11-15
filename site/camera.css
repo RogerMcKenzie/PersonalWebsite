@@ -1,0 +1,38 @@
+.camera-v2 { /* Positions match the rear framing of the camera image. */ --lcd-left:20.88%; --lcd-top:26.67%; --lcd-width:44.12%; --lcd-height:58.82%; --button-dark:#252527; --camera-ink:#ece9e0; --camera-dark:#252622; --hardware-accent:#ff5a60; --camera-radius:4px; --control-press:120ms; }
+.camera-v2 [hidden] { display:none!important; }
+.camera-v2 .stage { width:min(1552px,calc(100% - 32px)); min-height:100svh; padding:24px 0; justify-content:center; }
+.camera-v2 .camera { display:block; position:relative; width:100%; aspect-ratio:16/9; padding:0; background:none; box-shadow:none; border-radius:0; isolation:auto; }
+.camera-v2 .camera::before { display:none; }
+.camera-v2 .camera-shell { position:absolute; inset:0; width:100%; height:100%; display:block; pointer-events:none; user-select:none; }
+.camera-v2 .mobile-top-plate { display:none; }
+.camera-v2 .screen-bezel { position:absolute; left:var(--lcd-left); top:var(--lcd-top); width:var(--lcd-width); height:var(--lcd-height); min-width:0; padding:0; background:none; border-radius:var(--camera-radius); box-shadow:none; }
+.camera-v2 .screen { height:100%; min-height:0; padding:12px 22px 10px; border-radius:var(--camera-radius); overflow:hidden; display:flex; flex-direction:column; box-shadow:none; }
+.camera-v2 .location { font-size:11px; }
+.camera-v2 .display-content { flex:1; min-height:0; overflow-y:auto; overscroll-behavior-y:contain; scrollbar-width:thin; scrollbar-color:#b6b5aa var(--cream); view-transition-name:none; }
+.camera-v2 .display-content::-webkit-scrollbar { width:6px; }
+.camera-v2 .display-content::-webkit-scrollbar-thumb { background:#b6b5aa; border-radius:4px; }
+.camera-v2 .display-content::-webkit-scrollbar-track { background:var(--cream); }
+.camera-v2 .camera-signature { display:none; }
+.camera-v2[data-camera-view=photos] .display-content { overflow:hidden; }
+@media(min-width:1600px) {
+  .camera-v2 .screen { padding:18px 28px 14px; }
+}
+@media(max-width:1000px) {
+  .camera-v2 .stage { width:calc(100% - 24px); padding:20px 0; min-height:100svh; justify-content:flex-start; }
+  .camera-v2 .camera { aspect-ratio:auto; padding:0 14px 20px; border-radius:22px; background:var(--camera-dark); box-shadow:var(--shadow); }
+  .camera-v2 .camera-shell, .camera-v2 .camera-signature { display:none; }
+  .camera-v2 .mobile-top-plate { display:block; height:clamp(45px,12vw,86px); margin:0 -14px; background-image:url('assets/camera/zv-e10-rear.webp'); background-size:100% auto; background-position:center top; background-repeat:no-repeat; pointer-events:none; }
+  .camera-v2 .screen-bezel { position:relative; inset:auto; width:100%; height:auto; padding:6px; border-radius:12px; background:#10120f; }
+  .camera-v2 .screen { height:auto; min-height:560px; padding:16px 18px 12px; border-radius:8px; overflow:visible; }
+  .camera-v2 .display-content { overflow:visible; min-height:0; }
+}
+@media(max-width:500px) {
+  .camera-v2 .screen { padding:14px 16px 12px; }
+}
+@media(max-width:355px) {
+  .camera-v2 .screen { padding-left:12px; padding-right:12px; }
+}
+.camera-v2[data-camera-view=photos] .display-content>.view { height:100%; min-height:0; }
+@media(max-width:1000px) {
+  .camera-v2[data-camera-view=photos] .display-content>.view { height:auto; }
+}
