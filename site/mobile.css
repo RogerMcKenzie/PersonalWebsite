@@ -3,22 +3,22 @@
 
 @media (max-width:1000px) {
   body.camera-v2 {
-    --ground:#d9dadd;
     --camera-dark:#18181a;
-    --lcd-bg:#0b0b0c;
-    --lcd-ink:#f2f2f0;
-    --lcd-soft:#b6b6ba;
     --accent:#c8102e;
     --accent-dark:#c8102e;
     --mobile-gutter:16px;
+    --mobile-safe-top:max(12px,env(safe-area-inset-top));
+    --mobile-safe-bottom:max(12px,env(safe-area-inset-bottom));
+    --mobile-camera-height:calc(100svh - var(--mobile-safe-top) - var(--mobile-safe-bottom));
     background:var(--ground);
     font-family:var(--lcd-font);
     font-variant-numeric:tabular-nums;
   }
   .camera-v2 .stage {
-    width:min(480px,calc(100% - 8px));
-    min-height:100svh;
-    padding:max(12px,env(safe-area-inset-top)) 0 max(16px,env(safe-area-inset-bottom));
+    width:min(480px,calc(100% - 12px),calc(var(--mobile-camera-height) * 9 / 16));
+    height:100svh;
+    min-height:0;
+    padding:var(--mobile-safe-top) 0 var(--mobile-safe-bottom);
     justify-content:center;
   }
   .camera-v2 .camera {
@@ -72,6 +72,7 @@
   }
   .camera-v2 .lcd-view { flex:1; min-height:0; overflow-y:auto; overscroll-behavior-y:contain; scrollbar-width:thin; scrollbar-color:#77777c var(--lcd-bg); }
   .camera-v2 .lcd-view>.view { min-height:0; }
+  .camera-v2 .lcd-view>.view:has(.lcd-live) { height:100%; }
   .camera-v2 .lcd-nav { display:none; }
   .camera-v2 .controls { display:none; }
   /* Rotate the original control coordinate system along with the photograph. */
@@ -178,34 +179,18 @@
     background:var(--lcd-red);
   }
   .camera-v2 .mobile-nav svg { display:none; }
-  .camera-v2 .mobile-nav button:active,.camera-v2 .lcd-cta:active,.camera-v2 .mobile-home-action:active { transform:scale(.97); }
+  .camera-v2 .mobile-nav button:active,.camera-v2 .lcd-cta:active { transform:scale(.97); }
 
-  .camera-v2 .mobile-home { position:relative; display:flex; flex-direction:column; }
-  .camera-v2 .mobile-portrait {
-    display:block;
-    width:100%;
-    height:clamp(72px,24cqw,112px);
-    object-fit:cover;
-    object-position:50% 40%;
-    background:#18181a;
-  }
-  .camera-v2 .mobile-introduction { padding:12px var(--mobile-gutter); }
-  .camera-v2 .mobile-introduction h1 { font-size:24px; line-height:1.06; font-weight:600; }
-  .camera-v2 .mobile-introduction p { color:var(--lcd-soft); margin-top:8px; font-size:16px; line-height:1.45; }
-  .camera-v2 .mobile-home-action {
-    display:inline-flex;
-    align-items:center;
-    gap:18px;
-    min-height:44px;
-    margin-top:8px;
-    color:var(--lcd-ink);
-    font-weight:600;
-    text-decoration:underline;
-    text-decoration-color:var(--lcd-red);
-    text-decoration-thickness:2px;
-    text-underline-offset:6px;
-  }
-  .camera-v2 .mobile-home-action svg { width:18px; height:18px; }
+  /* Use the desktop Home template, portrait, typography and camera readouts. */
+  .camera-v2 .lcd-live { position:relative; height:100%; min-height:0; }
+  .camera-v2 .lcd-where { left:12px; top:12px; font-size:11px; }
+  .camera-v2 .lcd-status { right:12px; top:14px; gap:6px; }
+  .camera-v2 .lcd-status .lcd-batt b { width:18px; height:10px; }
+  .camera-v2 .lcd-who { left:12px; right:12px; bottom:68px; }
+  .camera-v2 .lcd-who h1 { font-size:clamp(20px,6cqw,28px); }
+  .camera-v2 .lcd-who p { font-size:16px; line-height:1.4; }
+  .camera-v2 .lcd-menu-btn { right:12px; bottom:12px; padding:10px 14px; font-size:14px; }
+  .camera-v2[data-camera-view=home] .lcd:not(:has(.lcd-menu:not([hidden]))) .mobile-nav { display:none; }
 
   .camera-v2 .mobile-page { padding:20px var(--mobile-gutter); }
   .camera-v2 .mobile-page h1 { font-size:26px; line-height:1.15; font-weight:600; margin-bottom:20px; }
@@ -302,5 +287,5 @@
   .camera-v2 .mobile-nav { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 @media (prefers-reduced-motion:reduce) {
-  .camera-v2 .mobile-nav button:active,.camera-v2 .mobile-home-action:active { transform:none; }
+  .camera-v2 .mobile-nav button:active { transform:none; }
 }

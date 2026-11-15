@@ -1,4 +1,4 @@
-import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=mobile-layout-20261115-1';
+import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=mobile-fit-20261115-1';
 
 const views=['home','about','work','photos','resume','contact'];
 const navViews=new Set(['about','work','photos','resume','contact']);
@@ -289,7 +289,7 @@ function setPhotoMode(mode,{focus=false}={}){
 }
 function photoHistory(){return {photoMode,photoTab,photoIndex,videoIndex,photoDetail:photoMode!=='index'&&current==='photos'};}
 function watchImages(){
- display.querySelectorAll('.lcd-show-img img,.mobile-portrait').forEach(img=>{
+ display.querySelectorAll('.lcd-show-img img,.lcd-live .lcd-feed').forEach(img=>{
   const host=img.parentElement;
   const finish=()=>{host.removeAttribute('data-image-loading');host.classList.remove('image-failed');};
   const fail=()=>{finish();host.classList.add('image-failed');};
