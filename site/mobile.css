@@ -7,19 +7,25 @@
     --accent:#c8102e;
     --accent-dark:#c8102e;
     --mobile-gutter:16px;
-    --mobile-safe-top:max(12px,env(safe-area-inset-top));
+    --mobile-safe-top:max(4px,env(safe-area-inset-top));
     --mobile-safe-bottom:max(12px,env(safe-area-inset-bottom));
-    --mobile-camera-height:calc(100svh - var(--mobile-safe-top) - var(--mobile-safe-bottom));
     background:var(--ground);
     font-family:var(--lcd-font);
     font-variant-numeric:tabular-nums;
+    overflow-x:clip;
   }
+  html:has(body.camera-v2) { overflow-x:clip; }
   .camera-v2 .stage {
-    width:min(480px,calc(100% - 12px),calc(var(--mobile-camera-height) * 9 / 16));
-    height:100svh;
-    min-height:0;
+    container-type:inline-size;
+    position:relative;
+    left:50%;
+    transform:translateX(-50%);
+    margin:0;
+    width:min(560px,111%);
+    height:auto;
+    min-height:100svh;
     padding:var(--mobile-safe-top) 0 var(--mobile-safe-bottom);
-    justify-content:center;
+    justify-content:flex-start;
   }
   .camera-v2 .camera {
     container-type:inline-size;
@@ -28,6 +34,7 @@
     background:none;
     border-radius:0;
     box-shadow:none;
+    margin-top:-13cqw;
   }
   .camera-v2 .mobile-top-plate { display:none; }
   .camera-v2 .camera .camera-shell {
@@ -278,6 +285,12 @@
   .camera-v2 .lcd-resume-top .lcd-plain { min-height:44px; display:inline-flex; align-items:center; font-size:16px; }
   .camera-v2 .lcd-resume-top .lcd-cta { font-size:16px; }
   .camera-v2 .lcd-doc { height:340px; min-height:0; margin:0 12px 20px; border-radius:0; }
+  .camera-v2 .mobile-resume-actions { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
+  .camera-v2 .mobile-resume-actions .lcd-plain { display:inline-flex; align-items:center; gap:8px; min-height:44px; color:var(--lcd-ink); text-decoration:underline; text-underline-offset:5px; }
+  .camera-v2 .mobile-resume-preview { margin-top:24px; }
+  .camera-v2 .mobile-resume-preview summary { display:flex; align-items:center; justify-content:space-between; min-height:44px; gap:12px; color:var(--lcd-soft); cursor:pointer; list-style:none; }
+  .camera-v2 .mobile-resume-preview summary::-webkit-details-marker { display:none; }
+  .camera-v2 .mobile-resume-preview .lcd-doc { margin:16px 0 0; }
   .camera-v2 .resume-loading { padding:24px; text-align:center; font-size:16px; }
   .camera-v2 .lcd-contact { padding:38px var(--mobile-gutter) 30px; }
   .camera-v2 .lcd-contact h1 { font-size:24px; font-stretch:100%; line-height:1.2; }

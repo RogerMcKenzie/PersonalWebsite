@@ -124,6 +124,19 @@ def render_mobile():
     assets = root / "site/assets/camera"
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(assets / "zv-e10.glb"))
+    # Match camera3d.js: the site changes the exported orange segment to movie red.
+    highlight = bpy.data.objects.get("Wheel_Highlight")
+    if highlight and highlight.active_material:
+        highlight.active_material = highlight.active_material.copy()
+        shader = next(n for n in highlight.active_material.node_tree.nodes
+                      if n.type == "BSDF_PRINCIPLED")
+        def linear(rgb):
+            return tuple(c / 12.92 if c <= .04045 else ((c + .055) / 1.055) ** 2.4
+                         for c in rgb) + (1.0,)
+        shader.inputs["Base Color"].default_value = linear((200 / 255, 16 / 255, 46 / 255))
+        emission = shader.inputs.get("Emission Color")
+        if emission and any(emission.default_value[:3]):
+            emission.default_value = linear((122 / 255, 10 / 255, 20 / 255))
     collection = bpy.data.collections.new("ZV-E10_Real")
     bpy.context.scene.collection.children.link(collection)
     for obj in tuple(bpy.context.scene.objects):
