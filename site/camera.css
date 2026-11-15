@@ -8,23 +8,16 @@
 .camera-v2 .screen-bezel { position:absolute; left:var(--lcd-left); top:var(--lcd-top); width:var(--lcd-width); height:var(--lcd-height); min-width:0; padding:0; background:none; border-radius:var(--camera-radius); box-shadow:none; }
 .camera-v2 .screen { height:100%; min-height:0; padding:12px 22px 10px; border-radius:var(--camera-radius); overflow:hidden; display:flex; flex-direction:column; box-shadow:none; }
 .camera-v2 .location { font-size:11px; }
-.camera-v2 .display-content { flex:1; min-height:0; overflow-y:auto; overscroll-behavior-y:contain; scrollbar-width:thin; scrollbar-color:#b6b5aa var(--cream); view-transition-name:none; }
-.camera-v2 .display-content::-webkit-scrollbar { width:6px; }
-.camera-v2 .display-content::-webkit-scrollbar-thumb { background:#b6b5aa; border-radius:4px; }
-.camera-v2 .display-content::-webkit-scrollbar-track { background:var(--cream); }
-.camera-v2 .camera-signature { display:none; }
-.camera-v2[data-camera-view=photos] .display-content { overflow:hidden; }
 @media(min-width:1600px) {
   .camera-v2 .screen { padding:18px 28px 14px; }
 }
 @media(max-width:1000px) {
   .camera-v2 .stage { width:calc(100% - 24px); padding:20px 0; min-height:100svh; justify-content:flex-start; }
   .camera-v2 .camera { aspect-ratio:auto; padding:0 14px 20px; border-radius:22px; background:var(--camera-dark); box-shadow:var(--shadow); }
-  .camera-v2 .camera-shell, .camera-v2 .camera-signature { display:none; }
+  .camera-v2 .camera-shell { display:none; }
   .camera-v2 .mobile-top-plate { display:block; height:clamp(45px,12vw,86px); margin:0 -14px; background-image:url('assets/camera/zv-e10-rear.webp'); background-size:100% auto; background-position:center top; background-repeat:no-repeat; pointer-events:none; }
   .camera-v2 .screen-bezel { position:relative; inset:auto; width:100%; height:auto; padding:6px; border-radius:12px; background:#10120f; }
   .camera-v2 .screen { height:auto; min-height:560px; padding:16px 18px 12px; border-radius:8px; overflow:visible; }
-  .camera-v2 .display-content { overflow:visible; min-height:0; }
 }
 @media(max-width:500px) {
   .camera-v2 .screen { padding:14px 16px 12px; }
@@ -32,7 +25,72 @@
 @media(max-width:355px) {
   .camera-v2 .screen { padding-left:12px; padding-right:12px; }
 }
-.camera-v2[data-camera-view=photos] .display-content>.view { height:100%; min-height:0; }
+
+/* Hardware controls over the printed buttons and wheel; on phones, a control row below the screen. */
+.camera-v2 .controls { display:block; position:absolute; inset:0; padding:0; margin:0; pointer-events:none; }
+.camera-v2 .controls :is(button,a) { pointer-events:auto; }
+.camera-v2 .control-label { pointer-events:none; }
+/* Four equal targets, one per quarter of the wheel: each covers its part of the ring and the
+   printed word beyond it, and stops short of HOME (32% across) in the middle. */
+.camera-v2 .camera-ink :is(.dial-top,.dial-bottom,.dial-left,.dial-right) { width:34%; height:34%; border-radius:50%; transform:translate(-50%,-50%); }
+.camera-v2 .camera-ink .dial-top { left:50%; top:16%; }
+.camera-v2 .camera-ink .dial-bottom { left:50%; top:84%; bottom:auto; }
+.camera-v2 .camera-ink .dial-left { left:16%; top:50%; }
+.camera-v2 .camera-ink .dial-right { left:84%; right:auto; top:50%; }
+.camera-v2 .camera-ink:not(.camera-embedded) .dial-item[aria-current=page]::after { content:''; position:absolute; left:50%; bottom:6px; width:18px; height:2px; border-radius:1px; transform:translateX(-50%); background:var(--hardware-accent); }
+@media(min-width:1001px) {
+  .camera-v2 .camera-ink .controls .control-label { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+}
 @media(max-width:1000px) {
-  .camera-v2[data-camera-view=photos] .display-content>.view { height:auto; }
+  .camera-v2 .camera-ink .dial .control-label { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+  .camera-v2 .camera:not(.camera-ink) .dial { background:linear-gradient(140deg,#343532,#20221f); }
+}
+.camera-v2 .hardware-button { text-decoration:none; cursor:pointer; position:absolute; display:grid; place-items:center; left:var(--x); top:var(--y); width:var(--d); transform:translate(-50%,-50%); min-width:44px; min-height:44px; aspect-ratio:1; padding:0; background:none; border:0; border-radius:50%; color:var(--camera-ink); font-size:clamp(10px,.95vw,14px); font-weight:550; transition:color var(--control-press) linear; }
+.camera-v2 .hardware-menu { --x:72.5%; --y:28.82%; --d:4.41%; }
+.camera-v2 .hardware-playback { --x:72.65%; --y:85.29%; --d:4.12%; }
+.camera-v2 .hardware-playback svg { width:24px; height:24px; }
+.camera-v2 .hardware-button:hover { color:var(--hardware-accent); }
+.camera-v2 .hardware-button:active { transform:translate(-50%,-50%) scale(.97); }
+.camera-v2 .dial { position:absolute; left:68.38%; top:47.38%; width:19.85%; max-width:none; aspect-ratio:1; margin:0; background:none; box-shadow:none; border:0; }
+.camera-v2 .dial::after, .camera-v2 .dial-indicator { display:none; }
+.camera-v2 .dial-item { min-width:44px; min-height:44px; padding:0; font-size:clamp(11px,.95vw,14px); color:var(--camera-ink); }
+.camera-v2 .dial-item[aria-current=page] { color:#fff; font-weight:650; text-decoration:underline; text-decoration-color:var(--hardware-accent); text-decoration-thickness:2px; text-underline-offset:5px; }
+.camera-v2 .dial-top { left:50%; top:5%; transform:translateX(-50%); }
+.camera-v2 .dial-bottom { left:50%; bottom:5%; transform:translateX(-50%); }
+.camera-v2 .dial-left { left:0; top:50%; width:30%; transform:translateY(-50%); }
+.camera-v2 .dial-right { right:0; top:50%; width:30%; transform:translateY(-50%); }
+.camera-v2 .dial-center { width:32%; height:32%; background:none; box-shadow:none; color:var(--camera-ink); font-size:clamp(14px,1.25vw,20px); font-weight:450; }
+.camera-v2 .dial-center:active { box-shadow:none; transform:translate(-50%,-50%) scale(.97); }
+.camera-v2 .browse { display:contents; padding:0; }
+.camera-v2 .browse>span { display:none; }
+.camera-v2 .browse .round-button { position:absolute; left:var(--x); top:var(--y); width:var(--d); transform:translate(-50%,-50%); min-width:44px; min-height:44px; height:auto; aspect-ratio:1; background:none; box-shadow:none; color:var(--camera-ink); }
+.camera-v2 .browse #previous { --x:72.65%; --y:43.2%; --d:4.71%; }
+.camera-v2 .browse #next { --x:83.09%; --y:85.29%; --d:4.12%; }
+.camera-v2 .round-button:active { transform:translate(-50%,-50%) scale(.97); }
+/* Placement changes between projected and responsive layouts must be immediate. */
+.camera-v2 .browse .round-button { transition:color var(--control-press) linear; }
+@media(max-width:1000px) {
+  .camera-v2 .controls { position:relative; inset:auto; display:grid; grid-template-columns:200px minmax(0,1fr); grid-template-areas:'menu playback' 'dial browse'; gap:14px 24px; padding:20px 8px 0; pointer-events:auto; }
+  .camera-v2 .hardware-button { position:static; transform:none; width:44px; height:44px; background:var(--button-dark); box-shadow:inset 0 1px 1px #74766d,0 2px 5px #1118; font-size:11px; }
+  .camera-v2 .hardware-menu { grid-area:menu; }
+  .camera-v2 .hardware-playback { grid-area:playback; justify-self:start; }
+  .camera-v2 .dial { grid-area:dial; position:relative; inset:auto; width:200px; margin:0; background-image:url('assets/camera/zv-e10-rear.webp'); background-size:503.7% auto; background-position:85.32% 73.23%; background-repeat:no-repeat; border-radius:50%; }
+  .camera-v2 .dial-item { font-size:13px; }
+  .camera-v2 .dial-center { font-size:18px; }
+  .camera-v2 .browse { grid-area:browse; display:flex; flex-wrap:wrap; justify-content:flex-start; align-self:center; align-items:center; gap:12px; }
+  .camera-v2 .browse .round-button { position:static; transform:none; width:44px; height:44px; background:var(--button-dark); box-shadow:inset 0 1px 1px #74766d,0 2px 5px #1118; }
+}
+@media(max-width:500px) {
+  .camera-v2 .controls { grid-template-columns:180px minmax(0,1fr); gap:14px 16px; padding:18px 2px 0; }
+  .camera-v2 .dial { width:180px; }
+  .camera-v2 .dial-item { font-size:12px; }
+}
+@media(max-width:355px) {
+  .camera-v2 .controls { grid-template-columns:158px minmax(0,1fr); gap:14px 10px; padding-left:0; padding-right:0; }
+  .camera-v2 .dial { width:158px; }
+  .camera-v2 .dial-item { font-size:11px; }
+  .camera-v2 .browse { gap:8px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .camera-v2 .hardware-button, .camera-v2 .round-button { transition:none; }
 }

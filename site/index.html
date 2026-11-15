@@ -128,6 +128,23 @@
   </div>
   </div>
   </section>
+  <aside class="controls" aria-label="Explore the portfolio">
+    <button id="menu-toggle" class="hardware-button hardware-menu" aria-controls="camera-menu" aria-expanded="false"><span class="control-label">MENU</span></button>
+    <button class="hardware-button hardware-playback" type="button" aria-label="Play back Roger’s videos"><span class="control-label"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m10 9 5 3-5 3z"/></svg></span></button>
+    <nav class="dial" aria-label="Portfolio sections">
+      <div class="dial-indicator" id="dial-indicator"></div>
+      <button class="dial-item dial-top" data-view="about"><span class="control-label">About</span></button>
+      <button class="dial-item dial-right" data-view="work"><span class="control-label">Work</span></button>
+      <button class="dial-item dial-bottom" data-view="photos"><span class="control-label">Photos</span></button>
+      <button class="dial-item dial-left" data-view="resume" aria-label="Résumé"><span class="control-label">Résumé</span></button>
+      <button class="dial-center" data-view="home" aria-label="Return home"><span class="control-label">HOME</span></button>
+    </nav>
+    <div class="browse">
+      <button class="round-button" id="previous" aria-label="Previous section"><span class="control-label"><svg viewBox="0 0 24 24"><path d="m14 5-7 7 7 7"/></svg></span></button>
+      <span>Browse</span>
+      <button class="round-button" id="next" aria-label="Next section"><span class="control-label"><svg viewBox="0 0 24 24"><path d="m10 5 7 7-7 7"/></svg></span></button>
+    </div>
+  </aside>
   </div>
   </main>
 </body>
