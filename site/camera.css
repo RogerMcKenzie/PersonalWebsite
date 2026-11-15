@@ -94,3 +94,72 @@
 @media(prefers-reduced-motion:reduce) {
   .camera-v2 .hardware-button, .camera-v2 .round-button { transition:none; }
 }
+
+/* ---- Live 3D body (camera3d.js, desktop only). The poster image stays as first paint and fallback. */
+.camera-v2 .camera-3d-canvas { position:absolute; inset:-25%; width:150%; height:150%; display:block; cursor:grab; touch-action:pan-y; }
+/* The canvas overscans the camera box (camera3d.js OVERSCAN) so the lens is not cut off mid-turn; keep that from adding scrollbars. */
+@media(min-width:1001px) {
+  :root:has(body.camera-v2), body.camera-v2 { overflow-x:clip; }
+  .camera-v2 .stage { overflow-y:clip; }
+}
+.camera-v2 .camera-3d-canvas.is-dragging { cursor:grabbing; }
+/* The LCD is behind the GPU canvas: its zero-alpha aperture reveals the live HTML while
+   closer parts of the camera still occlude it. Controls are projected from their own nodes. */
+@media(min-width:1001px) {
+  .camera-v2 .camera.camera-embedded { isolation:isolate; cursor:grab; }
+  .camera-v2 .camera-embedded.is-dragging { user-select:none; }
+  .camera-v2 .camera-embedded .camera-shell { visibility:hidden; }
+  .camera-v2 .camera-embedded .camera-3d-canvas { z-index:2; pointer-events:none; filter:none; }
+  .camera-v2 .camera-embedded::after { content:''; position:absolute; z-index:0; left:9%; right:9%; top:88%; height:4%; border-radius:50%; background:#28221840; filter:blur(18px); pointer-events:none; }
+  .camera-v2 .camera-embedded .screen-bezel { z-index:1; left:0; top:0; transform-origin:0 0; overflow:hidden; border-radius:2px; transition:none; cursor:auto; }
+  .camera-v2 .camera-embedded .screen { position:relative; border-radius:2px; box-shadow:inset 0 0 0 1px #0002,inset 0 2px 14px #171c2220; }
+  .camera-v2 .camera-embedded .screen::after { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:linear-gradient(125deg,#fff 0%,#ffffff20 38%,transparent 56%,#202c420a 100%); opacity:var(--lcd-glare,.025); }
+  .camera-v2 .camera-embedded .controls { z-index:3; transition:none; }
+  .camera-v2 .camera-embedded :is(.hardware-button,.dial,.browse .round-button) { left:0; top:0; transform-origin:0 0; transition:color var(--control-press) linear; }
+  .camera-v2 .camera-embedded .dial { pointer-events:auto; cursor:grab; touch-action:none; user-select:none; }
+  .camera-v2 .camera-embedded .dial.is-turning { cursor:grabbing; }
+  .camera-v2 .camera-embedded :is(.screen-bezel,.controls) { opacity:1; }
+  .camera-v2 .camera-embedded :is(.screen-bezel, .controls :is(button,a)) { pointer-events:auto; }
+}
+/* Soft shadow on the page so the camera sits on it instead of floating. */
+.camera-v2 .camera-3d-canvas, .camera-v2 .camera-shell { filter:drop-shadow(0 1.6vw 1.8vw rgba(40,34,24,.28)) drop-shadow(0 .3vw .4vw rgba(40,34,24,.22)); }
+@media(max-width:1000px) {
+  .camera-v2 .camera-shell { filter:none; }
+}
+.camera-v2 .camera-shell { transition:opacity .3s ease-out; }
+.camera-v2 .camera-3d-ready .camera-shell { opacity:0; }
+.camera-v2 .screen-bezel, .camera-v2 .controls { transition:opacity .35s ease-out; }
+/* Before first paint (inline script in index.html) the overlay waits for the intro turn. */
+.camera-3d-boot .camera-v2 .camera:not(.camera-3d-ready) :is(.camera-shell,.screen-bezel,.controls) { opacity:0; transition:none; }
+.camera-v2 .camera:not(.camera-embedded).camera-3d-intro .screen-bezel, .camera-v2 .camera:not(.camera-embedded).camera-3d-intro .controls, .camera-v2 .camera:not(.camera-embedded).camera-3d-turned .screen-bezel, .camera-v2 .camera:not(.camera-embedded).camera-3d-turned .controls { opacity:0; }
+.camera-v2 .camera:not(.camera-embedded).camera-3d-intro .screen-bezel, .camera-v2 .camera:not(.camera-embedded).camera-3d-intro .controls :is(button,a), .camera-v2 .camera:not(.camera-embedded).camera-3d-turned .screen-bezel, .camera-v2 .camera:not(.camera-embedded).camera-3d-turned .controls :is(button,a) { pointer-events:none; }
+@media(max-width:1000px) {
+  .camera-v2 .camera-3d-canvas { display:none; }
+  .camera-v2 .camera .screen-bezel, .camera-v2 .camera .controls { opacity:1; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .camera-v2 .camera-shell, .camera-v2 .screen-bezel, .camera-v2 .controls { transition:none; }
+}
+/* ---- Explore arrows (added by camera3d.js once the 3D body is live, desktop only). */
+.camera-v2 .camera-explore { display:none; }
+@media(min-width:1001px) {
+  .camera-v2 .camera-embedded .camera-explore { display:block; position:absolute; inset:0; z-index:4; pointer-events:none; }
+  .camera-v2 .camera-turn { position:absolute; display:grid; place-items:center; width:48px; height:48px; padding:0; border:0; border-radius:50%; pointer-events:auto; cursor:pointer; color:#fff; background:#1d1e2066; box-shadow:0 0 0 1px #ffffff59, 0 2px 8px #0000002e; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); opacity:.85; transform:translate(-50%,-50%); transition:opacity .2s ease-out, background-color .2s ease-out, transform .15s ease-out; }
+  .camera-v2 .camera-turn svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .3s ease-in-out; }
+  .camera-v2 .camera-turn:hover, .camera-v2 .camera-turn:focus-visible { opacity:1; background:#1d1e20b3; }
+  .camera-v2 .camera-turn:focus-visible { outline:2px solid #c8102e; outline-offset:3px; }
+  .camera-v2 .camera-turn:active { transform:translate(-50%,-50%) scale(.97); }
+  .camera-v2 .camera-turn-left { left:3.5%; top:52%; }
+  .camera-v2 .camera-turn-top { left:50%; top:5%; }
+  .camera-v2 .camera-turn-top[aria-pressed=true] svg { transform:rotate(180deg); }
+  .camera-v2 .camera-3d-intro .camera-turn { opacity:0; pointer-events:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .camera-v2 .camera-turn, .camera-v2 .camera-turn svg { transition:none; }
+}
+@media(min-width:1001px) {
+  /* Back to the screen: only once the visitor has turned, tilted, zoomed, flipped or opened something. */
+  .camera-v2 .camera-turn-home { left:3.5%; top:calc(52% + 64px); opacity:0; pointer-events:none; visibility:hidden; transition:opacity .16s ease-out, visibility 0s .16s; }
+  .camera-v2 .camera-exploring .camera-turn-home { opacity:.85; pointer-events:auto; visibility:visible; transition:opacity .2s ease-out; }
+  .camera-v2 .camera-exploring .camera-turn-home:hover { opacity:1; }
+}
