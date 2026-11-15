@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rogermckenzie.dev/sitemap.xml
+Sitemap: https://rogermckz.com/sitemap.xml
