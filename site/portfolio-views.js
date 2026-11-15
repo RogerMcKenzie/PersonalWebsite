@@ -49,17 +49,13 @@ const menuPreviews={
  contact:{text:EMAIL}
 };
 
-function mobileHomeView(){
- return `<div class="mobile-home"><img class="mobile-portrait" src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" fetchpriority="high"><div class="mobile-introduction"><h1>Roger McKenzie</h1><p>Software developer<br>and content creator</p><a class="mobile-home-action" href="#work" data-view="work">See my apps${ICON.right}</a></div></div>`;
-}
 function mobileListView(kind,{listIndex}){
  const {label,items}=lists[kind];
  if(kind==='about')return `<section class="mobile-about mobile-page"><h1>${label}</h1><img src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" loading="lazy">${items.map(item=>`<section><h2>${item.name}</h2><p>${item.text}</p></section>`).join('')}${socialLinks}</section>`;
  return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.work?'open':''}><summary>${item.name}${ICON.down}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
 }
 
-function homeView({mobile}){
- if(mobile)return mobileHomeView();
+function homeView(){
  return `<div class="lcd-live"><img class="lcd-feed" src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" fetchpriority="high"><span class="lcd-where lcd-narrow lcd-shadow">Gainesville, FL</span><span class="lcd-status lcd-shadow" aria-hidden="true"><span class="lcd-rec"></span><span class="lcd-batt"><b></b></span></span><div class="lcd-focus" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="lcd-who lcd-shadow"><h1>Roger McKenzie</h1><p>Software developer and content creator</p></div><button class="lcd-menu-btn" data-open-menu aria-haspopup="true">${ICON.menu}Menu</button></div>`;
 }
 function previewHTML(item){
