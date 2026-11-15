@@ -1,4 +1,4 @@
-const EMAIL='McKenzieRoger83@gmail.com';
+const EMAIL='roger@rogermckz.dev';
 const YOUTUBE='https://www.youtube.com/@RogerMcKenzie1';
 const RESUME='https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3';
 const svg=d=>`<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
