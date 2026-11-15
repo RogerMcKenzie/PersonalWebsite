@@ -30,8 +30,11 @@
     box-shadow:none;
   }
   .camera-v2 .mobile-top-plate { display:none; }
-  .camera-v2 .camera-shell {
+  .camera-v2 .camera .camera-shell {
     display:block;
+    opacity:1;
+    visibility:visible;
+    transition:none;
     left:100%; top:0;
     width:177.777778%; height:56.25%;
     transform:rotate(90deg);
@@ -98,7 +101,7 @@
     aspect-ratio:1;
   }
   .camera-v2 .controls .browse { display:contents; }
-  .camera-v2 .controls .dial {
+  .camera-v2 .camera .controls .dial {
     position:absolute;
     left:68.38%; top:47.38%;
     width:19.85%; max-width:none;
@@ -136,10 +139,15 @@
   .camera-v2 .controls .dial-center .control-label { font-size:12px; }
   .camera-v2 .controls .dial-item { text-decoration:none; }
   .camera-v2 .controls .dial-item[aria-current=page] .control-label { text-decoration:underline; text-decoration-color:var(--lcd-red); text-decoration-thickness:2px; text-underline-offset:4px; }
-  .camera-v2 .camera-ink .dial-top { top:2%; }
-  .camera-v2 .camera-ink .dial-bottom { top:98%; }
-  .camera-v2 .camera-ink .dial-left { left:5%; }
-  .camera-v2 .camera-ink .dial-right { left:98%; }
+  .camera-v2 .camera .controls :is(.dial-top,.dial-bottom,.dial-left,.dial-right) {
+    width:34%; height:34%; border-radius:50%;
+    left:50%; top:50%; right:auto; bottom:auto;
+    transform:translate(-50%,-50%);
+  }
+  .camera-v2 .camera .controls .dial-top { top:2%; }
+  .camera-v2 .camera .controls .dial-bottom { top:98%; }
+  .camera-v2 .camera .controls .dial-left { left:5%; }
+  .camera-v2 .camera .controls .dial-right { left:98%; }
   .camera-v2 .camera-ink .dial-item[aria-current=page]::after { display:none; }
   .camera-v2 .controls :is(button,a):focus-visible { outline:2px solid #f2f2f0; outline-offset:2px; }
   .camera-v2 .controls .hardware-button:active,.camera-v2 .controls .round-button:active { transform:translate(-50%,-50%) scale(.97); }
