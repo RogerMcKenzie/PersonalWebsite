@@ -1,0 +1,56 @@
+# Roger McKenzie
+
+> Software developer, photographer and content creator in Gainesville, Florida. Information Systems student at the University of Florida, with minors in Computer Science and Statistics.
+
+The website is an interactive camera (a Sony ZV-E10) whose screen shows the site. The same content is in plain HTML inside index.html.
+
+## About
+- From Miami; first in his family to go to college.
+- Software engineering intern at Amazon in Arlington, Virginia, in 2025 and 2026.
+- Lead developer at The Agency at UF since April 2026.
+- Off the clock: cooking, climbing, gaming, a home server, and tech videos on YouTube.
+
+## Résumé
+### Education
+- University of Florida, B.S.B.A. in Information Systems, minors in Computer Science and Statistics. Graduating April 2028.
+- Certifications: AWS Certified Cloud Practitioner, AWS Certified AI Practitioner, NVIDIA Fundamentals of Deep Learning.
+
+### Software Development Engineer Intern, Amazon (Arlington, VA, May–Aug 2026)
+- Designed the AWS infrastructure, security and data layers for a serverless ML recommendation service that replaced a manually tuned ranking heuristic, reducing manual evaluator outreach by 37%.
+- Built the CDK infrastructure package and production CI/CD pipeline, including an encrypted DynamoDB feature store migrated from a legacy table with zero downtime.
+- Architected a cross-account inference API (Fastify, TypeScript, Lambda) with SigV4 IAM authorization, Zod validation and per-client throttling; passed Amazon's Application Security Review and Operational Readiness Review.
+
+### Software Development Engineer Intern, Amazon (Arlington, VA, May–Aug 2025)
+- Built APEX, a full-stack A/B testing platform (React, TypeScript, tRPC, AWS Lambda, CloudFront, CDK) for email and SMS campaigns reaching over 1 million prospective candidates.
+- Experiment creation with multi-arm forms, up to 100 treatment variations and live sample-size feedback at 80% power and 95% confidence.
+
+### Lead Developer, The Agency at UF (Gainesville, FL, April 2026–present)
+- Leads two internal platforms, Studio Stack and Research Resourcing, replacing spreadsheet coordination across three departments.
+- Built Studio Stack's backend on Cognito, API Gateway, Lambda, RDS PostgreSQL and S3.
+- Built a Slack-integrated AI resourcing agent (TypeScript, Lambda, DynamoDB, OpenAI API) that ranks researchers by availability and qualifications, cutting turnaround from hours to seconds.
+
+### Skills
+- Languages: TypeScript, JavaScript, Python, C++, Java, SQL
+- Cloud and tools: AWS (Lambda, API Gateway, S3, DynamoDB, RDS, Cognito, IAM, CloudWatch, CDK), Docker, Git, Vercel
+- Frameworks: React, Next.js, Node.js, Fastify, FastAPI, tRPC, Tailwind CSS, Zod
+
+## Apps I've built
+- Studio Stack: production scheduling, brief intake and gear reservations for The Agency at UF. Cloud backend with role-based sign-in and workflow tracking (TypeScript, AWS Lambda, PostgreSQL, S3).
+- ResMatch: tailors a résumé to a job description (Next.js, TypeScript, OpenAI).
+- SnapCal: Chrome extension that turns events on a webpage into Google Calendar entries (Gemini, Google Calendar).
+- [Jenna's Recipes](https://jennarecipes.vercel.app): recipe search by ingredient, Gemini suggestions and a saved shopping list (React, TypeScript, MUI).
+
+## Photographs and video
+- Cathedral sunset, Washington, DC (2026)
+- Terrace lights (2026)
+- Caesars Palace, Las Vegas, NV (2026)
+- North Beach nights, San Francisco, CA (2026)
+- [AfroTech 2025](https://www.youtube.com/watch?v=hrOAiSEx3Ww), Houston, TX
+
+## Links
+- [Résumé (Google Docs)](https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/edit)
+- [Résumé (PDF)](https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/export?format=pdf)
+- Contact: see the "Get in touch" section of the site
+- [GitHub](https://github.com/RogerMcKenzie)
+- [LinkedIn](https://www.linkedin.com/in/rogermckenzie/)
+- [YouTube](https://www.youtube.com/@RogerMcKenzie1)
