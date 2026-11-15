@@ -1,17 +1,26 @@
 # Roger McKenzie — Personal Website
 
-My portfolio: software projects, photography, résumé and contact.
+The interactive Sony ZV-E10 portfolio, with Roger’s projects, photography, videos, résumé and contact information on its LCD. Desktop renders the camera in 3D using vendored Three.js; phones and browsers without WebGL use the rear camera image and HTML controls.
 
-The site is being rebuilt as a static site. The previous Next.js app has been removed; the new version will land in small follow-up pull requests. Until then, GitHub Pages keeps serving the last published version.
+## Run locally
 
-## Resume
+Run `npm run dev`, then open http://localhost:4183. The site in `site/` is plain HTML, CSS and JavaScript; no compilation or dependency installation is needed.
 
-The resume is hosted on Google Docs and served as a direct PDF download.
+## Validate
 
-[Download Resume (PDF)](https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/export?format=pdf)
+Run `npm run check` for JavaScript syntax and `npm run test:camera` for the shipped model, LCD projection, controls, depth hit-testing and fallback behavior.
 
-## Social
+## Publish
 
-- GitHub: [github.com/RogerMcKenzie](https://github.com/RogerMcKenzie)
-- LinkedIn: [linkedin.com/in/rogermckenzie](https://www.linkedin.com/in/rogermckenzie/)
-- YouTube: [youtube.com/@RogerMcKenzie1](https://www.youtube.com/@RogerMcKenzie1)
+Cloudflare Workers Builds watches this repository’s `main` branch. After a push or merge to `main`, the existing `npx wrangler deploy` command publishes `site/` to the `personalwebsite` Worker using `wrangler.jsonc`. Both https://rogermckz.com and https://rogermckz.dev serve that same deployment.
+
+## Site files
+
+- `site/index.html`: page, static content, script imports and font loading
+- `site/app.js`: LCD content, navigation, photos, videos and dialogs
+- `site/camera3d.js`, `site/camera-screen.js`, `site/camera-extras.js`: rendering, LCD projection and camera interactions
+- `site/style.css`, `site/camera.css`, `site/lcd.css`, `site/screen-glass.css`: layout and display styling
+- `site/assets/`: portraits, photographs, camera model and fallback images
+- `site/vendor/three/`: Three.js runtime and its license
+
+The résumé loads directly from Roger’s Google Doc. Keep asset query versions current when changing camera scripts or model files.

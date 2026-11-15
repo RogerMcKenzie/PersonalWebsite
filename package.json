@@ -1,0 +1,10 @@
+{
+  "name": "roger-mckenzie-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 4183 --bind 127.0.0.1 --directory site",
+    "check": "node --check site/app.js && node --check site/camera3d.js && node --check site/camera-screen.js && node --check site/camera-extras.js",
+    "test:camera": "node scripts/check-camera-screen.mjs"
+  }
+}
