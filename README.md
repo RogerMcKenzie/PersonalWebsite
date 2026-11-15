@@ -28,3 +28,11 @@ Cloudflare Workers Builds watches `main`. After a push or merge, its existing `n
 - `site/assets/`: portrait, photos, model and fallback image
 
 The résumé loads directly from Roger’s Google Doc. Update asset query versions when changing the runtime or model.
+
+## Mobile layout
+
+At widths up to 1000px, `site/mobile.css` turns the actual rear camera clockwise into a vertical body, with the physical wheel and camera buttons below its LCD. The live HTML stays upright inside the rotated aperture and scrolls above the persistent navigation. Home, Apps, Photos and Menu remain visible on every screen; Menu contains About, Résumé and Contact. The hardware controls keep their menu, playback, section, home and previous/next actions; wheel input is converted back into the camera’s original coordinates. Mobile projects expand in place, About flows in one column, and photographs retain their full framing in detail. Vertical scrolling stays inside the LCD; horizontal swipes and the on-screen arrows browse photographs. Browser Back returns from photo/video detail to the grid. The résumé retains its Google Docs source with visible Open and Download PDF links.
+
+The static HTML stays visible until the app initializes, so a failed script download leaves readable content. Image space is reserved while loading, photo failures show a message, and slow résumé previews retain direct document access. Desktop camera projection and assets are unchanged.
+
+Browser review covered 320, 375, 390 and 430px phone widths, landscape, both sides of the 1000px breakpoint and 1440px desktop, with no horizontal overflow. The vertical camera and its controls fit in a 320 × 667 viewport; the smaller LCD uses two rows of navigation below 356px. Project expansion, menu navigation/focus, photo detail, browser history and résumé actions were checked in the browser. Physical iOS/Android testing remains separate.

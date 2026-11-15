@@ -1,0 +1,284 @@
+/* The rear camera turns clockwise on phones; its HTML LCD stays upright. */
+.mobile-nav,.mobile-menu-close { display:none; }
+
+@media (max-width:1000px) {
+  body.camera-v2 {
+    --ground:#d9dadd;
+    --camera-dark:#18181a;
+    --lcd-bg:#0b0b0c;
+    --lcd-ink:#f2f2f0;
+    --lcd-soft:#b6b6ba;
+    --accent:#c8102e;
+    --accent-dark:#c8102e;
+    --mobile-gutter:16px;
+    background:var(--ground);
+    font-family:var(--lcd-font);
+    font-variant-numeric:tabular-nums;
+  }
+  .camera-v2 .stage {
+    width:min(480px,calc(100% - 8px));
+    min-height:100svh;
+    padding:max(12px,env(safe-area-inset-top)) 0 max(16px,env(safe-area-inset-bottom));
+    justify-content:center;
+  }
+  .camera-v2 .camera {
+    container-type:inline-size;
+    aspect-ratio:9/16;
+    padding:0;
+    background:none;
+    border-radius:0;
+    box-shadow:none;
+  }
+  .camera-v2 .mobile-top-plate { display:none; }
+  .camera-v2 .camera-shell {
+    display:block;
+    left:100%; top:0;
+    width:177.777778%; height:56.25%;
+    transform:rotate(90deg);
+    transform-origin:0 0;
+  }
+  .camera-v2 .screen-bezel {
+    position:absolute;
+    left:calc(100% - var(--lcd-top) - var(--lcd-height));
+    top:var(--lcd-left);
+    width:var(--lcd-height);
+    height:var(--lcd-width);
+    padding:0;
+    border-radius:2px;
+    background:none;
+  }
+  .camera-v2.refined .screen {
+    height:100%;
+    min-height:0;
+    padding:0;
+    border-radius:2px;
+    overflow:hidden;
+    background:var(--lcd-bg);
+  }
+  .camera-v2 .lcd {
+    width:100%;
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    font-size:16px;
+    line-height:1.55;
+  }
+  .camera-v2 .lcd-view,.camera-v2 .lcd-view>.view {
+    position:relative;
+    inset:auto;
+    min-width:0;
+  }
+  .camera-v2 .lcd-view { flex:1; min-height:0; overflow-y:auto; overscroll-behavior-y:contain; scrollbar-width:thin; scrollbar-color:#77777c var(--lcd-bg); }
+  .camera-v2 .lcd-view>.view { min-height:0; }
+  .camera-v2 .lcd-nav { display:none; }
+  .camera-v2 .controls { display:none; }
+  /* Rotate the original control coordinate system along with the photograph. */
+  .js .camera-v2 .controls {
+    display:block;
+    position:absolute;
+    inset:auto;
+    left:100%; top:0;
+    width:177.777778%; height:56.25%;
+    padding:0;
+    transform:rotate(90deg);
+    transform-origin:0 0;
+    pointer-events:none;
+  }
+  .camera-v2 .controls .hardware-button,.camera-v2 .controls .browse .round-button {
+    position:absolute;
+    left:var(--x); top:var(--y);
+    width:var(--d); height:auto;
+    min-width:44px; min-height:44px;
+    transform:translate(-50%,-50%);
+    background:none;
+    box-shadow:none;
+    aspect-ratio:1;
+  }
+  .camera-v2 .controls .browse { display:contents; }
+  .camera-v2 .controls .dial {
+    position:absolute;
+    left:68.38%; top:47.38%;
+    width:19.85%; max-width:none;
+    margin:0;
+    background:none;
+    border-radius:50%;
+    pointer-events:none;
+    touch-action:none;
+  }
+  .camera-v2 .controls .dial::before { content:''; position:absolute; inset:14%; border-radius:50%; background:none; box-shadow:none; pointer-events:auto; }
+  .camera-v2 .controls .dial button { z-index:1; pointer-events:auto; }
+  .camera-v2 .controls .hardware-playback,.camera-v2 .controls #previous { margin-left:-10px; }
+  .camera-v2 .controls #next { margin-left:16px; }
+  .camera-v2 .camera .dial-center { min-width:44px; min-height:44px; }
+  .camera-v2 .camera-ink .controls .control-label { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+  .camera-v2 .camera-ink .dial-top { top:2%; }
+  .camera-v2 .camera-ink .dial-bottom { top:98%; }
+  .camera-v2 .camera-ink .dial-left { left:5%; }
+  .camera-v2 .camera-ink .dial-right { left:98%; }
+  .camera-v2 .camera-ink .dial-item[aria-current=page]::after { display:none; }
+  .camera-v2 .controls :is(button,a):focus-visible { outline:2px solid #f2f2f0; outline-offset:2px; }
+  .camera-v2 .controls .hardware-button:active,.camera-v2 .controls .round-button:active { transform:translate(-50%,-50%) scale(.97); }
+  .camera-v2 .lcd button,.camera-v2 .lcd a,.camera-v2 .lcd summary { touch-action:manipulation; }
+  .camera-v2 .lcd :is(button,a,summary):focus-visible { outline:2px solid var(--lcd-ink); outline-offset:3px; }
+  .js .camera-v2 .mobile-nav {
+    position:relative;
+    bottom:auto;
+    z-index:7;
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    flex:none;
+    padding:2px 4px;
+    background:var(--lcd-bg);
+  }
+  .camera-v2 .mobile-nav button {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    min-width:44px;
+    min-height:44px;
+    padding:10px 2px;
+    color:var(--lcd-soft);
+    font-size:13px;
+    font-weight:550;
+    position:relative;
+  }
+  .camera-v2 .mobile-nav button[aria-current=page] { color:var(--lcd-ink); }
+  .camera-v2 .mobile-nav button[aria-current=page]::after {
+    content:"";
+    position:absolute;
+    bottom:5px;
+    left:calc(50% - 10px);
+    width:20px;
+    height:2px;
+    background:var(--lcd-red);
+  }
+  .camera-v2 .mobile-nav svg { display:none; }
+  .camera-v2 .mobile-nav button:active,.camera-v2 .lcd-cta:active,.camera-v2 .mobile-home-action:active { transform:scale(.97); }
+
+  .camera-v2 .mobile-home { position:relative; display:flex; flex-direction:column; }
+  .camera-v2 .mobile-portrait {
+    display:block;
+    width:100%;
+    height:clamp(72px,24cqw,112px);
+    object-fit:cover;
+    object-position:50% 40%;
+    background:#18181a;
+  }
+  .camera-v2 .mobile-introduction { padding:12px var(--mobile-gutter); }
+  .camera-v2 .mobile-introduction h1 { font-size:24px; line-height:1.06; font-weight:600; }
+  .camera-v2 .mobile-introduction p { color:var(--lcd-soft); margin-top:8px; font-size:16px; line-height:1.45; }
+  .camera-v2 .mobile-home-action {
+    display:inline-flex;
+    align-items:center;
+    gap:18px;
+    min-height:44px;
+    margin-top:8px;
+    color:var(--lcd-ink);
+    font-weight:600;
+    text-decoration:underline;
+    text-decoration-color:var(--lcd-red);
+    text-decoration-thickness:2px;
+    text-underline-offset:6px;
+  }
+  .camera-v2 .mobile-home-action svg { width:18px; height:18px; }
+
+  .camera-v2 .mobile-page { padding:20px var(--mobile-gutter); }
+  .camera-v2 .mobile-page h1 { font-size:26px; line-height:1.15; font-weight:600; margin-bottom:20px; }
+  .camera-v2 .mobile-projects details { margin:0 0 16px; }
+  .camera-v2 .mobile-projects summary {
+    list-style:none;
+    min-height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    cursor:pointer;
+    font-size:21px;
+    font-weight:550;
+    line-height:1.3;
+  }
+  .camera-v2 .mobile-projects summary::-webkit-details-marker { display:none; }
+  .camera-v2 .mobile-projects summary svg { width:18px; height:18px; color:var(--lcd-soft); transition:transform 180ms ease-in-out; }
+  .camera-v2 .mobile-projects details[open] summary svg { transform:rotate(180deg); color:var(--lcd-ink); }
+  .camera-v2 .mobile-project-detail { padding:10px 0 20px; color:var(--lcd-soft); }
+  .camera-v2 .mobile-project-detail p { max-width:60ch; }
+  .camera-v2 .mobile-project-detail img { display:block; width:100%; height:auto; margin:4px 0 18px; background:#18181a; }
+  .camera-v2 .mobile-project-detail .lcd-meta { margin-top:16px; font-size:14px; }
+  .camera-v2 .mobile-project-detail .lcd-cta { margin-top:20px; }
+  .camera-v2 .mobile-about>img { display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:cover; object-position:50% 30%; margin-bottom:28px; background:#18181a; }
+  .camera-v2 .mobile-about section { margin-bottom:26px; }
+  .camera-v2 .mobile-about h2 { font-size:20px; line-height:1.3; font-weight:550; margin-bottom:10px; }
+  .camera-v2 .mobile-about p { color:var(--lcd-soft); max-width:60ch; }
+  .camera-v2 .lcd-links { gap:8px 22px; }
+
+  .camera-v2 .lcd-menu {
+    min-height:0;
+    flex:1;
+    overflow-y:auto;
+    padding:52px var(--mobile-gutter) 20px;
+    gap:0;
+    position:relative;
+  }
+  .camera-v2 .lcd-menu>.lcd-batt,.camera-v2 .lcd-menu li:has([data-view=work]),.camera-v2 .lcd-menu li:has([data-view=photos]) { display:none; }
+  .camera-v2 .lcd-menu ul { gap:8px; }
+  .camera-v2 .lcd-menu li button { min-height:44px; font-size:24px; color:var(--lcd-ink); }
+  .camera-v2 .lcd-menu li button::before { display:none; }
+  .camera-v2 .mobile-menu-close { position:absolute; right:12px; top:10px; display:grid; place-items:center; width:44px; height:44px; }
+  .camera-v2 .lcd-menu:not([hidden]) { animation:mobile-menu-in 200ms var(--lcd-out); }
+  @keyframes mobile-menu-in { from { opacity:0; transform:scale(.95); transform-origin:100% 100%; } }
+
+  .camera-v2 .lcd-index { padding:20px 0 18px; }
+  .camera-v2 .lcd-tabs { height:auto; min-height:48px; padding:0 12px 10px; gap:8px; }
+  .camera-v2 .lcd-tabs button { min-height:44px; padding:0 10px; font-size:16px; font-stretch:100%; }
+  .camera-v2 .lcd-thumbs { padding:10px 14px; gap:12px; }
+  .camera-v2 .lcd-thumbs button { min-width:44px; min-height:44px; aspect-ratio:4/5; background:#18181a; }
+  .camera-v2 .lcd-thumbs button[aria-current=true] { outline:0; }
+  .camera-v2 .lcd-thumbs button:focus-visible { outline:2px solid var(--lcd-ink); outline-offset:3px; }
+  .camera-v2 .lcd-thumbs img { object-position:center; }
+  .camera-v2 .lcd-index-cap { display:none; }
+  .camera-v2 .lcd-channel-tile { font-size:16px; padding:16px; min-height:140px; text-align:center; }
+  .camera-v2 .lcd-show { grid-template-columns:minmax(0,1fr); grid-template-areas:"img" "left" "right"; padding-top:14px; }
+  .camera-v2 .lcd-show-img { height:auto; aspect-ratio:3/4; width:100%; min-width:0; min-height:0; position:relative; overflow:hidden; }
+  .camera-v2 .lcd-show-img img { position:absolute; inset:0; min-width:0; min-height:0; width:100%; height:100%; object-fit:contain; }
+  .camera-v2 .lcd-show-side { padding:20px var(--mobile-gutter) 0; font-stretch:100%; }
+  .camera-v2 .lcd-show-side.is-right { align-items:flex-start; text-align:left; padding-top:6px; padding-bottom:20px; }
+  .camera-v2 .lcd-show h1 { font-size:22px; font-stretch:100%; margin-top:0; }
+  .camera-v2 .lcd-place { font-size:15px; margin-top:6px; }
+  .camera-v2 .lcd-file,.camera-v2 .lcd-bars,.camera-v2 .lcd-show-side.is-right>span { display:none; }
+  .camera-v2 .lcd-all { min-height:44px; margin-top:4px; font-size:16px; }
+  .camera-v2 .lcd-arrow { top:calc(14px + 39.213333cqw); background:#18181a; }
+  .camera-v2 .lcd-movie .lcd-show-img.is-vertical :is(iframe,.lcd-poster) { width:auto; height:100%; aspect-ratio:9/16; }
+  .camera-v2 .lcd-poster { padding:0; }
+  .camera-v2 .lcd-show-img[data-image-loading]::after,.camera-v2 .lcd-show-img.image-failed::after {
+    position:absolute; inset:0; display:grid; place-items:center; color:var(--lcd-soft); background:var(--lcd-bg); font-size:16px; padding:50px;
+  }
+  .camera-v2 .lcd-show-img[data-image-loading]::after { content:"Loading photo"; }
+  .camera-v2 .lcd-show-img.image-failed::after { content:"This photo couldn’t load"; }
+
+  .camera-v2 .lcd-resume-top { padding:28px var(--mobile-gutter) 24px; gap:12px; }
+  .camera-v2 .lcd-resume-top h1 { font-size:30px; margin-bottom:8px; }
+  .camera-v2 .lcd-resume-top .lcd-plain { min-height:44px; display:inline-flex; align-items:center; font-size:16px; }
+  .camera-v2 .lcd-resume-top .lcd-cta { font-size:16px; }
+  .camera-v2 .lcd-doc { height:340px; min-height:0; margin:0 12px 20px; border-radius:0; }
+  .camera-v2 .resume-loading { padding:24px; text-align:center; font-size:16px; }
+  .camera-v2 .lcd-contact { padding:38px var(--mobile-gutter) 30px; }
+  .camera-v2 .lcd-contact h1 { font-size:24px; font-stretch:100%; line-height:1.2; }
+  .camera-v2 .lcd-contact .lcd-cta { font-size:16px; line-height:1.5; padding:12px; display:flex; align-items:center; overflow-wrap:anywhere; }
+  .camera-v2 .lcd-contact .lcd-links { margin-top:24px; }
+
+  /* Keep the fallback readable when JavaScript is unavailable or fails to load. */
+  .camera-v2 .lcd-static { position:relative; inset:auto; overflow:visible; padding:24px var(--mobile-gutter); font-size:16px; }
+  .camera-v2 .lcd-static h1 { font-size:30px; }
+  .camera-v2 .lcd-static img { max-width:100%; }
+}
+
+@media (max-width:355px) {
+  body.camera-v2 { --mobile-gutter:12px; }
+  .camera-v2 .mobile-nav { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .camera-v2 .mobile-nav button:active,.camera-v2 .mobile-home-action:active { transform:none; }
+}
