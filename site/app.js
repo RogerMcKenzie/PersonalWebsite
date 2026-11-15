@@ -1,0 +1,411 @@
+import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js';
+
+const views=['home','about','work','photos','resume','contact'];
+const navViews=new Set(['about','work','photos','resume','contact']);
+// Hide duplicate lettering only when the visible model/poster supplies the printed ink.
+const cameraBody=document.querySelector('.camera');
+const cameraPoster=cameraBody.querySelector('.camera-shell');
+const cameraDesktop=matchMedia('(min-width:1001px)');
+function updatePrintedControls(){
+ const posterReady=cameraPoster.complete&&cameraPoster.naturalWidth>0;
+ const modelReady=cameraDesktop.matches&&cameraBody.classList.contains('camera-3d-ready');
+ const printed=modelReady?cameraBody.classList.contains('camera-printed-model'):posterReady;
+ cameraBody.classList.toggle('camera-ink',printed);
+}
+cameraPoster.addEventListener('load',updatePrintedControls);
+cameraPoster.addEventListener('error',updatePrintedControls);
+cameraDesktop.addEventListener('change',updatePrintedControls);
+new MutationObserver(updatePrintedControls).observe(cameraBody,{attributes:true,attributeFilter:['class']});
+updatePrintedControls();
+
+let current='home';
+let photoIndex=0;
+let photoMode='index';
+let photoTab='photos';
+let videoIndex=0;
+const listIndex={work:0,about:0};
+const lcd=document.getElementById('lcd');
+const display=document.getElementById('display-content');
+const cameraMenu=document.getElementById('camera-menu');
+const menuToggle=document.getElementById('menu-toggle');
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const keyboardNavigation=()=>document.documentElement.dataset.navigation==='keyboard';
+let resumeResizeObserver;
+const viewState=()=>({photoIndex,photoMode,photoTab,videoIndex,listIndex});
+
+// ---------------------------------------------------------------- navigation
+function normalise(view){
+ if(view==='outside')view='photos';
+ if(view==='experience')view='resume';
+ return views.includes(view)?view:'home';
+}
+function updateNav(){
+ const navOn=!cameraMenu.hidden?false:navViews.has(current)&&!(current==='photos'&&photoMode!=='index');
+ lcd.dataset.nav=navOn?'on':'off';
+}
+function iframeViewportRatio(host){
+ // How many CSS px of iframe viewport one layout px gives inside this host.
+ const probe=document.createElement('iframe');
+ probe.style.cssText='position:absolute;left:0;top:0;width:100px;height:10px;border:0;visibility:hidden;pointer-events:none';
+ probe.setAttribute('aria-hidden','true');probe.tabIndex=-1;
+ host.append(probe);
+ const inner=probe.contentWindow?.innerWidth;
+ probe.remove();
+ return inner>0?inner/100:1;
+}
+function applyView(view,{focus=false,hash=true}={}){
+ view=normalise(view);
+ current=view;
+ setMenuOpen(false);
+ document.body.dataset.cameraView=view;
+ resumeResizeObserver?.disconnect();resumeResizeObserver=null;
+ display.innerHTML=`<div class="view">${viewHTML(view,viewState())}</div>`;
+ updateNav();
+ if(view==='home'){
+  const focusBox=display.querySelector('.lcd-focus');
+  setTimeout(()=>focusBox?.classList.add('is-locked'),reducedMotion.matches?0:350);
+ }
+ const resumeFrame=display.querySelector('.resume-frame');
+ if(resumeFrame){
+  // Google's preview centres an ~820px page once its viewport is wide enough, and pins it
+  // left (cutting the right side) when it is not. Browsers differ in how a zoomed parent
+  // changes an iframe's own viewport, so measure that, give the preview a 1000px viewport,
+  // and crop to the page plus a small margin.
+  const viewer=resumeFrame.parentElement;
+  resumeResizeObserver=new ResizeObserver(()=>{
+   const width=viewer.clientWidth,height=viewer.clientHeight;
+   if(!width||!height)return;
+   const ratio=iframeViewportRatio(viewer);
+   const frameWidth=1000/ratio,cropWidth=870/ratio,scale=width/cropWidth;
+   resumeFrame.style.width=`${frameWidth}px`;
+   resumeFrame.style.height=`${height/scale}px`;
+   resumeFrame.style.transform=`scale(${scale}) translateX(${-(frameWidth-cropWidth)/2}px)`;
+  });
+  resumeResizeObserver.observe(viewer);
+  resumeFrame.addEventListener('load',()=>{
+   viewer.removeAttribute('data-loading');
+   resumeFrame.previousElementSibling.hidden=true;
+  },{once:true});
+ }
+ document.querySelectorAll('.dial-item,.lcd-nav [data-view]').forEach(b=>{
+  if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+ });
+ const angles={home:0,about:0,work:90,photos:180,resume:270,contact:0};
+ document.getElementById('dial-indicator').style.setProperty('--angle',angles[view]+'deg');
+ const browsing=view==='photos'?'photograph':lists[view]?'item':'section';
+ document.getElementById('previous').setAttribute('aria-label',`Previous ${browsing}`);
+ document.getElementById('next').setAttribute('aria-label',`Next ${browsing}`);
+ if(hash&&location.hash!==`#${view}`)history.pushState(null,'',`#${view}`);
+ const titles={home:'Software, photography & content',about:'About',work:'Apps',photos:'Photography',resume:'Résumé',contact:'Contact'};
+ document.title=`Roger McKenzie | ${titles[view]}`;
+ if(focus)display.focus({preventScroll:true});
+}
+function render(view,options={}){
+ view=normalise(view);
+ // Photos opens on the grid; picking a photo starts the slideshow.
+ if(view==='photos'&&current!=='photos'&&!options.keepPhotoMode){photoMode='index';photoTab='photos';}
+ const unchanged=current===view;
+ applyView(view,options);
+ if(options.instant||unchanged||reducedMotion.matches||keyboardNavigation())return;
+ display.firstElementChild.animate([{opacity:.6},{opacity:1}],{duration:160,easing:'ease-out'});
+}
+function step(direction){
+ if(!cameraMenu.hidden){selectMenu(menuIndex+direction,{focus:true});return;}
+ if(current==='photos'&&photoMode==='show'){changePhoto(direction);return;}
+ if(current==='photos'&&photoMode==='play'){changeVideo(direction);return;}
+ if(current==='photos'){selectThumbnail((photoTab==='videos'?videoIndex:photoIndex)+direction,{focus:true});return;}
+ if(lists[current]){selectItem(current,listIndex[current]+direction,{focus:true});return;}
+ render(views[(views.indexOf(current)+direction+views.length)%views.length],{focus:true});
+}
+
+// ---------------------------------------------------------------- menu
+const menuButtons=[...cameraMenu.querySelectorAll('[data-view]')];
+const menuPreviewImage=document.getElementById('menu-preview-image');
+const menuPreviewText=document.getElementById('menu-preview-text');
+let menuIndex=0;
+function selectMenu(index,{focus=false}={}){
+ menuIndex=(index+menuButtons.length)%menuButtons.length;
+ menuButtons.forEach((b,i)=>b.setAttribute('aria-current',String(i===menuIndex)));
+ const preview=menuPreviews[menuButtons[menuIndex].dataset.view];
+ menuPreviewImage.hidden=!preview.img;
+ if(preview.img)menuPreviewImage.src=preview.img;
+ menuPreviewText.textContent=preview.text;
+ if(focus)menuButtons[menuIndex].focus({preventScroll:true});
+}
+function setMenuOpen(open,{focus=false}={}){
+ if(open){
+  const at=menuButtons.findIndex(b=>b.dataset.view===current);
+  selectMenu(at<0?0:at);
+ }
+ cameraMenu.hidden=!open;
+ display.inert=open;
+ menuToggle.setAttribute('aria-expanded',String(open));
+ updateNav();
+ if(open&&focus)menuButtons[menuIndex].focus({preventScroll:true});
+ if(!open&&focus)menuToggle.focus({preventScroll:true});
+}
+menuToggle.addEventListener('click',()=>setMenuOpen(cameraMenu.hidden,{focus:true}));
+menuButtons.forEach((button,i)=>{
+ button.addEventListener('pointerenter',()=>selectMenu(i));
+ button.addEventListener('focus',()=>selectMenu(i));
+});
+cameraMenu.addEventListener('keydown',e=>{
+ if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;
+ e.preventDefault();selectMenu(menuIndex+(e.key==='ArrowDown'?1:-1),{focus:true});
+});
+
+// ---------------------------------------------------------------- lists (Work, About)
+function selectItem(kind,index,{focus=false}={}){
+ const items=lists[kind].items;
+ const next=(index+items.length)%items.length;
+ const list=display.querySelector(`[data-list="${kind}"]`);
+ if(!list)return;
+ const changed=next!==listIndex[kind];
+ listIndex[kind]=next;
+ list.querySelectorAll('[data-item]').forEach((b,i)=>b.setAttribute('aria-current',String(i===next)));
+ if(focus)list.querySelector(`[data-item="${next}"]`)?.focus({preventScroll:true});
+ if(!changed)return;
+ const preview=list.querySelector('.lcd-preview');
+ preview.innerHTML=previewHTML(items[next]);
+ if(!reducedMotion.matches)preview.animate([{opacity:.4},{opacity:1}],{duration:140,easing:'ease-out'});
+}
+display.addEventListener('pointerover',e=>{
+ const item=e.target.closest('[data-item]');
+ if(item&&e.pointerType!=='touch')selectItem(item.closest('[data-list]').dataset.list,Number(item.dataset.item));
+ const thumb=e.target.closest('[data-photo],[data-video]');
+ if(thumb&&e.pointerType!=='touch')selectThumbnail(Number(thumb.dataset.photo??thumb.dataset.video));
+});
+display.addEventListener('focusin',e=>{
+ const item=e.target.closest('[data-item]');
+ if(item)selectItem(item.closest('[data-list]').dataset.list,Number(item.dataset.item));
+ const thumb=e.target.closest('[data-photo],[data-video]');
+ if(thumb)selectThumbnail(Number(thumb.dataset.photo??thumb.dataset.video));
+});
+display.addEventListener('keydown',e=>{
+ if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;
+ const item=e.target.closest('[data-item]');
+ if(!item)return;
+ e.preventDefault();
+ selectItem(item.closest('[data-list]').dataset.list,Number(item.dataset.item)+(e.key==='ArrowDown'?1:-1),{focus:true});
+});
+
+// ---------------------------------------------------------------- photos
+function changePhoto(direction){
+ photoIndex=(photoIndex+direction+photos.length)%photos.length;
+ const viewerFocused=document.activeElement?.classList.contains('lcd-show-img');
+ const focusedStep=document.activeElement?.dataset.photoStep;
+ display.innerHTML=`<div class="view">${slideshowView(viewState())}</div>`;
+ if(viewerFocused)display.querySelector('.lcd-show-img')?.focus({preventScroll:true});
+ else if(focusedStep)display.querySelector(`[data-photo-step="${focusedStep}"]`)?.focus({preventScroll:true});
+ if(!reducedMotion.matches&&!keyboardNavigation()){
+  display.querySelector('.lcd-show-img img').animate([{opacity:.5},{opacity:1}],{duration:180,easing:'ease-out'});
+ }
+}
+function selectThumbnail(index,{focus=false}={}){
+ const grid=display.querySelector('.lcd-thumbs');
+ if(!grid)return;
+ const videoTab=photoTab==='videos',attr=videoTab?'video':'photo',count=videoTab?videos.length:photos.length;
+ const next=(index+count)%count;
+ if(videoTab)videoIndex=next;else photoIndex=next;
+ grid.querySelectorAll(`[data-${attr}]`).forEach((b,i)=>b.setAttribute('aria-current',String(i===next)));
+ display.querySelector('.lcd-index-cap').innerHTML=indexCaption(viewState());
+ if(focus)grid.querySelector(`[data-${attr}="${next}"]`)?.focus({preventScroll:true});
+}
+function changeVideo(direction){
+ if(videos.length<2)return;
+ videoIndex=(videoIndex+direction+videos.length)%videos.length;
+ render('photos',{keepPhotoMode:true});
+}
+function setPhotoTab(tab){
+ photoTab=tab;photoMode='index';
+ render('photos',{keepPhotoMode:true});
+ display.querySelector(`[data-photo-tab="${tab}"]`)?.focus({preventScroll:true});
+}
+function setPhotoMode(mode,{focus=false}={}){
+ photoMode=mode;
+ render('photos',{keepPhotoMode:true,focus:false});
+ if(focus){
+  const target=mode==='index'?display.querySelector(photoTab==='videos'?`[data-video="${videoIndex}"]`:`[data-photo="${photoIndex}"]`):display.querySelector(mode==='play'?'.lcd-all':'.lcd-show-img');
+  target?.focus({preventScroll:true});
+ }
+}
+let lastPhotoScroll=0;
+document.addEventListener('wheel',e=>{
+ if(current!=='photos'||photoMode!=='show'||e.ctrlKey||!e.target.closest('.lcd-show-img'))return;
+ const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
+ if(Math.abs(delta)<8)return;
+ e.preventDefault();
+ const now=performance.now();
+ if(now-lastPhotoScroll<260)return;
+ lastPhotoScroll=now;changePhoto(delta>0?1:-1);
+},{passive:false});
+let photoGesture=null;
+document.addEventListener('pointerdown',e=>{
+ const viewer=e.target.closest('.lcd-show-img');
+ if(!viewer||e.button!==0)return;
+ photoGesture={x:e.clientX,y:e.clientY,pointerId:e.pointerId};
+});
+document.addEventListener('pointerup',e=>{
+ if(!photoGesture||e.pointerId!==photoGesture.pointerId)return;
+ const dx=e.clientX-photoGesture.x,dy=e.clientY-photoGesture.y;
+ photoGesture=null;
+ if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3)changePhoto(dx<0?1:-1);
+});
+document.addEventListener('pointercancel',()=>{photoGesture=null;});
+
+// ---------------------------------------------------------------- hardware wheel
+// The physical wheel steps through the four printed sections. Inside the menu it moves the
+// selection instead. Dragging preserves a simple click until a real turn starts.
+const sectionWheel=document.querySelector('.dial');
+const wheelSections=['about','work','photos','resume'];
+let wheelScroll=0,wheelScrollAt=0,wheelChangedAt=-Infinity;
+function stepWheel(direction){
+ if(!cameraMenu.hidden){selectMenu(menuIndex+direction,{focus:true});return;}
+ const index=wheelSections.indexOf(current);
+ const next=index<0?(direction>0?0:wheelSections.length-1)
+  :(index+direction+wheelSections.length)%wheelSections.length;
+ render(wheelSections[next]);
+}
+sectionWheel.addEventListener('wheel',e=>{
+ if(e.ctrlKey)return;
+ const delta=Math.abs(e.deltaY)>Math.abs(e.deltaX)?e.deltaY:e.deltaX;
+ if(!delta)return;
+ e.preventDefault();
+ const now=performance.now();
+ if(now-wheelScrollAt>160||Math.sign(delta)!==Math.sign(wheelScroll))wheelScroll=0;
+ wheelScrollAt=now;
+ wheelScroll+=delta*(e.deltaMode===1?16:e.deltaMode===2?200:1);
+ if(Math.abs(wheelScroll)>=36&&now-wheelChangedAt>=220){
+  stepWheel(Math.sign(wheelScroll));wheelScroll=0;wheelChangedAt=now;
+ }
+},{passive:false});
+sectionWheel.addEventListener('keydown',e=>{
+ if(!['ArrowUp','ArrowDown'].includes(e.key)||e.altKey||e.ctrlKey||e.metaKey)return;
+ e.preventDefault();stepWheel(e.key==='ArrowDown'?1:-1);
+});
+// Dragging turns the wheel 1:1 with the pointer (camera3d.js draws it from 'camera-wheel'
+// events). The section under the red segment opens as soon as the segment reaches it.
+const WHEEL_ANGLE={about:0,work:-Math.PI/2,photos:Math.PI,resume:Math.PI/2};
+let dialAngle=0;
+function nearAngle(angle,reference){return angle+Math.round((reference-angle)/(2*Math.PI))*2*Math.PI;}
+function sendWheel(angle,active){document.dispatchEvent(new CustomEvent('camera-wheel',{detail:{angle,active}}));}
+let wheelDrag=null,wheelSuppressClick=false;
+function wheelPoint(e){
+ if(cameraBody.classList.contains('camera-embedded')){
+  const rect=cameraBody.getBoundingClientRect();
+  const local=new DOMPoint(e.clientX-rect.left,e.clientY-rect.top)
+   .matrixTransform(new DOMMatrix(getComputedStyle(sectionWheel).transform).inverse());
+  return {x:local.x-sectionWheel.offsetWidth/2,y:local.y-sectionWheel.offsetHeight/2};
+ }
+ const rect=sectionWheel.getBoundingClientRect();
+ return {x:e.clientX-rect.left-rect.width/2,y:e.clientY-rect.top-rect.height/2};
+}
+sectionWheel.addEventListener('pointerdown',e=>{
+ if(e.button!==0||e.target.closest('.dial-center'))return;
+ const p=wheelPoint(e);
+ if(Math.hypot(p.x,p.y)<sectionWheel.offsetWidth*.23)return;
+ wheelSuppressClick=false;
+ const base=nearAngle(WHEEL_ANGLE[current]??0,dialAngle);
+ wheelDrag={id:e.pointerId,angle:Math.atan2(p.y,p.x),travel:0,menuTravel:0,base,dial:base,x:e.clientX,y:e.clientY,turning:false};
+});
+sectionWheel.addEventListener('pointermove',e=>{
+ if(!wheelDrag||e.pointerId!==wheelDrag.id)return;
+ if(!wheelDrag.turning&&Math.hypot(e.clientX-wheelDrag.x,e.clientY-wheelDrag.y)<8)return;
+ if(!wheelDrag.turning){
+  wheelDrag.turning=true;wheelSuppressClick=true;
+  sectionWheel.setPointerCapture(e.pointerId);sectionWheel.classList.add('is-turning');
+ }
+ const p=wheelPoint(e),angle=Math.atan2(p.y,p.x);
+ const delta=Math.atan2(Math.sin(angle-wheelDrag.angle),Math.cos(angle-wheelDrag.angle));
+ wheelDrag.angle=angle;wheelDrag.travel+=delta;
+ e.preventDefault();
+ if(!cameraMenu.hidden){
+  // In the menu the wheel steps the selection, one item per 60° of turn.
+  wheelDrag.menuTravel+=delta;
+  const turn=Math.PI/3;
+  while(Math.abs(wheelDrag.menuTravel)>=turn){
+   const direction=Math.sign(wheelDrag.menuTravel);stepWheel(direction);wheelDrag.menuTravel-=direction*turn;
+  }
+  return;
+ }
+ // Clockwise on screen is a negative wheel angle (see WHEEL_ANGLE).
+ wheelDrag.dial=wheelDrag.base-wheelDrag.travel;
+ sendWheel(wheelDrag.dial,true);
+ const section=wheelSections[((Math.round(-wheelDrag.dial/(Math.PI/2))%4)+4)%4];
+ if(section!==current)render(section);
+});
+function endWheelDrag(e){
+ if(!wheelDrag||e.pointerId!==wheelDrag.id)return;
+ const turned=wheelDrag.turning;
+ if(turned){dialAngle=wheelDrag.dial;sendWheel(wheelDrag.dial,false);}
+ wheelDrag=null;sectionWheel.classList.remove('is-turning');
+ if(turned)setTimeout(()=>{wheelSuppressClick=false;},0);
+}
+document.addEventListener('pointerup',endWheelDrag);
+document.addEventListener('pointercancel',e=>{endWheelDrag(e);wheelSuppressClick=false;});
+sectionWheel.addEventListener('lostpointercapture',endWheelDrag);
+sectionWheel.addEventListener('click',e=>{
+ if(wheelSuppressClick){e.preventDefault();e.stopImmediatePropagation();wheelSuppressClick=false;}
+},true);
+// A click on the ring between the printed sections picks the nearest one, so the whole wheel works.
+sectionWheel.addEventListener('click',e=>{
+ if(e.detail===0||e.target.closest('.dial-item,.dial-center')||!cameraMenu.hidden)return;
+ const p=wheelPoint(e);
+ if(Math.hypot(p.x,p.y)<sectionWheel.offsetWidth*.16)return;
+ const quarter=((Math.round(Math.atan2(p.y,p.x)/(Math.PI/2))%4)+4)%4;
+ render(['work','photos','resume','about'][quarter],{focus:true});
+});
+// The centre button confirms the menu selection while the menu is open.
+document.querySelector('.dial-center').addEventListener('click',e=>{
+ if(cameraMenu.hidden)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ render(menuButtons[menuIndex].dataset.view,{focus:true});
+},true);
+
+// ---------------------------------------------------------------- clicks and keys
+document.addEventListener('pointerdown',()=>{document.documentElement.dataset.navigation='pointer';},{passive:true});
+document.addEventListener('keydown',()=>{document.documentElement.dataset.navigation='keyboard';},true);
+document.addEventListener('click',e=>{
+ const target=e.target.closest('[data-play-video],[data-view],[data-open-menu],[data-photo],[data-video],[data-photo-tab],[data-photo-mode],[data-photo-step],[data-video-step],[data-item]');
+ if(!target)return;
+ if(target.hasAttribute('data-play-video')){
+  // Load YouTube only on request. If the owner has embedding turned off, YouTube's own
+  // message offers "Watch on YouTube".
+  const v=videos[videoIndex];
+  target.outerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&playsinline=1" title="${v.title}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+ }
+ else if(target.hasAttribute('data-open-menu'))setMenuOpen(true,{focus:true});
+ else if(target.dataset.view)render(target.dataset.view,{focus:true});
+ else if(target.dataset.photo){photoIndex=Number(target.dataset.photo);setPhotoMode('show',{focus:true});}
+ else if(target.dataset.video){videoIndex=Number(target.dataset.video);setPhotoMode('play',{focus:true});}
+ else if(target.dataset.photoTab)setPhotoTab(target.dataset.photoTab);
+ else if(target.dataset.videoStep)changeVideo(Number(target.dataset.videoStep));
+ else if(target.dataset.photoMode)setPhotoMode(target.dataset.photoMode,{focus:true});
+ else if(target.dataset.photoStep)changePhoto(Number(target.dataset.photoStep));
+ else if(target.dataset.item)selectItem(target.closest('[data-list]').dataset.list,Number(target.dataset.item));
+});
+// Playback opens the video tab of Photos (YouTube itself is on the 3D camera's record button).
+document.querySelector('.hardware-playback')?.addEventListener('click',()=>setPhotoTab('videos'));
+document.getElementById('previous').addEventListener('click',()=>step(-1));
+document.getElementById('next').addEventListener('click',()=>step(1));
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&!cameraMenu.hidden){e.preventDefault();setMenuOpen(false,{focus:true});return;}
+ if(e.key==='Escape'&&current==='photos'&&photoMode!=='index'){e.preventDefault();setPhotoMode('index',{focus:true});return;}
+ if(e.altKey||e.ctrlKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+ if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();step(e.key==='ArrowRight'?1:-1);}
+});
+
+// ---------------------------------------------------------------- LCD scale
+// Desktop lays the screen out at 620 × 465 and zooms it to the projected LCD size.
+const screenElement=lcd.parentElement;
+function fitLCD(){
+ if(!cameraDesktop.matches){lcd.style.removeProperty('zoom');return;}
+ const width=screenElement.clientWidth;
+ if(width)lcd.style.zoom=String(width/620);
+}
+new ResizeObserver(fitLCD).observe(screenElement);
+cameraDesktop.addEventListener('change',fitLCD);
+fitLCD();
+
+window.addEventListener('popstate',()=>render(location.hash.slice(1),{hash:false,instant:true}));
+render(location.hash.slice(1)||'home',{hash:false,instant:true});
