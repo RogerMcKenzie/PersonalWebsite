@@ -9,7 +9,7 @@
 
 const DESKTOP = window.matchMedia('(min-width: 1001px)');
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
-const MODEL_URL = 'assets/camera/zv-e10.glb?v=extras-20261115-1';
+const MODEL_URL = 'assets/camera/zv-e10.glb?v=sections-20261115-1';
 
 // Orthographic rear framing in metres (Blender FRAME: cx 0, cz 3.35cm, width 13.6cm, 16:9).
 const FRAME = { cx: 0, cy: 0.0335, width: 0.136, height: 0.136 * 9 / 16 };
@@ -36,8 +36,8 @@ const PRESSABLE = [
   ['.cx-c1', 'C1_Button', 0.05],
 ];
 
-// Orange wheel segment points at the active section (radians about the wheel axis).
-const WHEEL_ANGLE = { home: 0, about: 0, work: -Math.PI / 2, photos: Math.PI, resume: Math.PI / 2, experience: Math.PI / 2 };
+// Red wheel segment points at the active section (radians about the wheel axis).
+const WHEEL_ANGLE = { home: 0, about: 0, projects: -Math.PI / 2, photos: Math.PI, resume: Math.PI / 2, experience: Math.PI / 2 };
 
 const camera = document.querySelector('.camera-v2 .camera');
 let started = false;

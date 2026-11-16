@@ -5,9 +5,10 @@
   "scripts": {
     "build": "node scripts/prepare-three.mjs",
     "dev": "npm run build && python3 -m http.server 4184 --bind 127.0.0.1 --directory site",
-    "check": "node --check scripts/prepare-three.mjs && node --check site/portfolio-views.js && node --check site/app.js && node --check site/mobile-intro.js && node --check site/camera3d.js && node --check site/camera-screen.js && node --check site/camera-extras.js",
+    "check": "node --check scripts/prepare-three.mjs && node --check site/portfolio-views.js && node --check site/sections.js && node --check site/app.js && node --check site/mobile-intro.js && node --check site/camera3d.js && node --check site/camera-screen.js && node --check site/camera-extras.js",
     "test:camera": "node scripts/check-camera-screen.mjs",
-    "test:mobile-intro": "node scripts/check-mobile-intro.mjs"
+    "test:mobile-intro": "node scripts/check-mobile-intro.mjs",
+    "test:sections": "node scripts/check-sections.mjs"
   },
   "dependencies": {
     "three": "0.170.0"
