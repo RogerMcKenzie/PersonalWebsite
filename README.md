@@ -67,3 +67,5 @@ On phones, tapping a photograph opens a native modal over the contact sheet. `si
 `npm run test:mobile-photos` exercises retry and delayed image requests, modal cleanup, transition interruption, swipe boundaries, focus restoration, reduced motion and reopening during close. Browser review covers portrait and landscape layouts, thumbnail return, swipe, arrow buttons/keys, Escape, history and crossing the desktop breakpoint. Physical iOS/Android testing remains separate.
 
 The physical Home button carries `aria-current="page"` and a solid camera-red rim while Home is selected. Mobile and live 3D wheel segments clear in that state and return for the other sections; dragging the wheel still shows its position.
+
+Desktop menu previews use individual portrait and sunset crops, plus a live Google Docs iframe for Résumé. The résumé iframe loads only when selected, shares the full résumé viewer’s page scaling, and is released when the menu closes. The Projects preview names Studio Stack and Jenna’s Recipes. Mobile retains its compact menu and full résumé view.

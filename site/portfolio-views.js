@@ -46,7 +46,7 @@ const menuPreviews={
  about:{img:'assets/profile.jpg',text:'Software developer and photographer at the University of Florida'},
  projects:{img:'assets/jennas-recipes.jpg',text:'Studio Stack and Jenna’s Recipes'},
  photos:{img:'assets/photography/sunset-cathedral.jpg',text:'Four photographs from Washington, Las Vegas and San Francisco'},
- resume:{text:'Two software engineering internships at Amazon, and lead developer at The Agency at UF'},
+ resume:{document:`${RESUME}/preview`,text:''},
  contact:{text:EMAIL}
 };
 

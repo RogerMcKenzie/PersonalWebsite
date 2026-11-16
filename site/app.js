@@ -1,5 +1,5 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=sections-20261115-1';
-import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=projects-20261116-1';
+import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=menu-previews-20261116-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
@@ -73,6 +73,20 @@ function iframeViewportRatio(host){
  probe.remove();
  return inner>0?inner/100:1;
 }
+function observeResumeFrame(frame){
+ const viewer=frame.parentElement;
+ const observer=new ResizeObserver(()=>{
+  const width=viewer.clientWidth,height=viewer.clientHeight;
+  if(!width||!height)return;
+  const ratio=iframeViewportRatio(viewer);
+  const frameWidth=1000/ratio,cropWidth=870/ratio,scale=width/cropWidth;
+  frame.style.width=`${frameWidth}px`;
+  frame.style.height=`${height/scale}px`;
+  frame.style.transform=`scale(${scale}) translateX(${-(frameWidth-cropWidth)/2}px)`;
+ });
+ observer.observe(viewer);
+ return observer;
+}
 function applyView(view,{focus=false,hash=true}={}){
  mobilePhotos.close({animate:false,restoreFocus:false});
  const changed=current!==normalise(view);
@@ -96,16 +110,7 @@ function applyView(view,{focus=false,hash=true}={}){
   // changes an iframe's own viewport, so measure that, give the preview a 1000px viewport,
   // and crop to the page plus a small margin.
   const viewer=resumeFrame.parentElement;
-  resumeResizeObserver=new ResizeObserver(()=>{
-   const width=viewer.clientWidth,height=viewer.clientHeight;
-   if(!width||!height)return;
-   const ratio=iframeViewportRatio(viewer);
-   const frameWidth=1000/ratio,cropWidth=870/ratio,scale=width/cropWidth;
-   resumeFrame.style.width=`${frameWidth}px`;
-   resumeFrame.style.height=`${height/scale}px`;
-   resumeFrame.style.transform=`scale(${scale}) translateX(${-(frameWidth-cropWidth)/2}px)`;
-  });
-  resumeResizeObserver.observe(viewer);
+  resumeResizeObserver=observeResumeFrame(resumeFrame);
   resumeLoadingTimer=setTimeout(()=>{
    const loading=viewer.querySelector('.resume-loading');
    if(loading&&!loading.hidden)loading.textContent=`Preview taking a while? Open the résumé ${cameraDesktop.matches?'above':'below'}`;
@@ -153,6 +158,21 @@ function step(direction){
 const menuButtons=[...cameraMenu.querySelectorAll('[data-view]')];
 const menuPreviewImage=document.getElementById('menu-preview-image');
 const menuPreviewText=document.getElementById('menu-preview-text');
+const menuResume=document.getElementById('menu-preview-resume');
+const menuResumeFrame=menuResume.querySelector('iframe');
+const menuResumeLoading=menuResume.querySelector('.resume-loading');
+let menuResumeObserver,menuResumeTimer;
+menuResumeFrame.addEventListener('load',()=>{
+ if(!menuResumeFrame.hasAttribute('src'))return;
+ clearTimeout(menuResumeTimer);
+ menuResume.removeAttribute('data-loading');
+ menuResumeLoading.hidden=true;
+});
+function clearMenuResume(){
+ menuResumeObserver?.disconnect();menuResumeObserver=null;
+ clearTimeout(menuResumeTimer);
+ menuResumeFrame.removeAttribute('src');
+}
 let menuIndex=0;
 function selectMenu(index,{focus=false}={}){
  const direction=index<menuIndex?-1:1;
@@ -161,9 +181,22 @@ function selectMenu(index,{focus=false}={}){
   menuIndex=(menuIndex+direction+menuButtons.length)%menuButtons.length;
  }
  menuButtons.forEach((b,i)=>b.setAttribute('aria-current',String(i===menuIndex)));
- const preview=menuPreviews[menuButtons[menuIndex].dataset.view];
+ const previewView=menuButtons[menuIndex].dataset.view;
+ const preview=menuPreviews[previewView];
+ cameraMenu.dataset.preview=previewView;
  menuPreviewImage.hidden=!preview.img;
  if(preview.img)menuPreviewImage.src=preview.img;
+ menuResume.hidden=!preview.document;
+ if(preview.document&&cameraDesktop.matches){
+  if(!menuResumeFrame.hasAttribute('src')){
+   menuResume.setAttribute('data-loading','');
+   menuResumeLoading.hidden=false;menuResumeLoading.textContent='Loading résumé';
+   menuResumeFrame.src=preview.document;
+   menuResumeTimer=setTimeout(()=>{menuResumeLoading.textContent='Select Résumé to open the full document';},10000);
+  }
+  menuResumeObserver??=observeResumeFrame(menuResumeFrame);
+ }
+ menuPreviewText.hidden=!preview.text;
  menuPreviewText.textContent=preview.text;
  if(focus)menuButtons[menuIndex].focus({preventScroll:true});
 }
@@ -173,6 +206,7 @@ function updateBrowseLabels(){
  document.getElementById('next').setAttribute('aria-label',`Next ${browsing}`);
 }
 function setMenuOpen(open,{focus=false}={}){
+ if(!open)clearMenuResume();
  if(open){
   menuOpener=document.activeElement;
   const at=menuButtons.findIndex(b=>b.dataset.view===current);
