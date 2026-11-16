@@ -19,9 +19,9 @@
   .camera-v2 .stage {
     container-type:inline-size;
     position:relative;
-    /* Frame the off-centre LCD while leaving the SONY bezel and hinge in view. */
-    left:59%;
-    transform:translateX(-50%);
+    /* The rotated LCD's centre is 43.92% across the camera image. */
+    left:50%;
+    transform:translateX(-43.92%);
     margin:0;
     width:min(640px,142%);
     height:auto;
@@ -84,11 +84,12 @@
   .camera-v2 .mobile-camera-settling :is(.screen-bezel,.controls) { transition:opacity 180ms ease-out; }
   .camera-v2 .mobile-camera-settling .controls { transition-delay:30ms; }
   .camera-v2 .screen-bezel {
+    --mobile-screen-rise:6.5cqw;
     position:absolute;
     left:calc(100% - var(--lcd-top) - var(--lcd-height));
-    top:var(--lcd-left);
+    top:calc(var(--lcd-left) - var(--mobile-screen-rise));
     width:var(--lcd-height);
-    height:var(--lcd-width);
+    height:calc(var(--lcd-width) + var(--mobile-screen-rise));
     padding:0;
     border-radius:2px;
     background:none;

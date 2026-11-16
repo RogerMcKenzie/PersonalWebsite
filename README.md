@@ -69,3 +69,5 @@ On phones, tapping a photograph opens a native modal over the contact sheet. `si
 The physical Home button carries `aria-current="page"` and a solid camera-red rim while Home is selected. Mobile and live 3D wheel segments clear in that state and return for the other sections; dragging the wheel still shows its position.
 
 Desktop menu previews use individual portrait and sunset crops, plus a live Google Docs iframe for Résumé. The résumé iframe loads only when selected, shares the full résumé viewer’s page scaling, and is released when the menu closes. The Projects preview names Studio Stack and Jenna’s Recipes. Mobile retains its compact menu and full résumé view.
+
+The mobile LCD is centred precisely on the viewport using its 43.92% anchor in the rotated camera image. It extends upward by 6.5% of the camera width into the unused black bezel; the bottom edge, hardware controls, hinge and SONY wordmark keep their existing positions.
