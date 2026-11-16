@@ -1,9 +1,9 @@
-"""Render the mobile rear camera from the shipped GLB without control lettering.
+"""Render the mobile rear camera without control lettering or a fixed wheel segment.
 
 Run from the repository root:
   blender --background --python scripts/render-mobile-camera.py
 
-The HTML adds upright mobile labels; desktop assets are not modified.
+The HTML adds upright mobile labels and the live wheel segment; desktop assets are not modified.
 Uses the original camera poster framing and studio lighting.
 """
 import bpy
@@ -119,7 +119,7 @@ def render_poster(path, width=2400, coll="ZV-E10_Real", samples=64, overscan=1):
     return path
 
 
-def prepare_mobile_model():
+def prepare_mobile_model(hide_wheel_highlight=False):
     root = Path(__file__).resolve().parents[1]
     assets = root / "site/assets/camera"
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -141,6 +141,10 @@ def prepare_mobile_model():
     bpy.context.scene.collection.children.link(collection)
     for obj in tuple(bpy.context.scene.objects):
         collection.objects.link(obj)
+    # The mobile still gets a live SVG arc; the desktop poster and intro keep the
+    # model's red segment. Hide only this mesh when rendering that mobile still.
+    if hide_wheel_highlight:
+        bpy.data.objects["Wheel_Highlight"].hide_render = True
     labels = ["Label_Menu", "Label_Fn", "Label_Delete_Icon", "Label_Playback_Icon",
               "Label_Home", "Label_Wheel_Arrows", "Label_C2"]
     for name in labels:
@@ -150,7 +154,7 @@ def prepare_mobile_model():
 
 
 def render_mobile():
-    prepare_mobile_model()
+    prepare_mobile_model(hide_wheel_highlight=True)
     assets = Path(__file__).resolve().parents[1] / "site/assets/camera"
     render_poster(str(assets / "zv-e10-rear-mobile.webp"), width=2400)
 

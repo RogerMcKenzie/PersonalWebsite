@@ -35,6 +35,16 @@ const display=document.getElementById('display-content');
 const cameraMenu=document.getElementById('camera-menu');
 const menuToggle=document.getElementById('menu-toggle');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const dialIndicator=document.getElementById('dial-indicator');
+const dialAngles={home:0,about:0,projects:90,photos:180,resume:270,contact:0};
+let indicatorAngle=0;
+function setDialIndicator(degrees){
+ // Take the short route across the 0/360 boundary; an interrupted turn starts
+ // from the current visual angle through the browser's CSS transition.
+ degrees+=Math.round((indicatorAngle-degrees)/360)*360;
+ indicatorAngle=degrees;
+ dialIndicator.style.setProperty('--angle',degrees+'deg');
+}
 const keyboardNavigation=()=>document.documentElement.dataset.navigation==='keyboard';
 let resumeResizeObserver;
 let resumeLoadingTimer;
@@ -106,8 +116,7 @@ function applyView(view,{focus=false,hash=true}={}){
  document.querySelectorAll('.dial-item,.lcd-nav [data-view],.mobile-nav [data-view]').forEach(b=>{
   if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
  });
- const angles={home:0,about:0,projects:90,photos:180,resume:270,contact:0};
- document.getElementById('dial-indicator').style.setProperty('--angle',angles[view]+'deg');
+ if(!wheelDrag?.turning)setDialIndicator(dialAngles[view]);
  updateBrowseLabels();
  if(hash&&location.hash!==`#${view}`)history.pushState(photoHistory(),'',`#${view}`);
  document.title=`Roger McKenzie | ${view==='home'?'Software, photography & content':sections[view]}`;
@@ -367,7 +376,10 @@ sectionWheel.addEventListener('keydown',e=>{
 const WHEEL_ANGLE={about:0,projects:-Math.PI/2,photos:Math.PI,resume:Math.PI/2};
 let dialAngle=0;
 function nearAngle(angle,reference){return angle+Math.round((reference-angle)/(2*Math.PI))*2*Math.PI;}
-function sendWheel(angle,active){document.dispatchEvent(new CustomEvent('camera-wheel',{detail:{angle,active}}));}
+function sendWheel(angle,active){
+ setDialIndicator(active?-angle*180/Math.PI:dialAngles[current]);
+ document.dispatchEvent(new CustomEvent('camera-wheel',{detail:{angle,active}}));
+}
 let wheelDrag=null,wheelSuppressClick=false;
 function wheelPoint(e){
  if(cameraBody.classList.contains('camera-embedded')){

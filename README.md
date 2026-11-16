@@ -37,7 +37,7 @@ The static HTML stays visible until the app initializes, so a failed script down
 
 Browser review covered 320, 375, 390 and 430px phone widths, landscape, both sides of the 1000px breakpoint and 1440px desktop, with no horizontal overflow. Mobile starts near edge-to-edge, trimming the poster’s transparent margins instead of scaling the body down to the viewport height; lower controls stay reachable through normal page scrolling. The smaller LCD uses two rows of navigation below 356px. Project expansion, menu navigation/focus, photo detail, browser history and résumé actions were checked in the browser. Physical iOS/Android testing remains separate.
 
-The mobile poster applies the same red wheel-segment color as the desktop renderer. The Home portrait keeps its existing crop; only the outer camera is enlarged.
+The live mobile wheel segment uses the same camera red as the desktop renderer. The Home portrait keeps its existing crop; only the outer camera is enlarged.
 
 ## Mobile entrance
 
@@ -52,3 +52,7 @@ Home, About, Projects, Photos, Résumé and Contact are the public destination n
 The desktop model and rear poster print PROJECTS and RÉSUMÉ on the existing wheel surfaces. Mobile continues to use upright HTML labels over its blank poster and entrance clip.
 
 Regenerate the renamed wheel decal and desktop poster with `blender --background --python scripts/update-camera-labels.py` (requires ImageMagick). This appends only the replacement decal to the GLB, preserving all other model data and AO, and is safe to repeat. Its atlas helpers follow the original Blender generator; full model rebuilds should use the same PROJECTS/RÉSUMÉ legends and label version 4. Mobile assets contain no rear lettering and do not need regeneration for this change. `npm run test:sections` checks both templates, the static fallback, navigation names and legacy aliases.
+
+## Mobile wheel selection
+
+The mobile still has no baked red segment. An SVG arc registered to the real wheel uses the same section angles as the desktop model, so About points right, Projects down, Photos left and Résumé up after the body rotates. Screen navigation, menus, browser history and wheel input all update it. The arc tracks dragging without a transition and settles to the selected section on release; normal moves take the shortest turn and respect reduced motion. The desktop model and mobile entrance clip retain their own rendered segment. Regenerate the still with `scripts/render-mobile-camera.py`; only that render hides `Wheel_Highlight`.
