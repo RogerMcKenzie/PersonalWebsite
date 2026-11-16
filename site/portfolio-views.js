@@ -14,7 +14,8 @@ const ICON={
  photo:svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 17 5-5 4 4 3-3 4 4"/>'),
  video:svg('<rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/>'),
  mail:svg('<rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m4 7 8 6 8-6"/>'),
- down:svg('<path d="M12 4v12M6 11l6 6 6-6M5 20h14"/>')
+ expand:svg('<path d="m6 9 6 6 6-6"/>'),
+ download:svg('<path d="M12 4v12M6 11l6 6 6-6M5 20h14"/>')
 };
 const external='target="_blank" rel="noopener noreferrer"';
 const socialLinks=`<div class="lcd-links"><a href="https://github.com/RogerMcKenzie" ${external}>GitHub</a><a href="https://www.linkedin.com/in/rogermckenzie/" ${external}>LinkedIn</a><a href="${YOUTUBE}" ${external}>YouTube</a></div>`;
@@ -54,11 +55,11 @@ const menuPreviews={
 function mobileListView(kind,{listIndex}){
  const {label,items}=lists[kind];
  if(kind==='about')return `<section class="mobile-about mobile-page"><h1>${label}</h1><img src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" loading="lazy">${items.map(item=>`<section><h2>${item.name}</h2><p>${item.text}</p></section>`).join('')}${socialLinks}</section>`;
- return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.projects?'open':''}><summary>${item.name}${ICON.down}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
+ return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.projects?'open':''}><summary>${item.name}${ICON.expand}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
 }
 
 function homeView(){
- return `<div class="lcd-live"><img class="lcd-feed" src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" fetchpriority="high"><span class="lcd-where lcd-narrow lcd-shadow">Gainesville, FL</span><span class="lcd-status lcd-shadow" aria-hidden="true"><span class="lcd-rec"></span><span class="lcd-batt"><b></b></span></span><div class="lcd-focus" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="lcd-who lcd-shadow"><h1>Roger McKenzie</h1><p>Software developer and content creator</p></div><button class="lcd-menu-btn" data-open-menu aria-haspopup="true">${ICON.menu}Menu</button></div>`;
+ return `<div class="lcd-live"><img class="lcd-feed" src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" fetchpriority="high"><span class="lcd-status lcd-shadow" aria-hidden="true"><span class="lcd-rec"></span><span class="lcd-batt"><b></b></span></span><div class="lcd-focus" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="lcd-who lcd-shadow"><h1>Roger McKenzie</h1><p>Software developer and content creator</p></div><button class="lcd-menu-btn" data-open-menu aria-haspopup="true">${ICON.menu}Menu</button></div>`;
 }
 function previewHTML(item){
  return (item.img?`<img src="${item.img}" alt="" width="262" height="157" loading="lazy">`:'')
@@ -93,8 +94,8 @@ function indexView(state){
  return `<div class="lcd-page lcd-index"><h1 class="lcd-sr">${sections.photos}</h1><div class="lcd-tabs lcd-narrow" role="tablist"><button role="tab" data-photo-tab="photos" aria-selected="${photoTab==='photos'}" class="${photoTab==='photos'?'is-on':''}">${ICON.photo}Photos</button><button role="tab" data-photo-tab="videos" aria-selected="${photoTab==='videos'}" class="${photoTab==='videos'?'is-on':''}">${ICON.video}Videos</button></div><div class="lcd-thumbs">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
 }
 function resumeView({mobile}){
- if(mobile)return `<section class="mobile-resume mobile-page"><h1>${sections.resume}</h1><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="mobile-resume-actions"><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé${ICON.out}</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">Download PDF${ICON.down}</a></div></section>`;
- return `<div class="lcd-resume"><div class="lcd-resume-top"><h1>${sections.resume}</h1><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">${ICON.down}Download PDF</a></div><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>`;
+ if(mobile)return `<section class="mobile-resume mobile-page"><h1>${sections.resume}</h1><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="mobile-resume-actions"><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé${ICON.out}</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">Download PDF${ICON.download}</a></div></section>`;
+ return `<div class="lcd-resume"><div class="lcd-resume-top"><h1>${sections.resume}</h1><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">${ICON.download}Download PDF</a></div><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>`;
 }
 function contactView(){
  return `<div class="lcd-contact"><h1>Email me about internships, collaborations or photo work</h1><a class="lcd-cta" href="mailto:${EMAIL}">${ICON.mail}${EMAIL}</a>${socialLinks}</div>`;
