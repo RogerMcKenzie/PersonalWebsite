@@ -26,6 +26,12 @@ for(const mobile of [false,true]){
  const resume=viewHTML('resume',state);
  assert.match(resume,/>Open résumé(?:<svg|<\/a>)/);
  assert.match(resume,/Download PDF/);
+ if(mobile){
+  assert.match(resume,/<iframe class="resume-frame"/, 'mobile résumé is shown immediately');
+  assert.doesNotMatch(resume,/<details|loading="lazy"|Preview here/, 'no collapsed/lazy preview gate');
+  assert.ok(resume.indexOf('</iframe>')<resume.indexOf('Download PDF'), 'download follows the document');
+  assert.match(resume,/>Download PDF[\s\S]*<\/a><\/div><\/section>$/, 'download is the final action');
+ }
  assert.match(viewHTML('about',state),/Experience/,'About topic stays Experience');
  assert.match(viewHTML('photos',state),/>Videos<\/button>/,'Videos stays a Photos tab');
 }
