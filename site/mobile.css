@@ -85,11 +85,12 @@
   .camera-v2 .mobile-camera-settling .controls { transition-delay:30ms; }
   .camera-v2 .screen-bezel {
     --mobile-screen-rise:6.5cqw;
+    --mobile-screen-drop:4cqw;
     position:absolute;
     left:calc(100% - var(--lcd-top) - var(--lcd-height));
     top:calc(var(--lcd-left) - var(--mobile-screen-rise));
     width:var(--lcd-height);
-    height:calc(var(--lcd-width) + var(--mobile-screen-rise));
+    height:calc(var(--lcd-width) + var(--mobile-screen-rise) + var(--mobile-screen-drop));
     padding:0;
     border-radius:2px;
     background:none;
