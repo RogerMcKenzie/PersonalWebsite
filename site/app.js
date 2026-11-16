@@ -1,5 +1,5 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=sections-20261115-1';
-import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=sections-20261115-1';
+import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=mobile-resume-20261115-1';
 
 const views=sectionIds;
 const navViews=new Set(views.filter(view=>view!=='home'));
@@ -105,7 +105,7 @@ function applyView(view,{focus=false,hash=true}={}){
   resumeResizeObserver.observe(viewer);
   resumeLoadingTimer=setTimeout(()=>{
    const loading=viewer.querySelector('.resume-loading');
-   if(loading&&!loading.hidden)loading.textContent='Preview taking a while? Open the résumé above';
+   if(loading&&!loading.hidden)loading.textContent=`Preview taking a while? Open the résumé ${cameraDesktop.matches?'above':'below'}`;
   },10000);
   resumeFrame.addEventListener('load',()=>{
    clearTimeout(resumeLoadingTimer);
