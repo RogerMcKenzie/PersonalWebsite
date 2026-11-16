@@ -34,8 +34,6 @@ const videos=[
 const lists={
  projects:{label:sections.projects,items:[
   {name:'Studio Stack',text:'Production scheduling, brief intake and gear reservations for The Agency at UF. As lead developer I built the cloud backend with role-based sign-in and workflow tracking.',meta:'TypeScript, AWS Lambda, PostgreSQL, S3'},
-  {name:'ResMatch',text:'Tailors a résumé to the job description you’re applying for.',meta:'Next.js, TypeScript, OpenAI'},
-  {name:'SnapCal',text:'A Chrome extension that turns events on a webpage into Google Calendar entries, with a preview to check before saving.',meta:'Chrome extension, Gemini, Google Calendar'},
   {name:'Jenna’s Recipes',img:'assets/jennas-recipes.jpg',text:'Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits.',meta:'React, TypeScript, MUI',url:'https://jennarecipes.vercel.app',cta:'Open the app'}
  ]},
  about:{label:sections.about,items:[
@@ -46,9 +44,9 @@ const lists={
 };
 const menuPreviews={
  about:{img:'assets/profile.jpg',text:'Software developer and photographer at the University of Florida'},
- projects:{img:'assets/jennas-recipes.jpg',text:'Studio Stack, ResMatch, SnapCal and Jenna’s Recipes'},
+ projects:{img:'assets/jennas-recipes.jpg',text:'Studio Stack and Jenna’s Recipes'},
  photos:{img:'assets/photography/sunset-cathedral.jpg',text:'Four photographs from Washington, Las Vegas and San Francisco'},
- resume:{text:'Two software engineering internships at Amazon, and lead developer at The Agency at UF'},
+ resume:{document:`${RESUME}/preview`,text:''},
  contact:{text:EMAIL}
 };
 
