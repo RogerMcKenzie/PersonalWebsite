@@ -38,3 +38,9 @@ The static HTML stays visible until the app initializes, so a failed script down
 Browser review covered 320, 375, 390 and 430px phone widths, landscape, both sides of the 1000px breakpoint and 1440px desktop, with no horizontal overflow. Mobile starts near edge-to-edge, trimming the poster’s transparent margins instead of scaling the body down to the viewport height; lower controls stay reachable through normal page scrolling. The smaller LCD uses two rows of navigation below 356px. Project expansion, menu navigation/focus, photo detail, browser history and résumé actions were checked in the browser. Physical iOS/Android testing remains separate.
 
 The mobile poster applies the same red wheel-segment color as the desktop renderer. The Home portrait keeps its existing crop; only the outer camera is enlarged.
+
+## Mobile entrance
+
+On a fresh mobile page load, `site/mobile-intro.js` plays a 1.75-second rendered camera turn and crossfades into the existing LCD and controls. The H.264 clip is about 185 KB; phones still do not download Three.js or the GLB. Desktop retains its live 3D entrance. Reduced motion and data saver skip the clip entirely. Tapping, scrolling, keyboard input, a width change or hiding the page immediately restores the normal camera. Autoplay/load failures and a 1.2-second loading deadline also fall back to the still image. Section navigation does not replay the entrance.
+
+Regenerate the clip with `blender --background --python scripts/render-mobile-intro.py` (requires ffmpeg). It shares the poster renderer’s model, lighting, red wheel material, framing and overscan. `npm run test:mobile-intro` checks lifecycle and accessibility fallbacks; browser checks cover playback, the LCD handoff, tap-to-skip, navigation and desktop isolation.

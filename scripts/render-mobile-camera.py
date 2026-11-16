@@ -17,7 +17,7 @@ FRAME["height"] = FRAME["width"] / FRAME["aspect"]
 WEB_HIDDEN = ["Label_Menu", "Label_Fn", "Label_C2", "Label_Delete_Icon",
               "Label_Playback_Icon", "Label_Wheel_Arrows"]
 
-def render_poster(path, width=2400, coll="ZV-E10_Real"):
+def render_poster(path, width=2400, coll="ZV-E10_Real", samples=64, overscan=1):
     """Rear poster with the site's close warm key, cool edge strip and dark studio lighting.
     Cycles supplies contact shadows; the glTF occlusion input is for the browser only.
     Everything temporary, including colour management, is restored after rendering."""
@@ -34,7 +34,7 @@ def render_poster(path, width=2400, coll="ZV-E10_Real"):
     temp = []
     cam_data = bpy.data.cameras.new("Web_Rear_Cam")
     cam_data.type = "ORTHO"
-    cam_data.ortho_scale = FRAME["width"] / 100
+    cam_data.ortho_scale = FRAME["width"] / 100 * overscan
     cam = bpy.data.objects.new("Web_Rear_Cam", cam_data)
     sc.collection.objects.link(cam)
     cam.location = (FRAME["cx"] / 100, 0.5, FRAME["cz"] / 100)
@@ -75,7 +75,7 @@ def render_poster(path, width=2400, coll="ZV-E10_Real"):
         for o in others:
             o.hide_render = True
         r.engine = "CYCLES"
-        sc.cycles.samples = 64; sc.cycles.use_denoising = True
+        sc.cycles.samples = samples; sc.cycles.use_denoising = True
         for transform in ("Khronos PBR Neutral", "Standard"):
             try:
                 sc.view_settings.view_transform = transform; break
@@ -119,7 +119,7 @@ def render_poster(path, width=2400, coll="ZV-E10_Real"):
     return path
 
 
-def render_mobile():
+def prepare_mobile_model():
     root = Path(__file__).resolve().parents[1]
     assets = root / "site/assets/camera"
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -147,6 +147,11 @@ def render_mobile():
         obj = bpy.data.objects.get(name)
         if obj:
             obj.hide_render = True
+
+
+def render_mobile():
+    prepare_mobile_model()
+    assets = Path(__file__).resolve().parents[1] / "site/assets/camera"
     render_poster(str(assets / "zv-e10-rear-mobile.webp"), width=2400)
 
 

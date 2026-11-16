@@ -42,3 +42,6 @@ next-env.d.ts
 # Generated runtime assets and Cloudflare local state
 site/vendor/
 .wrangler/
+
+# Blender render scripts
+__pycache__/

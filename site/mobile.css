@@ -1,5 +1,6 @@
 /* The rear camera turns clockwise on phones; its HTML LCD stays upright. */
 .mobile-nav,.mobile-menu-close { display:none; }
+.mobile-camera-intro,.mobile-intro-status { display:none; }
 
 @media (max-width:1000px) {
   body.camera-v2 {
@@ -47,6 +48,40 @@
     transform:rotate(90deg);
     transform-origin:0 0;
   }
+  .camera-v2 .mobile-intro-status {
+    position:absolute;
+    top:32svh; left:50%;
+    transform:translateX(-50%);
+    font-size:14px;
+    white-space:nowrap;
+  }
+  .camera-mobile-boot .camera-v2 .mobile-intro-status { display:block; }
+  .camera-v2 .camera :is(.screen-bezel,.controls) { transition:none; }
+  .camera-mobile-boot .camera-v2 .camera :is(.camera-shell,.screen-bezel,.controls),
+  .camera-v2 .camera.mobile-camera-entering :is(.camera-shell,.screen-bezel,.controls) { opacity:0; transition:none; }
+  .camera-v2 .mobile-camera-intro {
+    display:block;
+    position:absolute;
+    inset:0;
+    z-index:5;
+    contain:paint;
+    overflow:clip;
+    pointer-events:none;
+    opacity:0;
+  }
+  .camera-v2 .mobile-camera-intro.is-visible { opacity:1; }
+  .camera-v2 .mobile-camera-intro.is-finishing { opacity:0; transition:opacity 180ms ease-out; }
+  .camera-v2 .mobile-camera-intro video {
+    position:absolute;
+    left:125%; top:-25%;
+    width:266.666667%; height:84.375%;
+    transform:rotate(90deg);
+    transform-origin:0 0;
+    object-fit:fill;
+    pointer-events:none;
+  }
+  .camera-v2 .mobile-camera-settling :is(.screen-bezel,.controls) { transition:opacity 180ms ease-out; }
+  .camera-v2 .mobile-camera-settling .controls { transition-delay:30ms; }
   .camera-v2 .screen-bezel {
     position:absolute;
     left:calc(100% - var(--lcd-top) - var(--lcd-height));
