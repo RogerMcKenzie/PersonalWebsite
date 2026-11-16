@@ -1,7 +1,13 @@
-import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=mobile-close-20261115-1';
+import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=sections-20261115-1';
+import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=sections-20261115-1';
 
-const views=['home','about','work','photos','resume','contact'];
-const navViews=new Set(['about','work','photos','resume','contact']);
+const views=sectionIds;
+const navViews=new Set(views.filter(view=>view!=='home'));
+// Keep the static fallback useful without JavaScript; hydrate live labels from one registry.
+document.querySelectorAll('[data-view]').forEach(button=>{
+ const label=button.querySelector('.control-label')||button;
+ label.textContent=sections[button.dataset.view];
+});
 // Hide duplicate lettering only when the visible model/poster supplies the printed ink.
 const cameraBody=document.querySelector('.camera');
 const cameraPoster=cameraBody.querySelector('.camera-shell');
@@ -23,7 +29,7 @@ let photoIndex=0;
 let photoMode='index';
 let photoTab='photos';
 let videoIndex=0;
-const listIndex={work:0,about:0};
+const listIndex={projects:0,about:0};
 const lcd=document.getElementById('lcd');
 const display=document.getElementById('display-content');
 const cameraMenu=document.getElementById('camera-menu');
@@ -36,11 +42,7 @@ let menuOpener;
 const viewState=()=>({photoIndex,photoMode,photoTab,videoIndex,listIndex,mobile:!cameraDesktop.matches});
 
 // ---------------------------------------------------------------- navigation
-function normalise(view){
- if(view==='outside')view='photos';
- if(view==='experience')view='resume';
- return views.includes(view)?view:'home';
-}
+const normalise=normaliseSection;
 function updateNav(){
  const navOn=!cameraMenu.hidden?false:navViews.has(current)&&!(current==='photos'&&photoMode!=='index');
  lcd.dataset.nav=navOn?'on':'off';
@@ -104,20 +106,20 @@ function applyView(view,{focus=false,hash=true}={}){
  document.querySelectorAll('.dial-item,.lcd-nav [data-view],.mobile-nav [data-view]').forEach(b=>{
   if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
  });
- const angles={home:0,about:0,work:90,photos:180,resume:270,contact:0};
+ const angles={home:0,about:0,projects:90,photos:180,resume:270,contact:0};
  document.getElementById('dial-indicator').style.setProperty('--angle',angles[view]+'deg');
- const browsing=view==='photos'?'photograph':lists[view]?'item':'section';
- document.getElementById('previous').setAttribute('aria-label',`Previous ${browsing}`);
- document.getElementById('next').setAttribute('aria-label',`Next ${browsing}`);
+ updateBrowseLabels();
  if(hash&&location.hash!==`#${view}`)history.pushState(photoHistory(),'',`#${view}`);
- const titles={home:'Software, photography & content',about:'About',work:'Apps',photos:'Photography',resume:'Résumé',contact:'Contact'};
- document.title=`Roger McKenzie | ${titles[view]}`;
+ document.title=`Roger McKenzie | ${view==='home'?'Software, photography & content':sections[view]}`;
  if(focus)display.focus({preventScroll:true});
  if(changed&&!cameraDesktop.matches)window.scrollTo({top:0,behavior:'instant'});
  watchImages();
 }
 function render(view,options={}){
+ const alias=Object.hasOwn(sectionAliases,location.hash.slice(1));
  view=normalise(view);
+ // Canonicalise old bookmarks in place, including Back/Forward, without an extra entry.
+ if(alias&&normalise(location.hash.slice(1))===view)history.replaceState(history.state,'',`#${view}`);
  // Photos opens on the grid; picking a photo starts the slideshow.
  if(view==='photos'&&current!=='photos'&&!options.keepPhotoMode){photoMode='index';photoTab='photos';}
  const unchanged=current===view;
@@ -142,7 +144,7 @@ let menuIndex=0;
 function selectMenu(index,{focus=false}={}){
  const direction=index<menuIndex?-1:1;
  menuIndex=(index+menuButtons.length)%menuButtons.length;
- while(!cameraDesktop.matches&&['work','photos'].includes(menuButtons[menuIndex].dataset.view)){
+ while(!cameraDesktop.matches&&['projects','photos'].includes(menuButtons[menuIndex].dataset.view)){
   menuIndex=(menuIndex+direction+menuButtons.length)%menuButtons.length;
  }
  menuButtons.forEach((b,i)=>b.setAttribute('aria-current',String(i===menuIndex)));
@@ -152,6 +154,11 @@ function selectMenu(index,{focus=false}={}){
  menuPreviewText.textContent=preview.text;
  if(focus)menuButtons[menuIndex].focus({preventScroll:true});
 }
+function updateBrowseLabels(){
+ const browsing=cameraMenu.hidden?browsingLabel(current,photoTab):'menu item';
+ document.getElementById('previous').setAttribute('aria-label',`Previous ${browsing}`);
+ document.getElementById('next').setAttribute('aria-label',`Next ${browsing}`);
+}
 function setMenuOpen(open,{focus=false}={}){
  if(open){
   menuOpener=document.activeElement;
@@ -159,6 +166,7 @@ function setMenuOpen(open,{focus=false}={}){
   selectMenu(at<0?0:at);
  }
  cameraMenu.hidden=!open;
+ updateBrowseLabels();
  display.inert=open;
  document.querySelectorAll('.mobile-nav [data-view]').forEach(b=>b.removeAttribute('aria-current'));
  if(!open)document.querySelector(`.mobile-nav [data-view="${current}"]`)?.setAttribute('aria-current','page');
@@ -177,7 +185,7 @@ cameraMenu.addEventListener('keydown',e=>{
  e.preventDefault();selectMenu(menuIndex+(e.key==='ArrowDown'?1:-1),{focus:true});
 });
 
-// ---------------------------------------------------------------- lists (Work, About)
+// ---------------------------------------------------------------- lists (Projects, About)
 function selectItem(kind,index,{focus=false}={}){
  const items=lists[kind].items;
  const next=(index+items.length)%items.length;
@@ -210,7 +218,7 @@ function selectItem(kind,index,{focus=false}={}){
 display.addEventListener('toggle',e=>{
  const project=e.target.closest('details[data-project]');
  if(!project?.open)return;
- listIndex.work=Number(project.dataset.project);
+ listIndex.projects=Number(project.dataset.project);
  display.querySelectorAll('details[data-project]').forEach(other=>{if(other!==project)other.open=false;});
 },true);
 display.addEventListener('pointerover',e=>{
@@ -328,7 +336,7 @@ document.addEventListener('pointercancel',()=>{photoGesture=null;});
 // The physical wheel steps through the four printed sections. Inside the menu it moves the
 // selection instead. Dragging preserves a simple click until a real turn starts.
 const sectionWheel=document.querySelector('.dial');
-const wheelSections=['about','work','photos','resume'];
+const wheelSections=['about','projects','photos','resume'];
 let wheelScroll=0,wheelScrollAt=0,wheelChangedAt=-Infinity;
 function stepWheel(direction){
  if(!cameraMenu.hidden){selectMenu(menuIndex+direction,{focus:true});return;}
@@ -356,7 +364,7 @@ sectionWheel.addEventListener('keydown',e=>{
 });
 // Dragging turns the wheel 1:1 with the pointer (camera3d.js draws it from 'camera-wheel'
 // events). The section under the red segment opens as soon as the segment reaches it.
-const WHEEL_ANGLE={about:0,work:-Math.PI/2,photos:Math.PI,resume:Math.PI/2};
+const WHEEL_ANGLE={about:0,projects:-Math.PI/2,photos:Math.PI,resume:Math.PI/2};
 let dialAngle=0;
 function nearAngle(angle,reference){return angle+Math.round((reference-angle)/(2*Math.PI))*2*Math.PI;}
 function sendWheel(angle,active){document.dispatchEvent(new CustomEvent('camera-wheel',{detail:{angle,active}}));}
@@ -425,7 +433,7 @@ sectionWheel.addEventListener('click',e=>{
  const p=wheelPoint(e);
  if(Math.hypot(p.x,p.y)<sectionWheel.offsetWidth*.16)return;
  const quarter=((Math.round(Math.atan2(p.y,p.x)/(Math.PI/2))%4)+4)%4;
- render(['work','photos','resume','about'][quarter],{focus:true});
+ render(['projects','photos','resume','about'][quarter],{focus:true});
 });
 // The centre button confirms the menu selection while the menu is open.
 document.querySelector('.dial-center').addEventListener('click',e=>{

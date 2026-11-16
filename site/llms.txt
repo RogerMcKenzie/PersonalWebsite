@@ -34,13 +34,13 @@ The website is an interactive camera (a Sony ZV-E10) whose screen shows the site
 - Cloud and tools: AWS (Lambda, API Gateway, S3, DynamoDB, RDS, Cognito, IAM, CloudWatch, CDK), Docker, Git, Vercel
 - Frameworks: React, Next.js, Node.js, Fastify, FastAPI, tRPC, Tailwind CSS, Zod
 
-## Apps I've built
+## Projects
 - Studio Stack: production scheduling, brief intake and gear reservations for The Agency at UF. Cloud backend with role-based sign-in and workflow tracking (TypeScript, AWS Lambda, PostgreSQL, S3).
 - ResMatch: tailors a résumé to a job description (Next.js, TypeScript, OpenAI).
 - SnapCal: Chrome extension that turns events on a webpage into Google Calendar entries (Gemini, Google Calendar).
 - [Jenna's Recipes](https://jennarecipes.vercel.app): recipe search by ingredient, Gemini suggestions and a saved shopping list (React, TypeScript, MUI).
 
-## Photographs and video
+## Photos
 - Cathedral sunset, Washington, DC (2026)
 - Terrace lights (2026)
 - Caesars Palace, Las Vegas, NV (2026)
@@ -50,7 +50,7 @@ The website is an interactive camera (a Sony ZV-E10) whose screen shows the site
 ## Links
 - [Résumé (Google Docs)](https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/edit)
 - [Résumé (PDF)](https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3/export?format=pdf)
-- Contact: see the "Get in touch" section of the site
+- Contact: see the "Contact" section of the site
 - [GitHub](https://github.com/RogerMcKenzie)
 - [LinkedIn](https://www.linkedin.com/in/rogermckenzie/)
 - [YouTube](https://www.youtube.com/@RogerMcKenzie1)

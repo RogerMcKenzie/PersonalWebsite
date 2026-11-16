@@ -1,3 +1,5 @@
+import { sections } from './sections.js?v=sections-20261115-1';
+
 const EMAIL='roger@rogermckz.dev';
 const YOUTUBE='https://www.youtube.com/@RogerMcKenzie1';
 const RESUME='https://docs.google.com/document/d/15JX0X1Reny-b6ptbkC4ADLikTLXrJYg3';
@@ -29,13 +31,13 @@ const videos=[
  {id:'hrOAiSEx3Ww',title:'AfroTech 2025',location:'Houston, TX',year:'2025',vertical:true}
 ];
 const lists={
- work:{label:'Apps I’ve built',items:[
+ projects:{label:sections.projects,items:[
   {name:'Studio Stack',text:'Production scheduling, brief intake and gear reservations for The Agency at UF. As lead developer I built the cloud backend with role-based sign-in and workflow tracking.',meta:'TypeScript, AWS Lambda, PostgreSQL, S3'},
   {name:'ResMatch',text:'Tailors a résumé to the job description you’re applying for.',meta:'Next.js, TypeScript, OpenAI'},
   {name:'SnapCal',text:'A Chrome extension that turns events on a webpage into Google Calendar entries, with a preview to check before saving.',meta:'Chrome extension, Gemini, Google Calendar'},
   {name:'Jenna’s Recipes',img:'assets/jennas-recipes.jpg',text:'Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits.',meta:'React, TypeScript, MUI',url:'https://jennarecipes.vercel.app',cta:'Open the app'}
  ]},
- about:{label:'About me',items:[
+ about:{label:sections.about,items:[
   {name:'Background',img:'assets/profile.jpg',text:'I’m from Miami and the first in my family to go to college. I study Information Systems at the University of Florida, with minors in Computer Science and Statistics.',links:true},
   {name:'Experience',img:'assets/profile.jpg',text:'Software engineering intern at Amazon in Arlington, Virginia, in 2025 and 2026. Lead developer at The Agency at UF since April 2026.'},
   {name:'Off the clock',img:'assets/profile.jpg',text:'Cooking, climbing, gaming and tinkering with a home server. I also make videos about tech on YouTube.',links:true}
@@ -43,7 +45,7 @@ const lists={
 };
 const menuPreviews={
  about:{img:'assets/profile.jpg',text:'Software developer and photographer at the University of Florida'},
- work:{img:'assets/jennas-recipes.jpg',text:'Studio Stack, ResMatch, SnapCal and Jenna’s Recipes'},
+ projects:{img:'assets/jennas-recipes.jpg',text:'Studio Stack, ResMatch, SnapCal and Jenna’s Recipes'},
  photos:{img:'assets/photography/sunset-cathedral.jpg',text:'Four photographs from Washington, Las Vegas and San Francisco'},
  resume:{text:'Two software engineering internships at Amazon, and lead developer at The Agency at UF'},
  contact:{text:EMAIL}
@@ -52,7 +54,7 @@ const menuPreviews={
 function mobileListView(kind,{listIndex}){
  const {label,items}=lists[kind];
  if(kind==='about')return `<section class="mobile-about mobile-page"><h1>${label}</h1><img src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" loading="lazy">${items.map(item=>`<section><h2>${item.name}</h2><p>${item.text}</p></section>`).join('')}${socialLinks}</section>`;
- return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.work?'open':''}><summary>${item.name}${ICON.down}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
+ return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.projects?'open':''}><summary>${item.name}${ICON.down}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
 }
 
 function homeView(){
@@ -88,11 +90,11 @@ function thumbsHTML({photoTab,videoIndex,photoIndex}){
 }
 function indexView(state){
  const {photoTab}=state;
- return `<div class="lcd-page lcd-index"><h1 class="lcd-sr">Photographs</h1><div class="lcd-tabs lcd-narrow" role="tablist"><button role="tab" data-photo-tab="photos" aria-selected="${photoTab==='photos'}" class="${photoTab==='photos'?'is-on':''}">${ICON.photo}Photos</button><button role="tab" data-photo-tab="videos" aria-selected="${photoTab==='videos'}" class="${photoTab==='videos'?'is-on':''}">${ICON.video}Videos</button></div><div class="lcd-thumbs">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
+ return `<div class="lcd-page lcd-index"><h1 class="lcd-sr">${sections.photos}</h1><div class="lcd-tabs lcd-narrow" role="tablist"><button role="tab" data-photo-tab="photos" aria-selected="${photoTab==='photos'}" class="${photoTab==='photos'?'is-on':''}">${ICON.photo}Photos</button><button role="tab" data-photo-tab="videos" aria-selected="${photoTab==='videos'}" class="${photoTab==='videos'?'is-on':''}">${ICON.video}Videos</button></div><div class="lcd-thumbs">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
 }
 function resumeView({mobile}){
- if(mobile)return `<section class="mobile-resume mobile-page"><h1>Résumé</h1><div class="mobile-resume-actions"><a class="lcd-cta" href="${RESUME}/edit" ${external}>Open résumé${ICON.out}</a><a class="lcd-plain" href="${RESUME}/export?format=pdf">Download PDF${ICON.down}</a></div><details class="mobile-resume-preview"><summary>Preview here${ICON.down}</summary><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" loading="lazy" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></details></section>`;
- return `<div class="lcd-resume"><div class="lcd-resume-top"><h1>Résumé</h1><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open in Google Docs</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">${ICON.down}Download PDF</a></div><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>`;
+ if(mobile)return `<section class="mobile-resume mobile-page"><h1>${sections.resume}</h1><div class="mobile-resume-actions"><a class="lcd-cta" href="${RESUME}/edit" ${external}>Open résumé${ICON.out}</a><a class="lcd-plain" href="${RESUME}/export?format=pdf">Download PDF${ICON.down}</a></div><details class="mobile-resume-preview"><summary>Preview here${ICON.down}</summary><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" loading="lazy" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></details></section>`;
+ return `<div class="lcd-resume"><div class="lcd-resume-top"><h1>${sections.resume}</h1><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">${ICON.down}Download PDF</a></div><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>`;
 }
 function contactView(){
  return `<div class="lcd-contact"><h1>Email me about internships, collaborations or photo work</h1><a class="lcd-cta" href="mailto:${EMAIL}">${ICON.mail}${EMAIL}</a>${socialLinks}</div>`;
@@ -104,7 +106,7 @@ function videoView({videoIndex}){
 function viewHTML(view,state){
  const {photoMode}=state;
  if(view==='home')return homeView(state);
- if(view==='about'||view==='work')return listView(view,state);
+ if(view==='about'||view==='projects')return listView(view,state);
  if(view==='photos')return photoMode==='index'?indexView(state):photoMode==='play'?videoView(state):slideshowView(state);
  if(view==='resume')return resumeView(state);
  return contactView();

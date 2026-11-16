@@ -10,17 +10,20 @@ const asset = JSON.parse(bytes.toString('utf8', 20, 20 + jsonLength));
 const binaryStart = 20 + jsonLength + 8;
 const printedRoot = asset.nodes.find(n => n.name === 'ZV-E10');
 assert.equal(printedRoot.extras.portfolio_labels, true, 'export identifies portfolio printing');
+assert.equal(printedRoot.extras.portfolio_label_version, 4, 'canonical printed destination names');
 assert.ok(bytes.length <= 5e6, 'GLB stays under the 5 MB budget');
 assert.ok(asset.meshes.reduce((sum,m) => sum + m.primitives.reduce((n,p) =>
   n + asset.accessors[p.indices].count / 3, 0), 0) <= 100000, 'triangle budget');
-const labelMaterial = asset.materials.find(m => m.name === 'ZVR_Labels');
+for (const name of ['ZVR_Labels','ZVR_WheelLabels']) {
+const labelMaterial = asset.materials.find(m => m.name === name);
 assert.equal(labelMaterial.alphaMode, 'BLEND');
 assert.ok(!labelMaterial.emissiveFactor?.some(v => v > 0), 'print receives scene lighting');
 assert.ok(labelMaterial.pbrMetallicRoughness.roughnessFactor >= 0.5, 'matte print');
+}
 for (const [name, parent, marking] of [
   ['Label_Menu','ZV-E10','MENU'], ['Label_Fn','Fn_Button','PREVIOUS'],
   ['Label_Playback_Icon','Playback_Button','PLAYBACK'], ['Label_Delete_Icon','Delete_Button','NEXT'],
-  ['Label_Home','Wheel_Center','HOME'], ['Label_Wheel_Arrows','ZV-E10','ABOUT | WORK | PHOTOS | CAREER'],
+  ['Label_Home','Wheel_Center','HOME'], ['Label_Wheel_Arrows','ZV-E10','ABOUT | PROJECTS | PHOTOS | RÉSUMÉ'],
 ]) {
   const index = asset.nodes.findIndex(n => n.name === name);
   assert.ok(index >= 0, `${name} is exported`);

@@ -33,7 +33,7 @@
 .camera-v2 .lcd-links { display:flex; flex-wrap:wrap; gap:4px 22px; font-weight:600; }
 .camera-v2 .lcd-links a { display:inline-flex; align-items:center; min-height:44px; color:var(--lcd-ink); text-decoration:underline; text-decoration-color:var(--lcd-red); text-decoration-thickness:2px; text-underline-offset:5px; }
 
-/* Section nav, shared by About, Work, All photos, Résumé and Contact */
+/* Section nav, shared by About, Projects, All photos, Résumé and Contact */
 .camera-v2 .lcd-nav { position:absolute; left:0; right:0; bottom:0; height:52px; display:flex; justify-content:center; gap:6px; background:var(--lcd-bg); z-index:4; }
 .camera-v2 .lcd-nav button { display:grid; place-items:center; padding:0 16px; color:var(--lcd-soft); font-stretch:75%; font-weight:600; font-size:15px; position:relative; transition:color .15s; }
 .camera-v2 .lcd-nav button:hover { color:var(--lcd-ink); }
@@ -78,7 +78,7 @@
 .camera-v2 .lcd-preview p { color:var(--lcd-soft); font-size:15px; line-height:1.45; }
 @keyframes lcd-rise { from { opacity:0; transform:translateY(6px); } }
 
-/* Menu-style pages (Work, About) */
+/* Menu-style pages (Projects, About) */
 .camera-v2 .lcd-page { position:absolute; inset:0 0 52px 0; }
 .camera-v2 .lcd-list { position:absolute; inset:0 0 52px 0; display:grid; grid-template-columns:1fr 262px; gap:28px; padding:40px 28px 0 30px; }
 .camera-v2 .lcd-list ul { list-style:none; display:grid; align-content:start; gap:2px; }

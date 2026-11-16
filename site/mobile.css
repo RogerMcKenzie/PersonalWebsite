@@ -279,7 +279,7 @@
     gap:0;
     position:relative;
   }
-  .camera-v2 .lcd-menu>.lcd-batt,.camera-v2 .lcd-menu li:has([data-view=work]),.camera-v2 .lcd-menu li:has([data-view=photos]) { display:none; }
+  .camera-v2 .lcd-menu>.lcd-batt,.camera-v2 .lcd-menu li:has([data-view=projects]),.camera-v2 .lcd-menu li:has([data-view=photos]) { display:none; }
   .camera-v2 .lcd-menu ul { gap:8px; }
   .camera-v2 .lcd-menu li button { min-height:44px; font-size:24px; color:var(--lcd-ink); }
   .camera-v2 .lcd-menu li button::before { display:none; }
