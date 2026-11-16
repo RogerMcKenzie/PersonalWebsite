@@ -1,5 +1,6 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=sections-20261115-1';
 import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=home-projects-20261115-1';
+import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
 const navViews=new Set(views.filter(view=>view!=='home'));
@@ -35,6 +36,7 @@ const display=document.getElementById('display-content');
 const cameraMenu=document.getElementById('camera-menu');
 const menuToggle=document.getElementById('menu-toggle');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const mobilePhotos=createMobilePhotoViewer({photos,reducedMotion,onStep:changePhoto,onClose:()=>setPhotoMode('index',{focus:true})});
 const dialIndicator=document.getElementById('dial-indicator');
 const dialAngles={home:0,about:0,projects:90,photos:180,resume:270,contact:0};
 let indicatorAngle=0;
@@ -49,7 +51,7 @@ const keyboardNavigation=()=>document.documentElement.dataset.navigation==='keyb
 let resumeResizeObserver;
 let resumeLoadingTimer;
 let menuOpener;
-const viewState=()=>({photoIndex,photoMode,photoTab,videoIndex,listIndex,mobile:!cameraDesktop.matches});
+const viewState=()=>({photoIndex,photoMode:!cameraDesktop.matches&&photoMode==='show'?'index':photoMode,photoTab,videoIndex,listIndex,mobile:!cameraDesktop.matches});
 
 // ---------------------------------------------------------------- navigation
 const normalise=normaliseSection;
@@ -72,6 +74,7 @@ function iframeViewportRatio(host){
  return inner>0?inner/100:1;
 }
 function applyView(view,{focus=false,hash=true}={}){
+ mobilePhotos.close({animate:false,restoreFocus:false});
  const changed=current!==normalise(view);
  view=normalise(view);
  current=view;
@@ -123,6 +126,7 @@ function applyView(view,{focus=false,hash=true}={}){
  if(focus)display.focus({preventScroll:true});
  if(changed&&!cameraDesktop.matches)window.scrollTo({top:0,behavior:'instant'});
  watchImages();
+ if(view==='photos'&&photoMode==='show'&&!cameraDesktop.matches)mobilePhotos.open(photoIndex);
 }
 function render(view,options={}){
  const alias=Object.hasOwn(sectionAliases,location.hash.slice(1));
@@ -258,6 +262,15 @@ display.addEventListener('keydown',e=>{
 
 // ---------------------------------------------------------------- photos
 function changePhoto(direction){
+ if(mobilePhotos.isOpen){
+  const next=Math.max(0,Math.min(photos.length-1,photoIndex+direction));
+  if(next===photoIndex)return;
+  photoIndex=next;
+  selectThumbnail(photoIndex);
+  mobilePhotos.update(photoIndex,direction);
+  history.replaceState(photoHistory(),'',location.href);
+  return;
+ }
  photoIndex=(photoIndex+direction+photos.length)%photos.length;
  const viewerFocused=document.activeElement?.classList.contains('lcd-show-img');
  const focusedStep=document.activeElement?.dataset.photoStep;
@@ -297,6 +310,11 @@ function setPhotoMode(mode,{focus=false}={}){
  const wasIndex=photoMode==='index';
  if(wasIndex&&mode!=='index')history.replaceState(photoHistory(),'',location.href);
  photoMode=mode;
+ if(!cameraDesktop.matches&&mode==='show'){
+  mobilePhotos.open(photoIndex,{origin:display.querySelector(`[data-photo="${photoIndex}"]`)});
+  if(wasIndex)history.pushState({...photoHistory(),photoDetail:true},'',location.href);
+  return;
+ }
  render('photos',{keepPhotoMode:true,focus:false});
  if(wasIndex&&mode!=='index')history.pushState({...photoHistory(),photoDetail:true},'',location.href);
  if(focus){
@@ -505,6 +523,14 @@ fitLCD();
 
 window.addEventListener('popstate',e=>{
  const state=e.state;
+ const closeMobilePhoto=mobilePhotos.isOpen&&!cameraDesktop.matches&&normalise(location.hash.slice(1))==='photos'&&(state?.photoMode||'index')==='index'&&(state?.photoTab||'photos')==='photos';
+ if(closeMobilePhoto){
+  photoMode='index';photoTab='photos';
+  mobilePhotos.close();
+  selectThumbnail(photoIndex);
+  history.replaceState(photoHistory(),'',location.href);
+  return;
+ }
  photoMode=state?.photoMode||'index';photoTab=state?.photoTab||'photos';
  photoIndex=state?.photoIndex||0;videoIndex=state?.videoIndex||0;
  render(location.hash.slice(1),{hash:false,instant:true,keepPhotoMode:true,focus:true});
