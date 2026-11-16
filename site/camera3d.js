@@ -146,6 +146,7 @@ async function start({ intro }) {
     highlight.material = highlight.material.clone();
     highlight.material.color.set(0xc8102e);
     if (highlight.material.emissive?.getHex()) highlight.material.emissive.set(0x7a0a14);
+    highlight.visible = document.body.dataset.cameraView !== 'home';
     setWheel(wheelAngle);
   }
 
@@ -254,6 +255,7 @@ async function start({ intro }) {
     if (!highlight) return;
     const { angle, active } = e.detail;
     wheelHeld = active;
+    highlight.visible = active || document.body.dataset.cameraView !== 'home';
     if (active) {
       wheelAngle = wheelTarget = detent(angle);
       setWheel(wheelAngle);
@@ -267,6 +269,7 @@ async function start({ intro }) {
     request();
   }
   new MutationObserver(() => {
+    if (highlight) highlight.visible = wheelHeld || document.body.dataset.cameraView !== 'home';
     if (wheelHeld) return;
     const target = WHEEL_ANGLE[document.body.dataset.cameraView] ?? 0;
     // Take the short way round.

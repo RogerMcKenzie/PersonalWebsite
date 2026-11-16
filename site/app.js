@@ -116,7 +116,7 @@ function applyView(view,{focus=false,hash=true}={}){
    resumeFrame.previousElementSibling.hidden=true;
   },{once:true});
  }
- document.querySelectorAll('.dial-item,.lcd-nav [data-view],.mobile-nav [data-view]').forEach(b=>{
+ document.querySelectorAll('.dial-item,.dial-center,.lcd-nav [data-view],.mobile-nav [data-view]').forEach(b=>{
   if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
  });
  if(!wheelDrag?.turning)setDialIndicator(dialAngles[view]);
