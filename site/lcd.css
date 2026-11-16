@@ -44,7 +44,6 @@
 /* Home: live view */
 .camera-v2 .lcd-live { position:absolute; inset:0; }
 .camera-v2 .lcd-feed { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 30%; }
-.camera-v2 .lcd-where { position:absolute; top:13px; left:16px; }
 .camera-v2 .lcd-status { position:absolute; top:13px; right:16px; display:flex; align-items:center; gap:10px; }
 .camera-v2 .lcd-focus { position:absolute; left:38.5%; top:30%; width:22%; height:37%; transform:scale(1.3); transition:transform .4s var(--lcd-out); pointer-events:none; }
 .camera-v2 .lcd-focus.is-locked { transform:none; }
