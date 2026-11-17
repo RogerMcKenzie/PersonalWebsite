@@ -42,8 +42,8 @@ const lists={
  ]}
 };
 const menuPreviews={
- projects:{img:'assets/jennas-recipes.jpg',text:'My home server, Studio Stack and Jenna’s Recipes'},
- photos:{img:'assets/photography/sunset-cathedral.jpg',text:'Four photographs from Washington, Las Vegas and San Francisco'},
+ projects:{img:'assets/jennas-recipes.jpg',text:''},
+ photos:{img:'assets/photography/sunset-cathedral.jpg',text:''},
  resume:{document:`${RESUME}/preview`,text:''},
  contact:{img:'assets/favicon-512.png',text:EMAIL}
 };

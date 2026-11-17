@@ -1,5 +1,5 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=contact-menu-20261117-1';
-import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=contact-menu-20261117-1';
+import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=menu-captions-20261117-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
