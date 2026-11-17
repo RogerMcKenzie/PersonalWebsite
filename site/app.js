@@ -1,5 +1,5 @@
-import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=content-gallery-20261117-1';
-import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=content-gallery-20261117-1';
+import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=content-names-20261117-1';
+import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=content-names-20261117-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
