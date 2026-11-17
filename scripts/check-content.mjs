@@ -1,6 +1,6 @@
-// Check mixed-media identity, order, selection and direct project entry points.
+// Check mixed-media identity, order, selection and project-only lists.
 import assert from 'node:assert/strict';
-import {contentItems,selectedContentIndex,photos,videos,viewHTML,indexCaption} from '../site/portfolio-views.js';
+import {contentItems,selectedContentIndex,photos,videos,lists,viewHTML,indexCaption} from '../site/portfolio-views.js';
 const base={mobile:false,listIndex:{projects:0},photoMode:'index',photoTab:'all',allIndex:0,photoIndex:0,videoIndex:0};
 const all=contentItems(base);
 assert.equal(all.length,videos.length+photos.length);
@@ -26,7 +26,8 @@ assert.match(viewHTML('photos',{...base,photoMode:'show'}),/Back to content/);
 assert.match(viewHTML('photos',{...base,photoMode:'play'}),/Back to content/);
 for(const mobile of [false,true]){
  const html=viewHTML('projects',{...base,mobile});
- assert.match(html,/data-view="content\/videos"/);
- if(mobile)assert.match(html,/href="#content\/videos"/);
+ assert.doesNotMatch(html,/data-view="content\/videos"|>Content<|Watch videos/);
+ assert.deepEqual(lists.projects.items.map(item=>item.name),['Home Server','Studio Stack','Jenna’s Recipes']);
+ assert.equal((html.match(mobile?/<details data-project=/g:/<button data-item=/g)||[]).length,3);
 }
-console.log('PASS: mixed media order/identity, filters, captions, selection, return labels and project shortcuts.');
+console.log('PASS: mixed media order/identity, filters, captions, selection, return labels and project-only lists.');

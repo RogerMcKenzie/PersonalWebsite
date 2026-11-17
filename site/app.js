@@ -1,5 +1,5 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=content-names-20261117-1';
-import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=content-names-20261117-1';
+import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=projects-only-20261117-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
@@ -261,7 +261,7 @@ function selectItem(kind,index,{focus=false}={}){
   }
   display.scrollTop=section.offsetTop-16;
   if(focus){
-   const target=section.matches('a')?section:section.querySelector('summary,h2');
+   const target=section.querySelector('summary,h2');
    if(target){if(target.tagName==='H2')target.tabIndex=-1;target.focus({preventScroll:true});}
   }
   return;

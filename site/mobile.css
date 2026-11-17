@@ -320,7 +320,6 @@
   .camera-v2 .lcd-index[data-content-filter=all] .lcd-thumbs button { aspect-ratio:auto; }
   .camera-v2 .lcd-tabs { flex:none; height:auto; min-height:48px; padding:0 8px 10px; gap:0; justify-content:space-between; }
   .camera-v2 .lcd-tabs svg { display:none; }
-  .camera-v2 .mobile-project-content { display:flex; align-items:center; justify-content:space-between; min-height:56px; color:var(--lcd-ink); font-size:22px; font-weight:600; text-decoration:none; }
   .camera-v2 .lcd-tabs button { min-height:44px; padding:0 6px; font-size:14px; font-stretch:100%; }
   .camera-v2 .lcd-thumbs { padding:10px 14px; gap:12px; }
   .camera-v2 .lcd-thumbs button { min-width:44px; min-height:44px; aspect-ratio:4/5; background:#18181a; }
