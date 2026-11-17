@@ -1,5 +1,5 @@
-import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=contact-menu-20261117-1';
-import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=menu-captions-20261117-1';
+import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=content-gallery-20261117-1';
+import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=content-gallery-20261117-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
@@ -28,7 +28,8 @@ updatePrintedControls();
 let current='home';
 let photoIndex=0;
 let photoMode='index';
-let photoTab='photos';
+let photoTab='all';
+let allIndex=0;
 let videoIndex=0;
 const listIndex={projects:0};
 const lcd=document.getElementById('lcd');
@@ -51,7 +52,7 @@ const keyboardNavigation=()=>document.documentElement.dataset.navigation==='keyb
 let resumeResizeObserver;
 let resumeLoadingTimer;
 let menuOpener;
-const viewState=()=>({photoIndex,photoMode:!cameraDesktop.matches&&photoMode==='show'?'index':photoMode,photoTab,videoIndex,listIndex,mobile:!cameraDesktop.matches});
+const viewState=()=>({photoIndex,photoMode:!cameraDesktop.matches&&photoMode==='show'?'index':photoMode,photoTab,allIndex,videoIndex,listIndex,mobile:!cameraDesktop.matches});
 
 // ---------------------------------------------------------------- navigation
 const normalise=normaliseSection;
@@ -126,7 +127,8 @@ function applyView(view,{focus=false,hash=true}={}){
  });
  if(!wheelDrag?.turning)setDialIndicator(dialAngles[view]);
  updateBrowseLabels();
- if(hash&&location.hash!==`#${view}`)history.pushState(photoHistory(),'',`#${view}`);
+ const route=view==='photos'?`content/${photoTab}`:view;
+ if(hash&&location.hash!==`#${route}`)history.pushState(photoHistory(),'',`#${route}`);
  document.title=`Roger McKenzie | ${view==='home'?'Software, photography & content':sections[view]}`;
  if(focus)display.focus({preventScroll:true});
  if(changed&&!cameraDesktop.matches)window.scrollTo({top:0,behavior:'instant'});
@@ -134,12 +136,14 @@ function applyView(view,{focus=false,hash=true}={}){
  if(view==='photos'&&photoMode==='show'&&!cameraDesktop.matches)mobilePhotos.open(photoIndex);
 }
 function render(view,options={}){
+ const [section,filter]=view.split('/');
  const alias=Object.hasOwn(sectionAliases,location.hash.slice(1));
- view=normalise(view);
- // Canonicalise old bookmarks in place, including Back/Forward, without an extra entry.
- if(alias&&normalise(location.hash.slice(1))===view)history.replaceState(history.state,'',`#${view}`);
- // Photos opens on the grid; picking a photo starts the slideshow.
- if(view==='photos'&&current!=='photos'&&!options.keepPhotoMode){photoMode='index';photoTab='photos';}
+ view=normalise(section);
+ // Retain legacy section bookmarks; media routes include their selected filter.
+ if(alias&&view!=='photos'&&normalise(location.hash.slice(1))===view)history.replaceState(history.state,'',`#${view}`);
+ if(view==='photos'&&!options.keepPhotoMode){
+  photoMode='index';photoTab=contentTabs.includes(filter)?filter:'all';
+ }
  const unchanged=current===view;
  applyView(view,options);
  if(options.instant||unchanged||reducedMotion.matches||keyboardNavigation())return;
@@ -149,7 +153,7 @@ function step(direction){
  if(!cameraMenu.hidden){selectMenu(menuIndex+direction,{focus:true});return;}
  if(current==='photos'&&photoMode==='show'){changePhoto(direction);return;}
  if(current==='photos'&&photoMode==='play'){changeVideo(direction);return;}
- if(current==='photos'){selectThumbnail((photoTab==='videos'?videoIndex:photoIndex)+direction,{focus:true});return;}
+ if(current==='photos'){selectThumbnail(selectedContentIndex(viewState())+direction,{focus:true});return;}
  if(lists[current]){selectItem(current,listIndex[current]+direction,{focus:true});return;}
  render(views[(views.indexOf(current)+direction+views.length)%views.length],{focus:true});
 }
@@ -210,7 +214,7 @@ function selectMenu(index,{focus=false}={}){
  if(focus)menuButtons[menuIndex].focus({preventScroll:true});
 }
 function updateBrowseLabels(){
- const browsing=cameraMenu.hidden?browsingLabel(current,photoTab):'menu item';
+ const browsing=cameraMenu.hidden?browsingLabel(current,photoMode==='show'?'photos':photoMode==='play'?'videos':photoTab):'menu item';
  document.getElementById('previous').setAttribute('aria-label',`Previous ${browsing}`);
  document.getElementById('next').setAttribute('aria-label',`Next ${browsing}`);
 }
@@ -257,7 +261,7 @@ function selectItem(kind,index,{focus=false}={}){
   }
   display.scrollTop=section.offsetTop-16;
   if(focus){
-   const target=section.querySelector('summary,h2');
+   const target=section.matches('a')?section:section.querySelector('summary,h2');
    if(target){if(target.tagName==='H2')target.tabIndex=-1;target.focus({preventScroll:true});}
   }
   return;
@@ -277,23 +281,24 @@ display.addEventListener('toggle',e=>{
  listIndex.projects=Number(project.dataset.project);
  display.querySelectorAll('details[data-project]').forEach(other=>{if(other!==project)other.open=false;});
 },true);
-display.addEventListener('pointerover',e=>{
+display.addEventListener('pointermove',e=>{
  const item=e.target.closest('[data-item]');
  if(item&&e.pointerType!=='touch')selectItem(item.closest('[data-list]').dataset.list,Number(item.dataset.item));
  const thumb=e.target.closest('[data-photo],[data-video]');
- if(thumb&&e.pointerType!=='touch')selectThumbnail(Number(thumb.dataset.photo??thumb.dataset.video));
+ if(thumb&&e.pointerType!=='touch')selectThumbnail(Number(thumb.dataset.contentIndex));
 });
 display.addEventListener('focusin',e=>{
  const item=e.target.closest('[data-item]');
  if(item)selectItem(item.closest('[data-list]').dataset.list,Number(item.dataset.item));
  const thumb=e.target.closest('[data-photo],[data-video]');
- if(thumb)selectThumbnail(Number(thumb.dataset.photo??thumb.dataset.video));
+ if(thumb)selectThumbnail(Number(thumb.dataset.contentIndex));
 });
 display.addEventListener('keydown',e=>{
  const tab=e.target.closest('[data-photo-tab]');
  if(tab&&['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){
   e.preventDefault();
-  setPhotoTab(e.key==='Home'?'photos':e.key==='End'?'videos':tab.dataset.photoTab==='photos'?'videos':'photos');
+  const index=contentTabs.indexOf(tab.dataset.photoTab);
+  setPhotoTab(contentTabs[e.key==='Home'?0:e.key==='End'?contentTabs.length-1:(index+(e.key==='ArrowRight'?1:contentTabs.length-1))%contentTabs.length]);
   return;
  }
  if(e.key!=='ArrowDown'&&e.key!=='ArrowUp')return;
@@ -309,15 +314,16 @@ function changePhoto(direction){
   const next=Math.max(0,Math.min(photos.length-1,photoIndex+direction));
   if(next===photoIndex)return;
   photoIndex=next;
-  selectThumbnail(photoIndex);
+  selectThumbnail(photoTab==='all'?videos.length+photoIndex:photoIndex);
   mobilePhotos.update(photoIndex,direction);
   history.replaceState(photoHistory(),'',location.href);
   return;
  }
  photoIndex=(photoIndex+direction+photos.length)%photos.length;
+ if(photoTab==='all')allIndex=videos.length+photoIndex;
  const viewerFocused=document.activeElement?.classList.contains('lcd-show-img');
  const focusedStep=document.activeElement?.dataset.photoStep;
- display.innerHTML=`<div class="view">${slideshowView({photoIndex})}</div>`;
+ display.innerHTML=`<div class="view">${slideshowView(viewState())}</div>`;
  watchImages();
  history.replaceState(photoHistory(),'',location.href);
  if(viewerFocused)display.querySelector('.lcd-show-img')?.focus({preventScroll:true});
@@ -329,20 +335,28 @@ function changePhoto(direction){
 function selectThumbnail(index,{focus=false}={}){
  const grid=display.querySelector('.lcd-thumbs');
  if(!grid)return;
- const videoTab=photoTab==='videos',attr=videoTab?'video':'photo',count=videoTab?videos.length:photos.length;
- const next=(index+count)%count;
- if(videoTab)videoIndex=next;else photoIndex=next;
- grid.querySelectorAll(`[data-${attr}]`).forEach((b,i)=>b.setAttribute('aria-current',String(i===next)));
+ const items=contentItems(viewState()),count=items.length;
+ if(!count)return;
+ const next=(index+count)%count,entry=items[next];
+ if(photoTab==='all')allIndex=next;
+ if(entry.type==='video')videoIndex=entry.index;else photoIndex=entry.index;
+ grid.querySelectorAll('[data-content-index]').forEach((b,i)=>b.setAttribute('aria-current',String(i===next)));
  display.querySelector('.lcd-index-cap').innerHTML=indexCaption(viewState());
- if(focus)grid.querySelector(`[data-${attr}="${next}"]`)?.focus({preventScroll:true});
+ if(focus){
+  const target=grid.querySelector(`[data-content-index="${next}"]`);
+  target?.focus({preventScroll:true});
+  target?.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
+ }
 }
 function changeVideo(direction){
  if(videos.length<2)return;
  videoIndex=(videoIndex+direction+videos.length)%videos.length;
+ if(photoTab==='all')allIndex=videoIndex;
  render('photos',{keepPhotoMode:true});
  history.replaceState(photoHistory(),'',location.href);
 }
 function setPhotoTab(tab){
+ if(!contentTabs.includes(tab))return;
  photoTab=tab;photoMode='index';
  render('photos',{keepPhotoMode:true});
  history.replaceState(photoHistory(),'',location.href);
@@ -361,13 +375,14 @@ function setPhotoMode(mode,{focus=false}={}){
  render('photos',{keepPhotoMode:true,focus:false});
  if(wasIndex&&mode!=='index')history.pushState({...photoHistory(),photoDetail:true},'',location.href);
  if(focus){
-  const target=mode==='index'?display.querySelector(photoTab==='videos'?`[data-video="${videoIndex}"]`:`[data-photo="${photoIndex}"]`):display.querySelector(mode==='play'?'.lcd-all':'.lcd-show-img');
+  const target=mode==='index'?display.querySelector(`[data-content-index="${selectedContentIndex(viewState())}"]`):display.querySelector(mode==='play'?'.lcd-all':'.lcd-show-img');
   target?.focus({preventScroll:true});
+  if(mode==='index')target?.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
  }
 }
-function photoHistory(){return {photoMode,photoTab,photoIndex,videoIndex,photoDetail:photoMode!=='index'&&current==='photos'};}
+function photoHistory(){return {photoMode,photoTab,photoIndex,videoIndex,allIndex,photoDetail:photoMode!=='index'&&current==='photos'};}
 function watchImages(){
- display.querySelectorAll('.lcd-show-img img,.lcd-live .lcd-feed').forEach(img=>{
+ display.querySelectorAll('.lcd-show-img img,.lcd-live .lcd-feed,.lcd-thumbs img').forEach(img=>{
   const host=img.parentElement;
   const finish=()=>{host.removeAttribute('data-image-loading');host.classList.remove('image-failed');};
   const fail=()=>{finish();host.classList.add('image-failed');};
@@ -542,7 +557,7 @@ document.addEventListener('click',e=>{
  else if(target.dataset.photoStep)changePhoto(Number(target.dataset.photoStep));
  else if(target.dataset.item)selectItem(target.closest('[data-list]').dataset.list,Number(target.dataset.item));
 });
-// Playback opens the video tab of Photos (YouTube itself is on the 3D camera's record button).
+// Playback opens the Videos tab of Content (YouTube itself is on the 3D camera's record button).
 document.querySelector('.hardware-playback')?.addEventListener('click',()=>setPhotoTab('videos'));
 document.getElementById('previous').addEventListener('click',()=>step(-1));
 document.getElementById('next').addEventListener('click',()=>step(1));
@@ -566,21 +581,29 @@ new ResizeObserver(fitLCD).observe(screenElement);
 cameraDesktop.addEventListener('change',()=>{fitLCD();render(current,{hash:false,instant:true,keepPhotoMode:true});});
 fitLCD();
 
+function hashView(){
+ const route=location.hash.slice(1);
+ return ['photos','outside'].includes(route)?'content/photos':route||'home';
+}
 window.addEventListener('popstate',e=>{
  const state=e.state;
- const closeMobilePhoto=mobilePhotos.isOpen&&!cameraDesktop.matches&&normalise(location.hash.slice(1))==='photos'&&(state?.photoMode||'index')==='index'&&(state?.photoTab||'photos')==='photos';
+ const closeMobilePhoto=mobilePhotos.isOpen&&!cameraDesktop.matches&&normalise(location.hash.slice(1).split('/')[0])==='photos'&&(state?.photoMode||'index')==='index'&&['photos','all'].includes(state?.photoTab||'all');
  if(closeMobilePhoto){
-  photoMode='index';photoTab='photos';
+  photoMode='index';photoTab=state?.photoTab||'all';
+  allIndex=photoTab==='all'?videos.length+photoIndex:allIndex;
   mobilePhotos.close();
-  selectThumbnail(photoIndex);
+  selectThumbnail(photoTab==='all'?videos.length+photoIndex:photoIndex);
   history.replaceState(photoHistory(),'',location.href);
   return;
  }
- photoMode=state?.photoMode||'index';photoTab=state?.photoTab||'photos';
+ photoMode=state?.photoMode||'index';
+ const filter=state?.photoTab||hashView().split('/')[1];
+ photoTab=contentTabs.includes(filter)?filter:'all';
+ allIndex=state?.allIndex||0;
  photoIndex=state?.photoIndex||0;videoIndex=state?.videoIndex||0;
- render(location.hash.slice(1),{hash:false,instant:true,keepPhotoMode:true,focus:true});
- if(current==='photos'&&photoMode==='index')display.querySelector(photoTab==='videos'?`[data-video="${videoIndex}"]`:`[data-photo="${photoIndex}"]`)?.focus({preventScroll:true});
+ render(hashView(),{hash:false,instant:true,keepPhotoMode:true,focus:true});
+ if(current==='photos'&&photoMode==='index')selectThumbnail(selectedContentIndex(viewState()),{focus:true});
 });
-render(location.hash.slice(1)||'home',{hash:false,instant:true});
+render(hashView(),{hash:false,instant:true});
 history.replaceState(photoHistory(),'',location.href);
 document.documentElement.classList.add('js');

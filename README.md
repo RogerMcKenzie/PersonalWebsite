@@ -71,3 +71,9 @@ The physical Home button carries `aria-current="page"` and a solid camera-red ri
 Desktop menu previews use individual portrait and sunset crops, plus a live Google Docs iframe for Résumé. The résumé iframe loads only when selected, shares the full résumé viewer’s page scaling, and is released when the menu closes. The Projects preview names Studio Stack and Jenna’s Recipes. Mobile retains its compact menu and full résumé view.
 
 The mobile LCD is centred precisely on the viewport using its 43.92% anchor in the rotated camera image. It extends upward by 6.5% and downward by 4% of the camera width into the unused black bezels, leaving a narrow lip inside the physical frame. The hardware controls, hinge and SONY wordmark keep their existing positions.
+
+## Combined content gallery
+
+The gallery opens on All content, followed by Videos and Photos. All content lists YouTube videos first, then photographs. Each item keeps its original player or photo viewer, including the mobile shared transition and browser Back/Forward behavior. The grid scrolls inside the desktop LCD and mixed mobile view, and keyboard/hardware browsing reveals the selected item.
+
+Projects includes a direct Content shortcut to Videos. Routes `#content/all`, `#content/videos`, and `#content/photos` retain the selected filter. Legacy `#photos` and `#outside` bookmarks open photographs. The shutter opens Photos and the playback shortcut opens Videos. Add media to the `videos` and `photos` arrays in `site/portfolio-views.js`; All content updates automatically. Validate this behavior with `npm run test:content`.

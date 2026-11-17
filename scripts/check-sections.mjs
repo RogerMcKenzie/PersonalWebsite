@@ -45,5 +45,7 @@ assert.doesNotMatch(html,/data-view="about"|id="about"|>About</);
 assert.match(html,/class="dial-item dial-top" data-view="contact"/);
 assert.equal(browsingLabel('photos','photos'),'photograph');
 assert.equal(browsingLabel('photos','videos'),'video');
+assert.equal(browsingLabel('photos','all'),'content item');
+assert.equal(normaliseSection('content'),'photos');
 assert.equal(browsingLabel('home'),'section');
 console.log('PASS: canonical names, static navigation, templates, legacy aliases and contextual browse labels.');
