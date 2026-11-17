@@ -72,7 +72,7 @@ async function start({ intro }) {
     import('three'),
     import('three/addons/loaders/GLTFLoader.js'),
     import('./camera-screen.js?v=extras-20261115-2'),
-    import('./camera-extras.js?v=email-20261115-1'),
+    import('./camera-extras.js?v=content-gallery-20261117-1'),
   ]);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });

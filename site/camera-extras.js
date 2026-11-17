@@ -157,7 +157,10 @@ export function attachCameraExtras(THREE, { model, pivot, view, camera, surfaces
   shutter.addEventListener('click', () => {
     if (!isOn()) return;
     flash();
-    setTimeout(() => document.querySelector('.lcd-nav [data-view="photos"]')?.click(), reduced.matches ? 0 : 140);
+    setTimeout(() => {
+      document.querySelector('.lcd-nav [data-view="photos"]')?.click();
+      document.querySelector('[data-photo-tab="photos"]')?.click();
+    }, reduced.matches ? 0 : 140);
   });
   movie.addEventListener('click', () => { state.tally = 1; request(); });
 

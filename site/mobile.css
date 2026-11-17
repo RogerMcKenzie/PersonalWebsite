@@ -311,12 +311,17 @@
   @keyframes mobile-menu-in { from { opacity:0; transform:scale(.95); transform-origin:100% 100%; } }
 
   .camera-v2 .lcd-index { padding:12px 0 8px; }
-  .camera-v2 .lcd-view>.view:has(.lcd-index [data-photo]) { height:100%; }
-  .camera-v2 .lcd-index:has([data-photo]) { display:flex; flex-direction:column; height:100%; min-height:0; }
-  .camera-v2 .lcd-index:has([data-photo]) .lcd-thumbs { flex:1; min-height:0; grid-template-rows:repeat(2,minmax(0,1fr)); }
-  .camera-v2 .lcd-index:has([data-photo]) .lcd-thumbs button { aspect-ratio:auto; min-height:44px; }
-  .camera-v2 .lcd-tabs { height:auto; min-height:48px; padding:0 12px 10px; gap:8px; }
-  .camera-v2 .lcd-tabs button { min-height:44px; padding:0 10px; font-size:16px; font-stretch:100%; }
+  .camera-v2 .lcd-view>.view:has(.lcd-index [data-content-index]) { height:100%; }
+  .camera-v2 .lcd-index[data-content-filter=photos] { display:flex; flex-direction:column; height:100%; min-height:0; }
+  .camera-v2 .lcd-index[data-content-filter=photos] .lcd-thumbs { flex:1; min-height:0; grid-template-rows:repeat(2,minmax(0,1fr)); }
+  .camera-v2 .lcd-index[data-content-filter=photos] .lcd-thumbs button { aspect-ratio:auto; min-height:44px; }
+  .camera-v2 .lcd-index[data-content-filter=all] { display:flex; flex-direction:column; height:100%; min-height:0; }
+  .camera-v2 .lcd-index[data-content-filter=all] .lcd-thumbs { flex:1; min-height:0; grid-auto-rows:clamp(110px,30cqw,180px); }
+  .camera-v2 .lcd-index[data-content-filter=all] .lcd-thumbs button { aspect-ratio:auto; }
+  .camera-v2 .lcd-tabs { flex:none; height:auto; min-height:48px; padding:0 8px 10px; gap:0; justify-content:space-between; }
+  .camera-v2 .lcd-tabs svg { display:none; }
+  .camera-v2 .mobile-project-content { display:flex; align-items:center; justify-content:space-between; min-height:56px; color:var(--lcd-ink); font-size:22px; font-weight:600; text-decoration:none; }
+  .camera-v2 .lcd-tabs button { min-height:44px; padding:0 6px; font-size:14px; font-stretch:100%; }
   .camera-v2 .lcd-thumbs { padding:10px 14px; gap:12px; }
   .camera-v2 .lcd-thumbs button { min-width:44px; min-height:44px; aspect-ratio:4/5; background:#18181a; }
   .camera-v2 .lcd-thumbs button[aria-current=true] { outline:0; }
