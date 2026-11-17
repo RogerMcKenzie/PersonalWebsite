@@ -35,9 +35,9 @@ The website is an interactive camera (a Sony ZV-E10) whose screen shows the site
 - Frameworks: React, Next.js, Node.js, Fastify, FastAPI, tRPC, Tailwind CSS, Zod
 
 ## Projects
-- [Home Server](https://github.com/RogerMcKenzie/home-server): Dell OptiPlex 3060 Micro upgraded with RAM and an NVMe drive salvaged from a damaged laptop. Intel Core i3-8100T, 16 GB RAM and 768 GB combined storage.
-- Studio Stack: production scheduling, brief intake and gear reservations for The Agency at UF. Cloud backend with role-based sign-in and workflow tracking (TypeScript, AWS Lambda, PostgreSQL, S3).
-- [Jenna's Recipes](https://jennarecipes.vercel.app): recipe search by ingredient, Gemini suggestions and a saved shopping list (React, TypeScript, MUI).
+- [Home Server](https://github.com/RogerMcKenzie/home-server): A home-server build using a Dell OptiPlex. I’m documenting the hardware upgrades and exploring virtual machines, game storage and backups. (Intel Core i3-8100T, 16 GB RAM, 256 GB SATA SSD + 512 GB NVMe SSD).
+- Studio Stack: I’m leading development of a production-grade web platform for managing creative teams, projects and equipment. Originally built for The Agency at UF, Studio Stack has expanded to serve external clients through organization workspaces, role-based access, production workflows and equipment operations. (TypeScript, React, Next.js, AWS Amplify, Cognito, API Gateway, Lambda, Amazon RDS for PostgreSQL, S3, SES, SNS and CloudWatch).
+- [Jenna’s Recipes](https://jennarecipes.vercel.app): A mock client website featuring Jenna’s favorite recipes, Gemini-generated recipes from ingredients and Spoonacular search. It also includes a kitchenware demo store with a shopping cart saved between visits. (React, TypeScript, MUI, Gemini, Spoonacular).
 
 ## Photos
 - Cathedral sunset, Washington, DC (2026)

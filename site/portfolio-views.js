@@ -33,9 +33,9 @@ const videos=[
 ];
 const lists={
  projects:{label:sections.projects,items:[
-  {name:'Home Server',text:'I’m building a home server from a Dell OptiPlex 3060 Micro, upgraded with RAM and an NVMe drive salvaged from a damaged laptop.',meta:'Intel Core i3-8100T, 16 GB RAM, 768 GB storage',url:'https://github.com/RogerMcKenzie/home-server',cta:'View the build'},
-  {name:'Studio Stack',text:'Production scheduling, brief intake and gear reservations for The Agency at UF. As lead developer I built the cloud backend with role-based sign-in and workflow tracking.',meta:'TypeScript, AWS Lambda, PostgreSQL, S3'},
-  {name:'Jenna’s Recipes',img:'assets/jennas-recipes.jpg',text:'Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits.',meta:'React, TypeScript, MUI',url:'https://jennarecipes.vercel.app',cta:'Open the app'}
+  {"name":"Home Server","text":"A home-server build using a Dell OptiPlex. I’m documenting the hardware upgrades and exploring virtual machines, game storage and backups.","meta":"Intel Core i3-8100T, 16 GB RAM, 256 GB SATA SSD + 512 GB NVMe SSD","url":"https://github.com/RogerMcKenzie/home-server","cta":"View the build"},
+  {"name":"Studio Stack","text":"I’m leading development of a production-grade web platform for managing creative teams, projects and equipment. Originally built for The Agency at UF, Studio Stack has expanded to serve external clients through organization workspaces, role-based access, production workflows and equipment operations.","meta":"TypeScript, React, Next.js, AWS Amplify, Cognito, API Gateway, Lambda, Amazon RDS for PostgreSQL, S3, SES, SNS and CloudWatch"},
+  {"name":"Jenna’s Recipes","img":"assets/jennas-recipes.jpg","text":"A mock client website featuring Jenna’s favorite recipes, Gemini-generated recipes from ingredients and Spoonacular search. It also includes a kitchenware demo store with a shopping cart saved between visits.","meta":"React, TypeScript, MUI, Gemini, Spoonacular","url":"https://jennarecipes.vercel.app","cta":"Open the app"}
  ]},
  about:{label:sections.about,items:[
   {name:'Background',img:'assets/profile.jpg',text:'I’m from Miami and the first in my family to go to college. I study Information Systems at the University of Florida, with minors in Computer Science and Statistics.',links:true},
