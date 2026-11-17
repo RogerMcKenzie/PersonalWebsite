@@ -275,6 +275,10 @@
  .camera-v2 .camera-extra.is-hint { animation:camera-hint 1.8s ease-out; }
  .camera-v2 .cx-port:hover .camera-extra-text { color:#fff; text-decoration:underline; text-underline-offset:3px; }
  .camera-v2 .camera-zoomed { cursor:grab; }
+ /* Fade the LCD itself on power off so menus and embedded content cannot paint over
+    the blackout layer on the transformed screen. */
+ .camera-v2 .camera-embedded .screen { isolation:isolate; transition:opacity .25s ease-out; }
+ .camera-v2 .camera-embedded.camera-off .screen { opacity:0; transition-duration:.2s; }
  /* Shutter blink and power off: a black layer over the LCD. */
  .camera-v2 .camera-embedded .screen-bezel::after { content:''; position:absolute; inset:0; z-index:5; background:#050505; opacity:0; pointer-events:none; transition:opacity .25s ease-out; }
  .camera-v2 .camera-embedded.camera-off .screen-bezel::after { opacity:1; transition-duration:.2s; }
@@ -291,7 +295,7 @@
  100% { opacity:0; transform:translate(-50%,-130%) scale(1); }
 }
 @media(prefers-reduced-motion:reduce) {
- .camera-v2 .camera-extra,.camera-v2 .camera-embedded .screen-bezel::after { transition:none; }
+ .camera-v2 .camera-extra,.camera-v2 .camera-embedded .screen,.camera-v2 .camera-embedded .screen-bezel::after { transition:none; }
  .camera-v2 .camera-embedded.is-capturing .screen-bezel::after { animation:none; }
  .camera-v2 .camera-toast.is-shown { animation:camera-toast-fade 1.6s linear; }
 }
