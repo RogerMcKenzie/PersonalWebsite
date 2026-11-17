@@ -1,5 +1,5 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=sections-20261115-1';
-import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=contact-socials-20261117-1';
+import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=menu-consistency-20261117-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
@@ -159,6 +159,9 @@ const menuButtons=[...cameraMenu.querySelectorAll('[data-view]')];
 const menuPreviewImage=document.getElementById('menu-preview-image');
 const menuPreviewText=document.getElementById('menu-preview-text');
 const menuPreviewSocials=document.getElementById('menu-preview-socials');
+const menuPreviewPanel=document.getElementById('menu-preview-panel');
+const menuPreviewOpen=cameraMenu.querySelector('[data-open-preview]');
+menuButtons.forEach(button=>button.setAttribute('aria-controls','menu-preview-panel'));
 menuPreviewSocials.innerHTML=contactIconsHTML;
 const menuResume=document.getElementById('menu-preview-resume');
 const menuResumeFrame=menuResume.querySelector('iframe');
@@ -177,19 +180,18 @@ function clearMenuResume(){
 }
 let menuIndex=0;
 function selectMenu(index,{focus=false}={}){
- const direction=index<menuIndex?-1:1;
  menuIndex=(index+menuButtons.length)%menuButtons.length;
- while(!cameraDesktop.matches&&['projects','photos'].includes(menuButtons[menuIndex].dataset.view)){
-  menuIndex=(menuIndex+direction+menuButtons.length)%menuButtons.length;
- }
  menuButtons.forEach((b,i)=>b.setAttribute('aria-current',String(i===menuIndex)));
  const previewView=menuButtons[menuIndex].dataset.view;
  const preview=menuPreviews[previewView];
  cameraMenu.dataset.preview=previewView;
+ menuPreviewPanel.setAttribute('aria-hidden',String(cameraDesktop.matches));
+ menuPreviewOpen.hidden=cameraDesktop.matches;
+ menuPreviewOpen.textContent=`Open ${sections[previewView]}`;
  menuPreviewImage.hidden=!preview.img;
  if(preview.img)menuPreviewImage.src=preview.img;
  menuResume.hidden=!preview.document;
- if(preview.document&&cameraDesktop.matches){
+ if(preview.document){
   if(!menuResumeFrame.hasAttribute('src')){
    menuResume.setAttribute('data-loading','');
    menuResumeLoading.hidden=false;menuResumeLoading.textContent='Loading résumé';
@@ -201,6 +203,10 @@ function selectMenu(index,{focus=false}={}){
  menuPreviewSocials.hidden=previewView!=='contact';
  menuPreviewText.hidden=!preview.text;
  menuPreviewText.textContent=preview.text;
+ if(previewView==='contact'&&!cameraDesktop.matches){
+  const split=preview.text.indexOf('@')+1;
+  menuPreviewText.replaceChildren(document.createTextNode(preview.text.slice(0,split)),document.createElement('wbr'),document.createTextNode(preview.text.slice(split)));
+ }
  if(focus)menuButtons[menuIndex].focus({preventScroll:true});
 }
 function updateBrowseLabels(){
@@ -513,7 +519,7 @@ document.querySelector('.dial-center').addEventListener('click',e=>{
 document.addEventListener('pointerdown',()=>{document.documentElement.dataset.navigation='pointer';},{passive:true});
 document.addEventListener('keydown',()=>{document.documentElement.dataset.navigation='keyboard';},true);
 document.addEventListener('click',e=>{
- const target=e.target.closest('[data-play-video],[data-view],[data-open-menu],[data-close-menu],[data-photo],[data-video],[data-photo-tab],[data-photo-mode],[data-photo-step],[data-video-step],[data-item]');
+ const target=e.target.closest('[data-play-video],[data-view],[data-open-preview],[data-open-menu],[data-close-menu],[data-photo],[data-video],[data-photo-tab],[data-photo-mode],[data-photo-step],[data-video-step],[data-item]');
  if(!target)return;
  if(target.matches('a[data-view]'))e.preventDefault();
  if(target.hasAttribute('data-play-video')){
@@ -522,6 +528,8 @@ document.addEventListener('click',e=>{
   const v=videos[videoIndex];
   target.outerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&playsinline=1" title="${v.title}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
  }
+ else if(target.hasAttribute('data-open-preview'))render(menuButtons[menuIndex].dataset.view,{focus:true});
+ else if(!cameraDesktop.matches&&menuButtons.includes(target))selectMenu(menuButtons.indexOf(target),{focus:true});
  else if(target.hasAttribute('data-close-menu'))setMenuOpen(false,{focus:true});
  else if(target.hasAttribute('data-open-menu'))setMenuOpen(cameraMenu.hidden,{focus:true});
  else if(target.dataset.view==='photos'&&current==='photos'&&photoMode!=='index')setPhotoMode('index',{focus:true});

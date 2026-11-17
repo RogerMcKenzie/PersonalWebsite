@@ -48,7 +48,7 @@ const lists={
  ]}
 };
 const menuPreviews={
- about:{img:'assets/profile.jpg',text:'Software developer and photographer at the University of Florida'},
+ about:{img:'assets/favicon-512.png',text:'Software developer and photographer at the University of Florida'},
  projects:{img:'assets/jennas-recipes.jpg',text:'My home server, Studio Stack and Jenna’s Recipes'},
  photos:{img:'assets/photography/sunset-cathedral.jpg',text:'Four photographs from Washington, Las Vegas and San Francisco'},
  resume:{document:`${RESUME}/preview`,text:''},
