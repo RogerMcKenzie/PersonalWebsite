@@ -38,6 +38,8 @@ for(const mobile of [false,true]){
 assert.equal(browsingLabel('projects'),'project');
 assert.equal(browsingLabel('contact'),'section');
 assert.equal(Object.hasOwn(menuPreviews,'about'),false);
+assert.equal(menuPreviews.projects.text,'','Projects preview has no caption');
+assert.equal(menuPreviews.photos.text,'','Content preview has no caption');
 assert.equal(menuPreviews.contact.img,'assets/favicon-512.png');
 assert.doesNotMatch(html,/data-view="about"|id="about"|>About</);
 assert.match(html,/class="dial-item dial-top" data-view="contact"/);
