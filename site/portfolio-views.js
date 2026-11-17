@@ -34,7 +34,8 @@ const videos=[
 const lists={
  projects:{label:sections.projects,items:[
   {name:'Studio Stack',text:'Production scheduling, brief intake and gear reservations for The Agency at UF. As lead developer I built the cloud backend with role-based sign-in and workflow tracking.',meta:'TypeScript, AWS Lambda, PostgreSQL, S3'},
-  {name:'Jenna’s Recipes',img:'assets/jennas-recipes.jpg',text:'Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits.',meta:'React, TypeScript, MUI',url:'https://jennarecipes.vercel.app',cta:'Open the app'}
+  {name:'Jenna’s Recipes',img:'assets/jennas-recipes.jpg',text:'Search recipes by ingredient, get Gemini suggestions and keep a shopping list between visits.',meta:'React, TypeScript, MUI',url:'https://jennarecipes.vercel.app',cta:'Open the app'},
+  {name:'Home Server',text:'I’m building a home server from a Dell OptiPlex 3060 Micro, upgraded with RAM and an NVMe drive salvaged from a damaged laptop.',meta:'Intel Core i3-8100T, 16 GB RAM, 768 GB storage',url:'https://github.com/RogerMcKenzie/home-server',cta:'View the build'}
  ]},
  about:{label:sections.about,items:[
   {name:'Background',img:'assets/profile.jpg',text:'I’m from Miami and the first in my family to go to college. I study Information Systems at the University of Florida, with minors in Computer Science and Statistics.',links:true},
@@ -44,7 +45,7 @@ const lists={
 };
 const menuPreviews={
  about:{img:'assets/profile.jpg',text:'Software developer and photographer at the University of Florida'},
- projects:{img:'assets/jennas-recipes.jpg',text:'Studio Stack and Jenna’s Recipes'},
+ projects:{img:'assets/jennas-recipes.jpg',text:'Studio Stack, Jenna’s Recipes and my home server'},
  photos:{img:'assets/photography/sunset-cathedral.jpg',text:'Four photographs from Washington, Las Vegas and San Francisco'},
  resume:{document:`${RESUME}/preview`,text:''},
  contact:{text:EMAIL}
