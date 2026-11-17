@@ -38,8 +38,7 @@ const lists={
  projects:{label:sections.projects,items:[
   {"name":"Home Server","text":"A home-server build using a Dell OptiPlex. I’m documenting the hardware upgrades and exploring virtual machines, game storage and backups.","meta":"Intel Core i3-8100T, 16 GB RAM, 256 GB SATA SSD + 512 GB NVMe SSD","url":"https://github.com/RogerMcKenzie/home-server","cta":"View the build"},
   {"name":"Studio Stack","text":"I lead development of a production-grade platform for creative teams, projects and equipment. Originally built for The Agency at UF, it now serves external clients with shared workspaces, role-based access and production workflows.","meta":"TypeScript, React, Next.js, AWS Amplify, Cognito, API Gateway, Lambda, Amazon RDS for PostgreSQL, S3, SES, SNS and CloudWatch","url":"https://github.com/The-Agency-at-UF/studiostack","cta":"View on GitHub"},
-  {"name":"Jenna’s Recipes","img":"assets/jennas-recipes.jpg","text":"A mock client website featuring Jenna’s favorite recipes, Gemini-generated recipes from ingredients and Spoonacular search. It also includes a kitchenware demo store with a shopping cart saved between visits.","meta":"React, TypeScript, MUI, Gemini, Spoonacular","url":"https://jennarecipes.vercel.app","cta":"Open the app"},
-  {name:'Content',text:'Videos about tech, events and the places I visit.',view:'content/videos',cta:'Watch videos'}
+  {"name":"Jenna’s Recipes","img":"assets/jennas-recipes.jpg","text":"A mock client website featuring Jenna’s favorite recipes, Gemini-generated recipes from ingredients and Spoonacular search. It also includes a kitchenware demo store with a shopping cart saved between visits.","meta":"React, TypeScript, MUI, Gemini, Spoonacular","url":"https://jennarecipes.vercel.app","cta":"Open the app"}
  ]}
 };
 const menuPreviews={
@@ -51,7 +50,7 @@ const menuPreviews={
 
 function mobileListView(kind,{listIndex}){
  const {label,items}=lists[kind];
- return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>item.view?`<a class="mobile-project-content" data-project="${i}" data-view="${item.view}" href="#${item.view}">${item.name}${ICON.right}</a>`:`<details data-project="${i}" ${i===listIndex.projects?'open':''}><summary>${item.name}${ICON.expand}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
+ return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.projects?'open':''}><summary>${item.name}${ICON.expand}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
 }
 
 function homeView(){
@@ -61,13 +60,12 @@ function previewHTML(item){
  return (item.img?`<img src="${item.img}" alt="" width="262" height="157" loading="lazy">`:'')
   +`<p>${item.text}</p>`
   +(item.meta?`<p class="lcd-meta">${item.meta}</p>`:'')
-  +(item.url?`<a class="lcd-cta" href="${item.url}" ${external}>${item.cta}${ICON.out}</a>`:'')
-  +(item.view?`<a class="lcd-cta" href="#${item.view}" data-view="${item.view}">${item.cta}${ICON.right}</a>`:'');
+  +(item.url?`<a class="lcd-cta" href="${item.url}" ${external}>${item.cta}${ICON.out}</a>`:'');
 }
 function listView(kind,{listIndex,mobile}){
  if(mobile)return mobileListView(kind,{listIndex});
  const {label,items}=lists[kind];const index=listIndex[kind];
- return `<div class="lcd-list" data-list="${kind}"><h1 class="lcd-sr">${label}</h1><ul aria-label="${label}">${items.map((item,i)=>`<li><button data-item="${i}"${item.view?` data-view="${item.view}"`:""} aria-current="${i===index}">${item.name}</button></li>`).join('')}</ul><div class="lcd-preview" aria-live="polite">${previewHTML(items[index])}</div></div>`;
+ return `<div class="lcd-list" data-list="${kind}"><h1 class="lcd-sr">${label}</h1><ul aria-label="${label}">${items.map((item,i)=>`<li><button data-item="${i}" aria-current="${i===index}">${item.name}</button></li>`).join('')}</ul><div class="lcd-preview" aria-live="polite">${previewHTML(items[index])}</div></div>`;
 }
 function photoPlace(p){return [p.location,p.year].filter(Boolean).join('<br>');}
 function slideshowView({photoIndex,photoTab}){
