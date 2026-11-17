@@ -1,3 +1,4 @@
+import { socialIcons } from './social-icons.js?v=contact-socials-20261117-1';
 import { sections } from './sections.js?v=sections-20261115-1';
 
 const EMAIL='roger@rogermckz.dev';
@@ -18,6 +19,9 @@ const ICON={
  download:svg('<path d="M12 4v12M6 11l6 6 6-6M5 20h14"/>')
 };
 const external='target="_blank" rel="noopener noreferrer"';
+const contactProfiles=[{"id":"linkedin","label":"LinkedIn","url":"https://www.linkedin.com/in/rogermckenzie/"},{"id":"youtube","label":"YouTube","url":"https://www.youtube.com/@RogerMcKenzie1"},{"id":"instagram","label":"Instagram","url":"https://www.instagram.com/rogermckz/"},{"id":"tiktok","label":"TikTok","url":"https://www.tiktok.com/@rogermckz"}];
+const contactIconsHTML=contactProfiles.map(profile=>socialIcons[profile.id]).join('');
+const contactSocialLinks=`<div class="lcd-links contact-social-links">${contactProfiles.map(profile=>`<a href="${profile.url}" ${external}>${socialIcons[profile.id]}<span>${profile.label}</span></a>`).join('')}</div>`;
 const socialLinks=`<div class="lcd-links"><a href="https://github.com/RogerMcKenzie" ${external}>GitHub</a><a href="https://www.linkedin.com/in/rogermckenzie/" ${external}>LinkedIn</a><a href="${YOUTUBE}" ${external}>YouTube</a></div>`;
 
 const photos=[
@@ -97,7 +101,7 @@ function resumeView({mobile}){
  return `<div class="lcd-resume"><div class="lcd-resume-top"><h1>${sections.resume}</h1><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">${ICON.download}Download PDF</a></div><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>`;
 }
 function contactView(){
- return `<div class="lcd-contact"><h1>Email me about internships, collaborations or photo work</h1><a class="lcd-cta" href="mailto:${EMAIL}">${ICON.mail}${EMAIL}</a>${socialLinks}</div>`;
+ return `<div class="lcd-contact"><h1>Email me about internships, collaborations or photo work</h1><a class="lcd-cta" href="mailto:${EMAIL}">${ICON.mail}${EMAIL}</a>${contactSocialLinks}</div>`;
 }
 function videoView({videoIndex}){
  const v=videos[videoIndex],n=videoIndex+1,many=videos.length>1;
@@ -113,4 +117,4 @@ function viewHTML(view,state){
 }
 
 
-export { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML };
+export { contactProfiles, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML };

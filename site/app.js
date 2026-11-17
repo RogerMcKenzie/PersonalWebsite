@@ -1,5 +1,5 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=sections-20261115-1';
-import { photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=studio-copy-20261117-1';
+import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=contact-socials-20261117-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
@@ -158,6 +158,8 @@ function step(direction){
 const menuButtons=[...cameraMenu.querySelectorAll('[data-view]')];
 const menuPreviewImage=document.getElementById('menu-preview-image');
 const menuPreviewText=document.getElementById('menu-preview-text');
+const menuPreviewSocials=document.getElementById('menu-preview-socials');
+menuPreviewSocials.innerHTML=contactIconsHTML;
 const menuResume=document.getElementById('menu-preview-resume');
 const menuResumeFrame=menuResume.querySelector('iframe');
 const menuResumeLoading=menuResume.querySelector('.resume-loading');
@@ -196,6 +198,7 @@ function selectMenu(index,{focus=false}={}){
   }
   menuResumeObserver??=observeResumeFrame(menuResumeFrame);
  }
+ menuPreviewSocials.hidden=previewView!=='contact';
  menuPreviewText.hidden=!preview.text;
  menuPreviewText.textContent=preview.text;
  if(focus)menuButtons[menuIndex].focus({preventScroll:true});
