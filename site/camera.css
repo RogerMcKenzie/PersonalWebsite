@@ -120,7 +120,7 @@
  .camera-v2 .stage { width:calc(100% - 24px); padding:20px 0; min-height:100svh; justify-content:flex-start; }
  .camera-v2 .camera { aspect-ratio:auto; padding:0 14px 20px; border-radius:22px; background:var(--camera-dark); box-shadow:var(--shadow); }
  .camera-v2 .camera-shell,.camera-v2 .camera-signature { display:none; }
- .camera-v2 .mobile-top-plate { display:block; height:clamp(45px,12vw,86px); margin:0 -14px; background-image:url('assets/camera/zv-e10-rear.webp?v=rear-layout-20261115-2'); background-size:100% auto; background-position:center top; background-repeat:no-repeat; pointer-events:none; }
+ .camera-v2 .mobile-top-plate { display:block; height:clamp(45px,12vw,86px); margin:0 -14px; background-image:url('assets/camera/zv-e10-rear.webp?v=content-names-20261117-1'); background-size:100% auto; background-position:center top; background-repeat:no-repeat; pointer-events:none; }
  .camera-v2 .screen-bezel { position:relative; inset:auto; width:100%; height:auto; padding:6px; border-radius:12px; background:#10120f; }
  .camera-v2 .screen { height:auto; min-height:560px; padding:16px 18px 12px; border-radius:8px; overflow:visible; }
  .camera-v2 .screen-header { min-height:36px; }
@@ -134,7 +134,7 @@
  .camera-v2 .hardware-button { position:static; transform:none; width:44px; height:44px; background:var(--button-dark); box-shadow:inset 0 1px 1px #74766d,0 2px 5px #1118; font-size:11px; }
  .camera-v2 .hardware-menu { grid-area:menu; }
  .camera-v2 .hardware-playback { grid-area:playback; justify-self:start; }
- .camera-v2 .dial { grid-area:dial; position:relative; inset:auto; width:200px; margin:0; background-image:url('assets/camera/zv-e10-rear.webp?v=rear-layout-20261115-2'); background-size:503.7% auto; background-position:85.32% 73.23%; background-repeat:no-repeat; border-radius:50%; }
+ .camera-v2 .dial { grid-area:dial; position:relative; inset:auto; width:200px; margin:0; background-image:url('assets/camera/zv-e10-rear.webp?v=content-names-20261117-1'); background-size:503.7% auto; background-position:85.32% 73.23%; background-repeat:no-repeat; border-radius:50%; }
  .camera-v2 .dial-item { font-size:13px; }
  .camera-v2 .dial-center { font-size:18px; }
  .camera-v2 .browse { grid-area:browse; display:flex; flex-wrap:wrap; justify-content:flex-start; align-self:center; align-items:center; gap:12px; }

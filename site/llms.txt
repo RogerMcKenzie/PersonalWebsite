@@ -33,7 +33,7 @@ The website is an interactive camera (a Sony ZV-E10) whose screen shows the site
 - [Studio Stack](https://github.com/The-Agency-at-UF/studiostack): I lead development of a production-grade platform for creative teams, projects and equipment. Originally built for The Agency at UF, it now serves external clients with shared workspaces, role-based access and production workflows. (TypeScript, React, Next.js, AWS Amplify, Cognito, API Gateway, Lambda, Amazon RDS for PostgreSQL, S3, SES, SNS and CloudWatch).
 - [Jenna’s Recipes](https://jennarecipes.vercel.app): A mock client website featuring Jenna’s favorite recipes, Gemini-generated recipes from ingredients and Spoonacular search. It also includes a kitchenware demo store with a shopping cart saved between visits. (React, TypeScript, MUI, Gemini, Spoonacular).
 
-## Photos
+## Content
 - Cathedral sunset, Washington, DC (2026)
 - Terrace lights (2026)
 - Caesars Palace, Las Vegas, NV (2026)

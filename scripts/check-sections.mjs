@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {sections,sectionIds,normaliseSection,browsingLabel} from '../site/sections.js';
 import {viewHTML,menuPreviews} from '../site/portfolio-views.js';
 
-assert.deepEqual(Object.values(sections),['Home','Projects','Photos','Résumé','Contact']);
+assert.deepEqual(Object.values(sections),['Home','Projects','Content','Résumé','Contact']);
 for(const id of sectionIds)assert.equal(normaliseSection(id),id);
 for(const [old,id] of Object.entries({about:'contact',work:'projects',outside:'photos',experience:'resume'}))assert.equal(normaliseSection(old),id);
 for(const unknown of ['',undefined,'toString','constructor','__proto__','missing'])assert.equal(normaliseSection(unknown),'home');
@@ -33,7 +33,7 @@ for(const mobile of [false,true]){
   assert.match(resume,/>Download PDF[\s\S]*<\/a><\/div><\/section>$/, 'download is the final action');
  }
  assert.doesNotMatch(viewHTML('contact',state),/>About</,'About is removed from runtime templates');
- assert.match(viewHTML('photos',state),/>Videos<\/button>/,'Videos stays a Photos tab');
+ assert.match(viewHTML('photos',state),/>Videos<\/button>/,'Videos stays a Content tab');
 }
 assert.equal(browsingLabel('projects'),'project');
 assert.equal(browsingLabel('contact'),'section');

@@ -276,8 +276,8 @@ def replace_decal(path, replacement):
         primitive["attributes"] = {k: v + counts["accessors"] for k, v in primitive["attributes"].items()}
     original = next(n for n in asset["nodes"] if n["name"] == "Label_Wheel_Arrows")
     asset["meshes"][original["mesh"]] = mesh
-    original["extras"]["marking"] = "CONTACT | PROJECTS | PHOTOS | RÉSUMÉ"
-    next(n for n in asset["nodes"] if n["name"] == "ZV-E10")["extras"]["portfolio_label_version"] = 5
+    original["extras"]["marking"] = "CONTACT | PROJECTS | CONTENT | RÉSUMÉ"
+    next(n for n in asset["nodes"] if n["name"] == "ZV-E10")["extras"]["portfolio_label_version"] = 6
     for key in counts:
         asset.setdefault(key, []).extend(new.get(key, []))
     for ext in new.get("extensionsUsed", []):
@@ -325,7 +325,7 @@ def main():
     path = assets / "zv-e10.glb"
     current, _ = read_glb(path)
     label_node = next(n for n in current["nodes"] if n["name"] == "Label_Wheel_Arrows")
-    if label_node.get("extras", {}).get("marking") == "CONTACT | PROJECTS | PHOTOS | RÉSUMÉ":
+    if label_node.get("extras", {}).get("marking") == "CONTACT | PROJECTS | CONTENT | RÉSUMÉ":
         render_desktop(repo, assets)
         print("Wheel already updated; refreshed desktop poster only")
         return
@@ -343,7 +343,7 @@ def main():
     coll = bpy.context.scene.collection
     legends = label_mesh("Wheel_Arrows", [
         ("text", "CONTACT", .22, (0, 1.16)), ("text", "PROJECTS", .22, (1.12, 0)),
-        ("text", "PHOTOS", .22, (0, -1.16)), ("text", "RÉSUMÉ", .22, (-1.02, 0)),
+        ("text", "CONTENT", .22, (0, -1.16)), ("text", "RÉSUMÉ", .22, (-1.02, 0)),
     ], None, coll, root, (-3.85, 2.124, 2.20), (90, 0, 180), load_font())
     legends.text_angles = {"RÉSUMÉ": 90, "PROJECTS": -90}
     finish_labels(coll, {})

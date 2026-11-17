@@ -1,5 +1,5 @@
 import { socialIcons } from './social-icons.js?v=contact-socials-20261117-1';
-import { sections } from './sections.js?v=content-gallery-20261117-1';
+import { sections } from './sections.js?v=content-names-20261117-1';
 
 const EMAIL='roger@rogermckz.dev';
 const YOUTUBE='https://www.youtube.com/@RogerMcKenzie1';

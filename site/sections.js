@@ -1,6 +1,6 @@
 // Public destinations shared by navigation, page templates and browser titles.
 export const sections=Object.freeze({
- home:'Home', projects:'Projects', photos:'Photos', resume:'Résumé', contact:'Contact'
+ home:'Home', projects:'Projects', photos:'Content', resume:'Résumé', contact:'Contact'
 });
 export const sectionIds=Object.freeze(Object.keys(sections));
 export const sectionAliases=Object.freeze({content:'photos',about:'contact',work:'projects',outside:'photos',experience:'resume'});
