@@ -35,9 +35,9 @@ The website is an interactive camera (a Sony ZV-E10) whose screen shows the site
 - Frameworks: React, Next.js, Node.js, Fastify, FastAPI, tRPC, Tailwind CSS, Zod
 
 ## Projects
+- [Home Server](https://github.com/RogerMcKenzie/home-server): Dell OptiPlex 3060 Micro upgraded with RAM and an NVMe drive salvaged from a damaged laptop. Intel Core i3-8100T, 16 GB RAM and 768 GB combined storage.
 - Studio Stack: production scheduling, brief intake and gear reservations for The Agency at UF. Cloud backend with role-based sign-in and workflow tracking (TypeScript, AWS Lambda, PostgreSQL, S3).
 - [Jenna's Recipes](https://jennarecipes.vercel.app): recipe search by ingredient, Gemini suggestions and a saved shopping list (React, TypeScript, MUI).
-- [Home Server](https://github.com/RogerMcKenzie/home-server): Dell OptiPlex 3060 Micro upgraded with RAM and an NVMe drive salvaged from a damaged laptop. Intel Core i3-8100T, 16 GB RAM and 768 GB combined storage.
 
 ## Photos
 - Cathedral sunset, Washington, DC (2026)
