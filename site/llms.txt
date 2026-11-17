@@ -36,7 +36,7 @@ The website is an interactive camera (a Sony ZV-E10) whose screen shows the site
 
 ## Projects
 - [Home Server](https://github.com/RogerMcKenzie/home-server): A home-server build using a Dell OptiPlex. I’m documenting the hardware upgrades and exploring virtual machines, game storage and backups. (Intel Core i3-8100T, 16 GB RAM, 256 GB SATA SSD + 512 GB NVMe SSD).
-- Studio Stack: I’m leading development of a production-grade web platform for managing creative teams, projects and equipment. Originally built for The Agency at UF, Studio Stack has expanded to serve external clients through organization workspaces, role-based access, production workflows and equipment operations. (TypeScript, React, Next.js, AWS Amplify, Cognito, API Gateway, Lambda, Amazon RDS for PostgreSQL, S3, SES, SNS and CloudWatch).
+- [Studio Stack](https://github.com/The-Agency-at-UF/studiostack): I lead development of a production-grade platform for creative teams, projects and equipment. Originally built for The Agency at UF, it now serves external clients with shared workspaces, role-based access and production workflows. (TypeScript, React, Next.js, AWS Amplify, Cognito, API Gateway, Lambda, Amazon RDS for PostgreSQL, S3, SES, SNS and CloudWatch).
 - [Jenna’s Recipes](https://jennarecipes.vercel.app): A mock client website featuring Jenna’s favorite recipes, Gemini-generated recipes from ingredients and Spoonacular search. It also includes a kitchenware demo store with a shopping cart saved between visits. (React, TypeScript, MUI, Gemini, Spoonacular).
 
 ## Photos
