@@ -4,12 +4,6 @@
 
 The website is an interactive camera (a Sony ZV-E10) whose screen shows the site. The same content is in plain HTML inside index.html.
 
-## About
-- From Miami; first in his family to go to college.
-- Software engineering intern at Amazon in Arlington, Virginia, in 2025 and 2026.
-- Lead developer at The Agency at UF since April 2026.
-- Off the clock: cooking, climbing, gaming, a home server, and tech videos on YouTube.
-
 ## Résumé
 ### Education
 - University of Florida, B.S.B.A. in Information Systems, minors in Computer Science and Statistics. Graduating April 2028.

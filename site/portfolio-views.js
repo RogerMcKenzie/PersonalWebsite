@@ -1,5 +1,5 @@
 import { socialIcons } from './social-icons.js?v=contact-socials-20261117-1';
-import { sections } from './sections.js?v=sections-20261115-1';
+import { sections } from './sections.js?v=contact-menu-20261117-1';
 
 const EMAIL='roger@rogermckz.dev';
 const YOUTUBE='https://www.youtube.com/@RogerMcKenzie1';
@@ -22,7 +22,6 @@ const external='target="_blank" rel="noopener noreferrer"';
 const contactProfiles=[{"id":"linkedin","label":"LinkedIn","url":"https://www.linkedin.com/in/rogermckenzie/"},{"id":"youtube","label":"YouTube","url":"https://www.youtube.com/@RogerMcKenzie1"},{"id":"instagram","label":"Instagram","url":"https://www.instagram.com/rogermckz/"},{"id":"tiktok","label":"TikTok","url":"https://www.tiktok.com/@rogermckz"}];
 const contactIconsHTML=contactProfiles.map(profile=>socialIcons[profile.id]).join('');
 const contactSocialLinks=`<div class="lcd-links contact-social-links">${contactProfiles.map(profile=>`<a href="${profile.url}" ${external}>${socialIcons[profile.id]}<span>${profile.label}</span></a>`).join('')}</div>`;
-const socialLinks=`<div class="lcd-links"><a href="https://github.com/RogerMcKenzie" ${external}>GitHub</a><a href="https://www.linkedin.com/in/rogermckenzie/" ${external}>LinkedIn</a><a href="${YOUTUBE}" ${external}>YouTube</a></div>`;
 
 const photos=[
  {src:'assets/photography/sunset-cathedral.jpg',alt:'Orange sunset over a cathedral silhouette and city rooftops',title:'Cathedral sunset',location:'Washington, DC',year:'2026'},
@@ -40,24 +39,17 @@ const lists={
   {"name":"Home Server","text":"A home-server build using a Dell OptiPlex. I’m documenting the hardware upgrades and exploring virtual machines, game storage and backups.","meta":"Intel Core i3-8100T, 16 GB RAM, 256 GB SATA SSD + 512 GB NVMe SSD","url":"https://github.com/RogerMcKenzie/home-server","cta":"View the build"},
   {"name":"Studio Stack","text":"I lead development of a production-grade platform for creative teams, projects and equipment. Originally built for The Agency at UF, it now serves external clients with shared workspaces, role-based access and production workflows.","meta":"TypeScript, React, Next.js, AWS Amplify, Cognito, API Gateway, Lambda, Amazon RDS for PostgreSQL, S3, SES, SNS and CloudWatch","url":"https://github.com/The-Agency-at-UF/studiostack","cta":"View on GitHub"},
   {"name":"Jenna’s Recipes","img":"assets/jennas-recipes.jpg","text":"A mock client website featuring Jenna’s favorite recipes, Gemini-generated recipes from ingredients and Spoonacular search. It also includes a kitchenware demo store with a shopping cart saved between visits.","meta":"React, TypeScript, MUI, Gemini, Spoonacular","url":"https://jennarecipes.vercel.app","cta":"Open the app"}
- ]},
- about:{label:sections.about,items:[
-  {name:'Background',img:'assets/profile.jpg',text:'I’m from Miami and the first in my family to go to college. I study Information Systems at the University of Florida, with minors in Computer Science and Statistics.',links:true},
-  {name:'Experience',img:'assets/profile.jpg',text:'Software engineering intern at Amazon in Arlington, Virginia, in 2025 and 2026. Lead developer at The Agency at UF since April 2026.'},
-  {name:'Off the clock',img:'assets/profile.jpg',text:'Cooking, climbing, gaming and tinkering with a home server. I also make videos about tech on YouTube.',links:true}
  ]}
 };
 const menuPreviews={
- about:{img:'assets/favicon-512.png',text:'Software developer and photographer at the University of Florida'},
  projects:{img:'assets/jennas-recipes.jpg',text:'My home server, Studio Stack and Jenna’s Recipes'},
  photos:{img:'assets/photography/sunset-cathedral.jpg',text:'Four photographs from Washington, Las Vegas and San Francisco'},
  resume:{document:`${RESUME}/preview`,text:''},
- contact:{text:EMAIL}
+ contact:{img:'assets/favicon-512.png',text:EMAIL}
 };
 
 function mobileListView(kind,{listIndex}){
  const {label,items}=lists[kind];
- if(kind==='about')return `<section class="mobile-about mobile-page"><h1>${label}</h1><img src="assets/profile.jpg" alt="Roger McKenzie" width="1512" height="1375" loading="lazy">${items.map(item=>`<section><h2>${item.name}</h2><p>${item.text}</p></section>`).join('')}${socialLinks}</section>`;
  return `<section class="mobile-projects mobile-page"><h1>${label}</h1>${items.map((item,i)=>`<details data-project="${i}" ${i===listIndex.projects?'open':''}><summary>${item.name}${ICON.expand}</summary><div class="mobile-project-detail">${previewHTML(item)}</div></details>`).join('')}</section>`;
 }
 
@@ -68,8 +60,7 @@ function previewHTML(item){
  return (item.img?`<img src="${item.img}" alt="" width="262" height="157" loading="lazy">`:'')
   +`<p>${item.text}</p>`
   +(item.meta?`<p class="lcd-meta">${item.meta}</p>`:'')
-  +(item.url?`<a class="lcd-cta" href="${item.url}" ${external}>${item.cta}${ICON.out}</a>`:'')
-  +(item.links?socialLinks:'');
+  +(item.url?`<a class="lcd-cta" href="${item.url}" ${external}>${item.cta}${ICON.out}</a>`:'');
 }
 function listView(kind,{listIndex,mobile}){
  if(mobile)return mobileListView(kind,{listIndex});
@@ -110,7 +101,7 @@ function videoView({videoIndex}){
 function viewHTML(view,state){
  const {photoMode}=state;
  if(view==='home')return homeView(state);
- if(view==='about'||view==='projects')return listView(view,state);
+ if(view==='projects')return listView(view,state);
  if(view==='photos')return photoMode==='index'?indexView(state):photoMode==='play'?videoView(state):slideshowView(state);
  if(view==='resume')return resumeView(state);
  return contactView();

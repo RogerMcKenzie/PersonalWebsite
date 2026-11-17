@@ -10,7 +10,7 @@ from pathlib import Path
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 
-ATLAS_W = 2048
+ATLAS_W = 1024
 TEX_DIR = "textures"
 PENDING_LABELS = []
 WORK = tempfile.TemporaryDirectory(prefix="portfolio-wheel-")
@@ -276,8 +276,8 @@ def replace_decal(path, replacement):
         primitive["attributes"] = {k: v + counts["accessors"] for k, v in primitive["attributes"].items()}
     original = next(n for n in asset["nodes"] if n["name"] == "Label_Wheel_Arrows")
     asset["meshes"][original["mesh"]] = mesh
-    original["extras"]["marking"] = "ABOUT | PROJECTS | PHOTOS | RÉSUMÉ"
-    next(n for n in asset["nodes"] if n["name"] == "ZV-E10")["extras"]["portfolio_label_version"] = 4
+    original["extras"]["marking"] = "CONTACT | PROJECTS | PHOTOS | RÉSUMÉ"
+    next(n for n in asset["nodes"] if n["name"] == "ZV-E10")["extras"]["portfolio_label_version"] = 5
     for key in counts:
         asset.setdefault(key, []).extend(new.get(key, []))
     for ext in new.get("extensionsUsed", []):
@@ -293,6 +293,24 @@ def replace_decal(path, replacement):
     result += struct.pack("<I4s", len(binary), b"BIN\x00") + binary
     Path(path).write_bytes(result)
 
+
+def prune_asset(path):
+    """Drop obsolete decal buffers after replacement while preserving the camera scene."""
+    output = Path(WORK.name) / "camera-pruned.glb"
+    subprocess.run(["npx", "--yes", "@gltf-transform/cli@4.5.1", "prune", str(path), str(output)], check=True)
+    asset, binary = read_glb(output)
+    for material in asset.get("materials", []):
+        if material.get("name", "").startswith("ZVR_WheelLabels"):
+            material["name"] = "ZVR_WheelLabels"
+    encoded = json.dumps(asset, ensure_ascii=False, separators=(",", ":")).encode()
+    encoded += b" " * (-len(encoded) % 4)
+    binary += b"\x00" * (-len(binary) % 4)
+    result = struct.pack("<4sII", b"glTF", 2, 28 + len(encoded) + len(binary))
+    result += struct.pack("<I4s", len(encoded), b"JSON") + encoded
+    result += struct.pack("<I4s", len(binary), b"BIN\x00") + binary
+    Path(path).write_bytes(result)
+
+
 def render_desktop(repo, assets):
     renderer = runpy.run_path(str(repo / "scripts/render-mobile-camera.py"))
     renderer["prepare_mobile_model"]()
@@ -307,7 +325,7 @@ def main():
     path = assets / "zv-e10.glb"
     current, _ = read_glb(path)
     label_node = next(n for n in current["nodes"] if n["name"] == "Label_Wheel_Arrows")
-    if label_node.get("extras", {}).get("marking") == "ABOUT | PROJECTS | PHOTOS | RÉSUMÉ":
+    if label_node.get("extras", {}).get("marking") == "CONTACT | PROJECTS | PHOTOS | RÉSUMÉ":
         render_desktop(repo, assets)
         print("Wheel already updated; refreshed desktop poster only")
         return
@@ -324,7 +342,7 @@ def main():
             image.name = "zv-e10-original-labels.png"
     coll = bpy.context.scene.collection
     legends = label_mesh("Wheel_Arrows", [
-        ("text", "ABOUT", .22, (0, 1.16)), ("text", "PROJECTS", .22, (1.12, 0)),
+        ("text", "CONTACT", .22, (0, 1.16)), ("text", "PROJECTS", .22, (1.12, 0)),
         ("text", "PHOTOS", .22, (0, -1.16)), ("text", "RÉSUMÉ", .22, (-1.02, 0)),
     ], None, coll, root, (-3.85, 2.124, 2.20), (90, 0, 180), load_font())
     legends.text_angles = {"RÉSUMÉ": 90, "PROJECTS": -90}
@@ -361,6 +379,7 @@ def main():
     bpy.ops.export_scene.gltf(filepath=str(temp_glb), export_format="GLB", use_selection=True,
         export_extras=True, export_yup=True, export_animations=False)
     replace_decal(path, temp_glb)
+    prune_asset(path)
     render_desktop(repo, assets)
     print("Updated wheel printing and desktop poster", path.stat().st_size)
 

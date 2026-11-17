@@ -10,7 +10,7 @@ const asset = JSON.parse(bytes.toString('utf8', 20, 20 + jsonLength));
 const binaryStart = 20 + jsonLength + 8;
 const printedRoot = asset.nodes.find(n => n.name === 'ZV-E10');
 assert.equal(printedRoot.extras.portfolio_labels, true, 'export identifies portfolio printing');
-assert.equal(printedRoot.extras.portfolio_label_version, 4, 'canonical printed destination names');
+assert.equal(printedRoot.extras.portfolio_label_version, 5, 'canonical printed destination names');
 assert.ok(bytes.length <= 5e6, 'GLB stays under the 5 MB budget');
 assert.ok(asset.meshes.reduce((sum,m) => sum + m.primitives.reduce((n,p) =>
   n + asset.accessors[p.indices].count / 3, 0), 0) <= 100000, 'triangle budget');
@@ -23,7 +23,7 @@ assert.ok(labelMaterial.pbrMetallicRoughness.roughnessFactor >= 0.5, 'matte prin
 for (const [name, parent, marking] of [
   ['Label_Menu','ZV-E10','MENU'], ['Label_Fn','Fn_Button','PREVIOUS'],
   ['Label_Playback_Icon','Playback_Button','PLAYBACK'], ['Label_Delete_Icon','Delete_Button','NEXT'],
-  ['Label_Home','Wheel_Center','HOME'], ['Label_Wheel_Arrows','ZV-E10','ABOUT | PROJECTS | PHOTOS | RÉSUMÉ'],
+  ['Label_Home','Wheel_Center','HOME'], ['Label_Wheel_Arrows','ZV-E10','CONTACT | PROJECTS | PHOTOS | RÉSUMÉ'],
 ]) {
   const index = asset.nodes.findIndex(n => n.name === name);
   assert.ok(index >= 0, `${name} is exported`);
@@ -35,8 +35,11 @@ function attribute(index) {
   const ArrayType = { 5126: Float32Array, 5123: Uint16Array, 5125: Uint32Array }[a.componentType];
   const size = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4 }[a.type];
   const offset = binaryStart + (v.byteOffset || 0) + (a.byteOffset || 0);
-  const copy = bytes.subarray(offset, offset + a.count * size * ArrayType.BYTES_PER_ELEMENT);
-  return new THREE.BufferAttribute(new ArrayType(copy.buffer.slice(copy.byteOffset, copy.byteOffset + copy.length)), size);
+  // glTF permits interleaved attributes; extract each element using its buffer-view stride.
+  const width = size * ArrayType.BYTES_PER_ELEMENT, stride = v.byteStride || width;
+  const copy = new Uint8Array(a.count * width);
+  for (let i=0;i<a.count;i++) copy.set(bytes.subarray(offset+i*stride,offset+i*stride+width),i*width);
+  return new THREE.BufferAttribute(new ArrayType(copy.buffer), size);
 }
 const nodes = asset.nodes.map(n => {
   let object;

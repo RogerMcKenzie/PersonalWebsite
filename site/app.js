@@ -1,5 +1,5 @@
-import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=sections-20261115-1';
-import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=menu-consistency-20261117-1';
+import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=contact-menu-20261117-1';
+import { contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=contact-menu-20261117-1';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
 
 const views=sectionIds;
@@ -30,7 +30,7 @@ let photoIndex=0;
 let photoMode='index';
 let photoTab='photos';
 let videoIndex=0;
-const listIndex={projects:0,about:0};
+const listIndex={projects:0};
 const lcd=document.getElementById('lcd');
 const display=document.getElementById('display-content');
 const cameraMenu=document.getElementById('camera-menu');
@@ -38,7 +38,7 @@ const menuToggle=document.getElementById('menu-toggle');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 const mobilePhotos=createMobilePhotoViewer({photos,reducedMotion,onStep:changePhoto,onClose:()=>setPhotoMode('index',{focus:true})});
 const dialIndicator=document.getElementById('dial-indicator');
-const dialAngles={home:0,about:0,projects:90,photos:180,resume:270,contact:0};
+const dialAngles={home:0,projects:90,photos:180,resume:270,contact:0};
 let indicatorAngle=0;
 function setDialIndicator(degrees){
  // Take the short route across the 0/360 boundary; an interrupted turn starts
@@ -59,7 +59,7 @@ function updateNav(){
  const navOn=!cameraMenu.hidden?false:navViews.has(current)&&!(current==='photos'&&photoMode!=='index');
  lcd.dataset.nav=navOn?'on':'off';
  const menuButton=document.querySelector('.mobile-nav [data-open-menu]');
- const menuCurrent=!cameraMenu.hidden||['about','resume','contact'].includes(current);
+ const menuCurrent=!cameraMenu.hidden||['resume','contact'].includes(current);
  if(menuCurrent)menuButton.setAttribute('aria-current','page');else menuButton.removeAttribute('aria-current');
  menuButton.setAttribute('aria-expanded',String(!cameraMenu.hidden));
 }
@@ -241,7 +241,7 @@ cameraMenu.addEventListener('keydown',e=>{
  e.preventDefault();selectMenu(menuIndex+(e.key==='ArrowDown'?1:-1),{focus:true});
 });
 
-// ---------------------------------------------------------------- lists (Projects, About)
+// ---------------------------------------------------------------- projects
 function selectItem(kind,index,{focus=false}={}){
  const items=lists[kind].items;
  const next=(index+items.length)%items.length;
@@ -249,7 +249,7 @@ function selectItem(kind,index,{focus=false}={}){
  if(!list){
   if(cameraDesktop.matches)return;
   const project=display.querySelector(`[data-project="${next}"]`);
-  const section=project||display.querySelectorAll('.mobile-about section')[next];
+  const section=project;
   if(!section)return;
   listIndex[kind]=next;
   if(project){
@@ -406,7 +406,7 @@ document.addEventListener('pointercancel',()=>{photoGesture=null;});
 // The physical wheel steps through the four printed sections. Inside the menu it moves the
 // selection instead. Dragging preserves a simple click until a real turn starts.
 const sectionWheel=document.querySelector('.dial');
-const wheelSections=['about','projects','photos','resume'];
+const wheelSections=['contact','projects','photos','resume'];
 let wheelScroll=0,wheelScrollAt=0,wheelChangedAt=-Infinity;
 function stepWheel(direction){
  if(!cameraMenu.hidden){selectMenu(menuIndex+direction,{focus:true});return;}
@@ -434,7 +434,7 @@ sectionWheel.addEventListener('keydown',e=>{
 });
 // Dragging turns the wheel 1:1 with the pointer (camera3d.js draws it from 'camera-wheel'
 // events). The section under the red segment opens as soon as the segment reaches it.
-const WHEEL_ANGLE={about:0,projects:-Math.PI/2,photos:Math.PI,resume:Math.PI/2};
+const WHEEL_ANGLE={contact:0,projects:-Math.PI/2,photos:Math.PI,resume:Math.PI/2};
 let dialAngle=0;
 function nearAngle(angle,reference){return angle+Math.round((reference-angle)/(2*Math.PI))*2*Math.PI;}
 function sendWheel(angle,active){
@@ -506,7 +506,7 @@ sectionWheel.addEventListener('click',e=>{
  const p=wheelPoint(e);
  if(Math.hypot(p.x,p.y)<sectionWheel.offsetWidth*.16)return;
  const quarter=((Math.round(Math.atan2(p.y,p.x)/(Math.PI/2))%4)+4)%4;
- render(['projects','photos','resume','about'][quarter],{focus:true});
+ render(['projects','photos','resume','contact'][quarter],{focus:true});
 });
 // The centre button confirms the menu selection while the menu is open.
 document.querySelector('.dial-center').addEventListener('click',e=>{

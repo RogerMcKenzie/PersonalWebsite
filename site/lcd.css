@@ -83,7 +83,7 @@
 .camera-v2 .lcd-preview p { color:var(--lcd-soft); font-size:15px; line-height:1.45; }
 /* Keep menu pictures the same size so captions stay aligned while browsing. */
 .camera-v2 .lcd-menu .lcd-preview img { height:auto; aspect-ratio:5/4; }
-.camera-v2 .lcd-menu[data-preview=about] .lcd-preview img { object-fit:contain; object-position:center; background:#fff; }
+.camera-v2 .lcd-menu[data-preview=contact] .lcd-preview img { object-fit:contain; object-position:center; background:#fff; }
 .camera-v2 .lcd-menu[data-preview=photos] .lcd-preview img { object-position:50% 70%; }
 .camera-v2 .lcd-menu .menu-resume-preview { width:100%; height:auto; aspect-ratio:8.5/11; margin:0; border-radius:0; background:#fff; pointer-events:none; }
 .camera-v2 .lcd-menu .menu-resume-preview .resume-loading { color:var(--lcd-bg); font-size:15px; padding:20px; text-align:center; }

@@ -2,11 +2,11 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {sections,sectionIds,normaliseSection,browsingLabel} from '../site/sections.js';
-import {viewHTML} from '../site/portfolio-views.js';
+import {viewHTML,menuPreviews} from '../site/portfolio-views.js';
 
-assert.deepEqual(Object.values(sections),['Home','About','Projects','Photos','Résumé','Contact']);
+assert.deepEqual(Object.values(sections),['Home','Projects','Photos','Résumé','Contact']);
 for(const id of sectionIds)assert.equal(normaliseSection(id),id);
-for(const [old,id] of Object.entries({work:'projects',outside:'photos',experience:'resume'}))assert.equal(normaliseSection(old),id);
+for(const [old,id] of Object.entries({about:'contact',work:'projects',outside:'photos',experience:'resume'}))assert.equal(normaliseSection(old),id);
 for(const unknown of ['',undefined,'toString','constructor','__proto__','missing'])assert.equal(normaliseSection(unknown),'home');
 const html=fs.readFileSync(new URL('../site/index.html',import.meta.url),'utf8');
 for(const match of html.matchAll(/<button[^>]*data-view="([^"]+)"[^>]*>(.*?)<\/button>/gs)){
@@ -19,8 +19,8 @@ for(const id of sectionIds.filter(id=>id!=='home')){
  assert.match(html,new RegExp(`<section id="${id}">(?:<span[^>]+></span>)?<h2>${sections[id]}</h2>`));
 }
 for(const mobile of [false,true]){
- const state={mobile,listIndex:{about:0,projects:0},photoMode:'index',photoTab:'photos',photoIndex:0,videoIndex:0};
- for(const id of ['about','projects','photos','resume']){
+ const state={mobile,listIndex:{projects:0},photoMode:'index',photoTab:'photos',photoIndex:0,videoIndex:0};
+ for(const id of ['projects','photos','resume']){
   assert.match(viewHTML(id,state),new RegExp(`<h1[^>]*>${sections[id]}</h1>`),`${id}, mobile=${mobile}`);
  }
  const resume=viewHTML('resume',state);
@@ -32,11 +32,15 @@ for(const mobile of [false,true]){
   assert.ok(resume.indexOf('</iframe>')<resume.indexOf('Download PDF'), 'download follows the document');
   assert.match(resume,/>Download PDF[\s\S]*<\/a><\/div><\/section>$/, 'download is the final action');
  }
- assert.match(viewHTML('about',state),/Experience/,'About topic stays Experience');
+ assert.doesNotMatch(viewHTML('contact',state),/>About</,'About is removed from runtime templates');
  assert.match(viewHTML('photos',state),/>Videos<\/button>/,'Videos stays a Photos tab');
 }
 assert.equal(browsingLabel('projects'),'project');
-assert.equal(browsingLabel('about'),'topic');
+assert.equal(browsingLabel('contact'),'section');
+assert.equal(Object.hasOwn(menuPreviews,'about'),false);
+assert.equal(menuPreviews.contact.img,'assets/favicon-512.png');
+assert.doesNotMatch(html,/data-view="about"|id="about"|>About</);
+assert.match(html,/class="dial-item dial-top" data-view="contact"/);
 assert.equal(browsingLabel('photos','photos'),'photograph');
 assert.equal(browsingLabel('photos','videos'),'video');
 assert.equal(browsingLabel('home'),'section');
