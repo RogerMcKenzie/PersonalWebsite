@@ -227,3 +227,20 @@
 .camera-v2 .lcd-static li { margin-bottom:4px; }
 
 .camera-v2 .menu-preview-open[hidden] { display:none; }
+
+.camera-v2 .lcd-photo-playback { display:grid; grid-template-rows:minmax(0,1fr) auto; }
+.camera-v2 .lcd-photo-playback .lcd-show-img { position:relative; inset:auto; min-width:0; min-height:0; }
+.camera-v2 .lcd-photo-playback .lcd-show-img img { position:absolute; inset:0; }
+.camera-v2 .lcd-photo-controls { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:60px; padding:4px 12px; }
+.camera-v2 .lcd-photo-caption { min-width:0; }
+.camera-v2 .lcd-photo-caption h1 { margin:0; }
+.camera-v2 .lcd-photo-caption .lcd-place { margin:0; }
+.camera-v2 .lcd-photo-actions { display:flex; align-items:center; gap:4px; flex-shrink:0; }
+.camera-v2 .lcd-photo-actions .lcd-all { margin:0 8px 0 0; }
+.camera-v2 .lcd-photo-actions .lcd-arrow { position:static; margin:0; }
+.camera-v2 .lcd-photo-count { color:var(--lcd-soft); font-size:14px; text-align:center; min-width:50px; }
+.camera-v2 .lcd .lcd-photo-zoom { overflow:hidden; cursor:zoom-in; }
+.camera-v2 .lcd .lcd-photo-zoom[aria-disabled="true"] { cursor:default; }
+.camera-v2 .lcd .lcd-photo-zoom:focus-visible { outline-offset:-3px; }
+.camera-v2 .lcd .lcd-photo-zoom[data-zoomed] { cursor:zoom-out; touch-action:none; }
+.camera-v2 .lcd .lcd-photo-zoom[data-zoomed]:active { cursor:grabbing; }

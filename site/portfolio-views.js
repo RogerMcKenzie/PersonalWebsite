@@ -70,7 +70,19 @@ function listView(kind,{listIndex,mobile}){
 function photoPlace(p){return [p.location,p.year].filter(Boolean).join('<br>');}
 function slideshowView({photoIndex,photoTab}){
  const p=photos[photoIndex],n=photoIndex+1;
- return `<div class="lcd-show"><div class="lcd-show-img" role="region" tabindex="0" aria-label="Photograph ${n} of ${photos.length}. Swipe, scroll or use the arrow keys to browse"><img src="${p.src}" alt="${p.alt}" width="1574" height="2200" draggable="false"></div><div class="lcd-show-side is-left lcd-narrow"><span class="lcd-file">${ICON.play}100-${String(n).padStart(4,'0')}</span><h1>${p.title}</h1><span class="lcd-place">${photoPlace(p)}</span></div><div class="lcd-show-side is-right lcd-narrow"><span>${n} / ${photos.length}</span><div class="lcd-bars" aria-hidden="true">${photos.map((_,i)=>`<i class="${i===photoIndex?'is-on':''}"></i>`).join('')}</div><button class="lcd-all" data-photo-mode="index">${ICON.grid}${photoTab==='all'?'Back to content':'All photos'}</button></div><button class="lcd-arrow is-prev" data-photo-step="-1" aria-label="Previous photograph">${ICON.left}</button><button class="lcd-arrow is-next" data-photo-step="1" aria-label="Next photograph">${ICON.right}</button></div>`;
+ const place=[p.location,p.year].filter(Boolean).join(' · ');
+ return `<div class="lcd-show lcd-photo-playback">
+  <button type="button" class="lcd-show-img lcd-photo-zoom" aria-label="Zoom in on ${p.alt}" aria-disabled="true"><img src="${p.src}" alt="${p.alt}" width="${p.width??1574}" height="${p.height??2200}" draggable="false"></button>
+  <footer class="lcd-photo-controls">
+   <div class="lcd-photo-caption"><h1>${p.title}</h1>${place?`<p class="lcd-place">${place}</p>`:''}</div>
+   <div class="lcd-photo-actions">
+    <button class="lcd-all" data-photo-mode="index">${ICON.grid}${photoTab==='all'?'Back to content':'All photos'}</button>
+    <button class="lcd-arrow" data-photo-step="-1" aria-label="Previous photograph">${ICON.left}</button>
+    <span class="lcd-photo-count">${n} / ${photos.length}</span>
+    <button class="lcd-arrow" data-photo-step="1" aria-label="Next photograph">${ICON.right}</button>
+   </div>
+  </footer>
+ </div>`;
 }
 const contentTabs=Object.freeze(['all','videos','photos']);
 function contentItems({photoTab}){
