@@ -1,0 +1,93 @@
+.camera-v2 .lcd-sd-swap {
+ position:absolute; inset-block-start:3px; inset-inline-end:14px;
+ display:inline-flex; align-items:center; gap:6px; min-width:44px; min-height:var(--sd-hit-size,44px);
+ padding-inline:8px; font:inherit; color:var(--lcd-ink); background:none; border:0;
+}
+.lcd-sd-swap svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.camera-v2 .lcd-sd-swap:hover { text-decoration:underline; text-underline-offset:4px; }
+.camera-v2 .lcd-index .lcd-empty-media { grid-column:1/-1; margin:40px 0 0; color:var(--lcd-ink); text-align:center; }
+.sd-lcd-choices {
+ position:absolute; z-index:5; inset:calc(var(--sd-hit-size,44px) + 6px) 16px auto auto;
+ display:grid; gap:2px; min-inline-size:166px; padding:5px;
+ border-radius:7px; background:#222327; color:#f3f3f4;
+ transform-origin:top right; animation:sd-choices-in 150ms ease-out both;
+}
+@keyframes sd-choices-in { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
+.camera-v2 .sd-lcd-choices button,.sd-hatch-controls button {
+ min-inline-size:44px; min-block-size:var(--sd-hit-size,44px); padding:0 10px; text-align:left;
+ border:0; color:#f3f3f4; font:inherit; cursor:pointer; background:none;
+}
+.camera-v2 .sd-lcd-choices button:hover,.sd-hatch-controls button:hover { background:#34363a; }
+.camera-v2 .sd-lcd-choices button[aria-current],.sd-hatch-controls button[aria-current] { color:#ff747c; }
+.camera-v2 .sd-lcd-choices button[aria-current]::after,.sd-hatch-controls button[aria-current]::after {
+ content:''; display:inline-block; width:5px; height:5px; margin-inline-start:9px;
+ background:currentColor; border-radius:50%; vertical-align:middle;
+}
+.sd-see-underside {
+ position:absolute; z-index:4; inset-inline-end:12px; inset-block-end:-30px;
+ min-width:44px; min-height:44px; padding-inline:12px; border:0;
+ color:#292929; background:none; cursor:pointer; font:500 15px Archivo,Arial,sans-serif;
+ text-decoration:underline; text-underline-offset:4px;
+}
+.sd-hatch-controls {
+ position:absolute; z-index:7;
+ left:clamp(8px,calc(var(--sd-anchor-x,58%) + 14%),calc(100% - 168px));
+ top:clamp(20px,calc(var(--sd-anchor-y,54%) + 5%),calc(100% - 153px));
+ min-inline-size:144px; padding:4px; display:grid; gap:2px;
+ border-radius:7px; background:#232428; color:#f3f3f4;
+ font:500 15px Archivo,Arial,sans-serif;
+}
+.sd-lcd-choices button:focus-visible,.sd-hatch-controls button:focus-visible { outline:2px solid #fff; outline-offset:-2px; }
+.sd-see-underside:focus-visible { outline:2px solid #292929; outline-offset:-2px; }
+.sd-lcd-choices button:active,.sd-hatch-controls button:active,.sd-see-underside:active { transform:scale(.97); }
+.camera-v2 .sd-viewing :is(.camera-explore,.camera-extras) { opacity:0; pointer-events:none; }
+.camera-v2 .sd-viewing :is(.camera-explore,.camera-extras) * { pointer-events:none; }
+.sd-poses {
+ display:none; position:absolute; z-index:6; pointer-events:none;
+ left:50%; top:49%; transform:translate(-50%,-50%);
+ width:min(53%,450px); aspect-ratio:4/5; background:center / contain no-repeat url('assets/camera/sd-compartment.jpg');
+ opacity:0;
+}
+.sd-poses.is-visible { display:block; opacity:1; }
+.camera-v2 .camera:has(.sd-poses.is-covering) :is(.camera-shell,.screen-bezel,.controls,.camera-extras,.camera-explore,.camera-3d-canvas) {
+ visibility:hidden; pointer-events:none;
+}
+.camera-v2 .sd-viewing .lcd { filter:brightness(.36); }
+.sd-sr { position:absolute; inline-size:1px; block-size:1px; margin:0; overflow:hidden; clip-path:inset(50%); }
+@media(max-width:1000px) {
+ .camera-v2 .lcd-sd-swap { inset-block-start:12px; inset-inline-end:8px; font-size:14px; }
+ .lcd-sd-word { display:none; }
+ .camera-v2 .lcd-index .lcd-tabs { padding-inline-end:76px; }
+ .camera-v2 .lcd-index .lcd-tabs button { padding-inline:3px; min-inline-size:44px; }
+ .sd-lcd-choices { inset-block-start:62px; }
+ .sd-see-underside { display:none; }
+ .sd-poses {
+  --sd-phone-width:min(96vw,460px);
+  display:block; visibility:hidden;
+  left:43.92%; top:calc(max(0px,21cqw) + 10px);
+  transform:translateX(-50%); width:var(--sd-phone-width);
+ }
+ .sd-poses.is-visible { visibility:visible; }
+ .camera[data-sd-renderer="atlas"] .sd-poses {
+  transform:translateX(-50%) translate(var(--sd-tx,0px),var(--sd-ty,0px)) scale(var(--sd-sx,1),var(--sd-sy,1));
+ }
+ .camera-v2 .camera[data-sd-renderer="atlas"] :is(.camera-shell,.screen-bezel,.controls) {
+  opacity:var(--sd-rest-opacity,1);
+ }
+ .sd-hatch-controls {
+  left:43.92%; top:calc(max(0px,21cqw) + min(120vw,575px) - 24px);
+  transform:translateX(-50%);
+  inline-size:max-content; max-inline-size:calc(100vw - 24px);
+ }
+}
+@media(max-width:1000px) and (max-height:680px) {
+ .sd-poses { --sd-phone-width:min(92vw,58svh); }
+ .sd-hatch-controls { top:calc(max(0px,21cqw) + min(115vw,72.5svh) - 24px); }
+}
+@media(prefers-reduced-motion:reduce) {
+ .sd-lcd-choices { animation:none; }
+ .sd-poses { transition:none; }
+ .sd-lcd-choices button:active,.sd-hatch-controls button:active,.sd-see-underside:active { transform:none; }
+}
+
+.sd-lcd-choices[hidden],.sd-see-underside[hidden],.sd-hatch-controls[hidden] { display:none; }

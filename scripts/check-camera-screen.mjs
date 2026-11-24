@@ -9,6 +9,10 @@ const jsonLength = bytes.readUInt32LE(12);
 const asset = JSON.parse(bytes.toString('utf8', 20, 20 + jsonLength));
 const binaryStart = 20 + jsonLength + 8;
 const printedRoot = asset.nodes.find(n => n.name === 'ZV-E10');
+const hatch = asset.nodes.find(n => n.name === 'Battery door hinge');
+const card = asset.nodes.find(n => n.name === 'Full-size SD card');
+assert.ok(printedRoot.children.includes(asset.nodes.indexOf(hatch)), 'the hatch can turn with the camera');
+assert.ok(printedRoot.children.includes(asset.nodes.indexOf(card)), 'the SD card can slide independently');
 assert.equal(printedRoot.extras.portfolio_labels, true, 'export identifies portfolio printing');
 assert.equal(printedRoot.extras.portfolio_label_version, 6, 'canonical printed destination names');
 assert.ok(bytes.length <= 5e6, 'GLB stays under the 5 MB budget');
@@ -103,7 +107,7 @@ const elements = new Map(['.screen-bezel', '.controls', '#menu-toggle', '.hardwa
   '#previous', '#next', '.dial'].map(s => [s, element()]));
 const classes = new Set();
 const camera = { clientWidth: 1440, clientHeight: 810, querySelector: s => elements.get(s),
-  classList: { toggle(name, enabled) { if (enabled) classes.add(name); else classes.delete(name); } } };
+  classList: { contains: name => classes.has(name), toggle(name, enabled) { if (enabled) classes.add(name); else classes.delete(name); } } };
 const canvas = { getBoundingClientRect: () => ({ left: -camera.clientWidth / 4,
   top: -camera.clientHeight / 4, width: camera.clientWidth * 1.5, height: camera.clientHeight * 1.5 }) };
 const surface = attachCameraInterface(THREE, { model, view, camera, canvas, frame, overscan: 1.5 });
@@ -112,6 +116,11 @@ const display = model.getObjectByName('Screen_Display');
 const matrix = e => e.style.transform.slice(7, -1).split(',').map(Number);
 const near = (a, b, message) => assert.ok(Math.abs(a - b) < 0.03, `${message}: ${a} != ${b}`);
 surface.setEnabled(true); surface.update();
+assert.equal(screen.inert, false);
+classes.add('sd-viewing'); surface.update();
+assert.equal(screen.inert, true, 'camera LCD controls are inactive during the hatch view');
+classes.delete('sd-viewing'); surface.update();
+assert.equal(screen.inert, false);
 near(parseFloat(screen.style.width) / camera.clientWidth * 100, 44.117647, 'LCD width');
 near(parseFloat(screen.style.height) / camera.clientHeight * 100, 58.823529, 'LCD height');
 near(matrix(screen)[4] / camera.clientWidth * 100, 20.882353, 'LCD left');

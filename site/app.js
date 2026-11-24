@@ -1,5 +1,6 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=content-names-20261117-1';
-import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=photo-playback-1';
+import { activeCard, memoryCards, insertMemoryCard, contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=sd-card-1';
+import { createCardSwap } from './sd-card-swap.js?v=sd-card-1';
 import { createPhotoZoom } from './photo-zoom.js?v=4';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=photo-playback-1';
 
@@ -26,6 +27,7 @@ cameraDesktop.addEventListener('change',updatePrintedControls);
 new MutationObserver(updatePrintedControls).observe(cameraBody,{attributes:true,attributeFilter:['class']});
 updatePrintedControls();
 
+try { insertMemoryCard(sessionStorage.getItem('portfolio.sd-card')); } catch {}
 let current='home';
 let photoIndex=0;
 let photoMode='index';
@@ -56,6 +58,17 @@ function bindDesktopZoom(){
  }
 }
 const mobilePhotos=createMobilePhotoViewer({photos,reducedMotion,onStep:changePhoto,onClose:()=>setPhotoMode('index',{focus:true})});
+const cardSwap=createCardSwap({
+ camera:cameraBody,lcd,cards:memoryCards,activeCard:()=>activeCard,reducedMotion,
+ onInsert(id){
+  insertMemoryCard(id);
+  try { sessionStorage.setItem('portfolio.sd-card',id); } catch {}
+  photoIndex=0;videoIndex=0;allIndex=0;photoMode='index';photoTab=photos.length?'photos':'all';
+  render('photos',{keepPhotoMode:true,focus:false});
+  history.replaceState(photoHistory(),'',`#content/${photoTab}`);
+ },
+ onReturn(){ display.querySelector('[data-swap-sd]')?.focus({preventScroll:true}); }
+});
 const dialIndicator=document.getElementById('dial-indicator');
 const dialAngles={home:0,projects:90,photos:180,resume:270,contact:0};
 let indicatorAngle=0;
@@ -153,11 +166,15 @@ function applyView(view,{focus=false,hash=true}={}){
  if(changed&&!cameraDesktop.matches)window.scrollTo({top:0,behavior:'instant'});
  watchImages();
  if(view==='photos'&&photoMode==='show'&&!cameraDesktop.matches)mobilePhotos.open(photoIndex);
+ const photoGrid=view==='photos'&&photoMode==='index';
+ cardSwap.sync(photoGrid);
+ if(photoGrid&&!cameraDesktop.matches)cardSwap.warm();
 }
 function render(view,options={}){
  const [section,filter]=view.split('/');
  const alias=Object.hasOwn(sectionAliases,location.hash.slice(1));
  view=normalise(section);
+ if(view!=='photos')cardSwap.reset();
  // Retain legacy section bookmarks; media routes include their selected filter.
  if(alias&&view!=='photos'&&normalise(location.hash.slice(1))===view)history.replaceState(history.state,'',`#${view}`);
  if(view==='photos'&&!options.keepPhotoMode){
@@ -329,6 +346,7 @@ display.addEventListener('keydown',e=>{
 
 // ---------------------------------------------------------------- photos
 function changePhoto(direction){
+ if(!photos.length)return;
  if(mobilePhotos.isOpen){
   const next=Math.max(0,Math.min(photos.length-1,photoIndex+direction));
   if(next===photoIndex)return;
@@ -400,7 +418,7 @@ function setPhotoMode(mode,{focus=false}={}){
   if(mode==='index')target?.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
  }
 }
-function photoHistory(){return {photoMode,photoTab,photoIndex,videoIndex,allIndex,photoDetail:photoMode!=='index'&&current==='photos'};}
+function photoHistory(){return {cardId:activeCard.id,photoMode,photoTab,photoIndex,videoIndex,allIndex,photoDetail:photoMode!=='index'&&current==='photos'};}
 function watchImages(){
  display.querySelectorAll('.lcd-show-img img,.lcd-live .lcd-feed,.lcd-thumbs img').forEach(img=>{
   const host=img.parentElement;
@@ -555,6 +573,7 @@ document.querySelector('.dial-center').addEventListener('click',e=>{
 document.addEventListener('pointerdown',()=>{document.documentElement.dataset.navigation='pointer';},{passive:true});
 document.addEventListener('keydown',()=>{document.documentElement.dataset.navigation='keyboard';},true);
 document.addEventListener('click',e=>{
+ if(e.target.closest('[data-swap-sd]')){cardSwap.open();return;}
  const target=e.target.closest('[data-play-video],[data-view],[data-open-preview],[data-open-menu],[data-close-menu],[data-photo],[data-video],[data-photo-tab],[data-photo-mode],[data-photo-step],[data-video-step],[data-item]');
  if(!target)return;
  if(target.matches('a[data-view]'))e.preventDefault();
@@ -583,7 +602,7 @@ document.querySelector('.hardware-playback')?.addEventListener('click',()=>setPh
 document.getElementById('previous').addEventListener('click',()=>step(-1));
 document.getElementById('next').addEventListener('click',()=>step(1));
 document.addEventListener('keydown',e=>{
- if(e.defaultPrevented)return;
+ if(e.defaultPrevented||cardSwap.isOpen)return;
  if(e.key==='Escape'&&!cameraMenu.hidden){e.preventDefault();setMenuOpen(false,{focus:true});return;}
  if(e.key==='Escape'&&current==='photos'&&photoMode!=='index'){e.preventDefault();setPhotoMode('index',{focus:true});return;}
  if(e.altKey||e.ctrlKey||e.metaKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
@@ -594,9 +613,13 @@ document.addEventListener('keydown',e=>{
 // Desktop lays the screen out at 620 × 465 and zooms it to the projected LCD size.
 const screenElement=lcd.parentElement;
 function fitLCD(){
- if(!cameraDesktop.matches){lcd.style.removeProperty('zoom');return;}
+ if(!cameraDesktop.matches){lcd.style.removeProperty('zoom');lcd.style.removeProperty('--sd-hit-size');return;}
  const width=screenElement.clientWidth;
- if(width)lcd.style.zoom=String(width/620);
+ if(width){
+  const scale=width/620;
+  lcd.style.zoom=String(scale);
+  lcd.style.setProperty('--sd-hit-size',`${Math.max(44,Math.ceil(44/scale))}px`);
+ }
 }
 new ResizeObserver(fitLCD).observe(screenElement);
 cameraDesktop.addEventListener('change',()=>{fitLCD();render(current,{hash:false,instant:true,keepPhotoMode:true});});
@@ -607,7 +630,8 @@ function hashView(){
  return ['photos','outside'].includes(route)?'content/photos':route||'home';
 }
 window.addEventListener('popstate',e=>{
- const state=e.state;
+ cardSwap.reset();
+ const state=e.state?.cardId===activeCard.id?e.state:null;
  const closeMobilePhoto=mobilePhotos.isOpen&&!cameraDesktop.matches&&normalise(location.hash.slice(1).split('/')[0])==='photos'&&(state?.photoMode||'index')==='index'&&['photos','all'].includes(state?.photoTab||'all');
  if(closeMobilePhoto){
   photoMode='index';photoTab=state?.photoTab||'all';

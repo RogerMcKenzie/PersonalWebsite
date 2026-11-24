@@ -125,7 +125,7 @@ export function attachCameraInterface(THREE, { model, view, camera, canvas, fram
         && (!record.when || record.when());
       record.element.style.transform = `matrix(${(b.x - a.x) / record.width},${(b.y - a.y) / record.width},${(c.x - a.x) / record.height},${(c.y - a.y) / record.height},${a.x},${a.y})`;
       record.element.style.visibility = visible ? 'visible' : 'hidden';
-      record.element.inert = !visible;
+      record.element.inert = !visible || camera.classList.contains('sd-viewing');
     }
     screen.style.setProperty('--lcd-glare', (0.025 + (1 - Math.max(0, incidence)) * 0.07).toFixed(3));
   }
