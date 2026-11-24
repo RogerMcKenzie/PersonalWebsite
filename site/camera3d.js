@@ -11,7 +11,7 @@ import { cardTravel, restPose } from './sd-card-motion.js?v=flight-1';
 
 const DESKTOP = window.matchMedia('(min-width: 1001px)');
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
-const MODEL_URL = 'assets/camera/zv-e10.glb?v=sd-card-1';
+const MODEL_URL = 'assets/camera/zv-e10.glb?v=wheel-labels-1';
 
 // Orthographic rear framing in metres (Blender FRAME: cx 0, cz 3.35cm, width 13.6cm, 16:9).
 const FRAME = { cx: 0, cy: 0.0335, width: 0.136, height: 0.136 * 9 / 16 };
