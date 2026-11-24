@@ -91,3 +91,12 @@
 }
 
 .sd-lcd-choices[hidden],.sd-see-underside[hidden],.sd-hatch-controls[hidden] { display:none; }
+
+.camera-v2 .lcd-thumbs img.lcd-thumb-full { object-fit:contain; }
+@media (min-width:1001px) {
+ .camera-v2 .lcd-thumbs.is-many { grid-template-columns:repeat(3,minmax(0,1fr)); width:440px; margin-inline:auto; }
+}
+@media (max-width:1000px) {
+ .camera-v2 .lcd-index .lcd-thumbs.is-short { grid-template-rows:minmax(0,1fr); }
+ .camera-v2 .lcd-index .lcd-thumbs.is-many { grid-template-rows:none; grid-auto-rows:clamp(56px,24vw,128px); }
+}

@@ -1,3 +1,4 @@
+import { extraMemoryCards } from './sd-cards.js?v=card-collections-1';
 import { socialIcons } from './social-icons.js?v=contact-socials-20261117-1';
 import { sections } from './sections.js?v=content-names-20261117-1';
 
@@ -36,7 +37,7 @@ const videos=[
 ];
 const memoryCards=[
  {id:'all',name:'Portfolio',photos:[...photos],videos:[...videos]},
- {id:'high-school',name:'High School',photos:[],videos:[]}
+ ...extraMemoryCards
 ];
 let activeCard=memoryCards[0];
 function insertMemoryCard(id){
@@ -117,14 +118,17 @@ function thumbsHTML(state){
  if(state.photoTab==='videos'&&!videos.length)return '<p class="lcd-empty-media">No videos on this card</p>';
  const tiles=contentItems(state).map(({type,index,item},i)=>{
   const movie=type==='video',src=movie?videoThumb(item):item.src;
-  return `<button${movie?' class="lcd-video-tile"':''} data-${type}="${index}" data-content-index="${i}" aria-current="${i===selectedContentIndex(state)}" aria-label="${movie?'Play':'View'} ${item.title}"><img src="${src}" alt="" width="214" height="143" loading="lazy" draggable="false">${movie?`<span class="lcd-play-badge">${ICON.play}</span>`:''}</button>`;
+  return `<button${movie?' class="lcd-video-tile"':''} data-${type}="${index}" data-content-index="${i}" aria-current="${i===selectedContentIndex(state)}" aria-label="${movie?'Play':'View'} ${item.title}"><img src="${src}"${item.fullThumbnail?' class="lcd-thumb-full"':''} alt="" width="214" height="143" loading="lazy" draggable="false">${movie?`<span class="lcd-play-badge">${ICON.play}</span>`:''}</button>`;
  });
  if(state.photoTab==='videos'&&videos.length<4)tiles.push(`<a class="lcd-channel-tile" href="${YOUTUBE}" ${external}><span>More on YouTube</span>${ICON.out}</a>`);
  return tiles.join('');
 }
 function indexView(state){
  const {photoTab}=state,labels={all:'All content',videos:'Videos',photos:'Photos'},icons={all:ICON.grid,videos:ICON.video,photos:ICON.photo};
- return `<div class="lcd-page lcd-index" data-content-filter="${photoTab}"><h1 class="lcd-sr">${sections.photos}</h1><div class="lcd-tabs lcd-narrow" role="tablist" aria-label="Content type">${contentTabs.map(tab=>`<button id="content-tab-${tab}" role="tab" data-photo-tab="${tab}" aria-controls="content-panel" aria-selected="${photoTab===tab}" tabindex="${photoTab===tab?'0':'-1'}" class="${photoTab===tab?'is-on':''}">${icons[tab]}${labels[tab]}</button>`).join('')}</div><button type="button" class="lcd-sd-swap" data-swap-sd aria-expanded="false" aria-controls="sd-lcd-choices" aria-label="Swap SD card, ${activeCard.name} inserted" title="Swap SD card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H5V5l2-2Z"/><path d="M9 6v4m3-4v4m3-3v3"/></svg><span>SD<span class="lcd-sd-word"> card</span></span></button><div id="content-panel" class="lcd-thumbs" role="tabpanel" aria-labelledby="content-tab-${photoTab}">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
+ const items=contentItems(state);
+ const archive=activeCard.id!=='all'&&items.length;
+ const gridClass=archive?(items.length>4?' is-many':items.length<3?' is-short':''):'';
+ return `<div class="lcd-page lcd-index" data-content-filter="${photoTab}"><h1 class="lcd-sr">${sections.photos}</h1><div class="lcd-tabs lcd-narrow" role="tablist" aria-label="Content type">${contentTabs.map(tab=>`<button id="content-tab-${tab}" role="tab" data-photo-tab="${tab}" aria-controls="content-panel" aria-selected="${photoTab===tab}" tabindex="${photoTab===tab?'0':'-1'}" class="${photoTab===tab?'is-on':''}">${icons[tab]}${labels[tab]}</button>`).join('')}</div><button type="button" class="lcd-sd-swap" data-swap-sd aria-expanded="false" aria-controls="sd-lcd-choices" aria-label="Swap SD card, ${activeCard.name} inserted" title="Swap SD card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H5V5l2-2Z"/><path d="M9 6v4m3-4v4m3-3v3"/></svg><span>SD<span class="lcd-sd-word"> card</span></span></button><div id="content-panel" class="lcd-thumbs${gridClass}" role="tabpanel" aria-labelledby="content-tab-${photoTab}">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
 }
 function resumeView({mobile}){
  if(mobile)return `<section class="mobile-resume mobile-page"><h1>${sections.resume}</h1><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="mobile-resume-actions"><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé${ICON.out}</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">Download PDF${ICON.download}</a></div></section>`;
