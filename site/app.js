@@ -1,6 +1,7 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=content-names-20261117-1';
-import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=projects-only-20261117-1';
-import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=mobile-photos-20261116-3';
+import { contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=photo-playback-1';
+import { createPhotoZoom } from './photo-zoom.js?v=4';
+import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=photo-playback-1';
 
 const views=sectionIds;
 const navViews=new Set(views.filter(view=>view!=='home'));
@@ -37,6 +38,23 @@ const display=document.getElementById('display-content');
 const cameraMenu=document.getElementById('camera-menu');
 const menuToggle=document.getElementById('menu-toggle');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+let desktopZoom;
+let desktopZoomLoad;
+function bindDesktopZoom(){
+ desktopZoom?.dispose();
+ desktopZoomLoad?.abort();
+ const stage=display.querySelector('.lcd-photo-zoom');
+ desktopZoom=null;
+ if(!stage)return;
+ desktopZoom=createPhotoZoom({stage,button:stage});
+ const image=stage.querySelector('img');
+ if(image.complete)desktopZoom.setImage(image);
+ else {
+  desktopZoomLoad=new AbortController();
+  const zoom=desktopZoom;
+  image.addEventListener('load',()=>zoom.setImage(image),{once:true,signal:desktopZoomLoad.signal});
+ }
+}
 const mobilePhotos=createMobilePhotoViewer({photos,reducedMotion,onStep:changePhoto,onClose:()=>setPhotoMode('index',{focus:true})});
 const dialIndicator=document.getElementById('dial-indicator');
 const dialAngles={home:0,projects:90,photos:180,resume:270,contact:0};
@@ -98,6 +116,7 @@ function applyView(view,{focus=false,hash=true}={}){
  resumeResizeObserver?.disconnect();resumeResizeObserver=null;
  clearTimeout(resumeLoadingTimer);
  display.innerHTML=`<div class="view">${viewHTML(view,viewState())}</div>`;
+ bindDesktopZoom();
  display.scrollTop=0;
  updateNav();
  if(view==='home'){
@@ -324,6 +343,7 @@ function changePhoto(direction){
  const viewerFocused=document.activeElement?.classList.contains('lcd-show-img');
  const focusedStep=document.activeElement?.dataset.photoStep;
  display.innerHTML=`<div class="view">${slideshowView(viewState())}</div>`;
+ bindDesktopZoom();
  watchImages();
  history.replaceState(photoHistory(),'',location.href);
  if(viewerFocused)display.querySelector('.lcd-show-img')?.focus({preventScroll:true});
@@ -396,6 +416,7 @@ let lastPhotoScroll=0;
 document.addEventListener('wheel',e=>{
  if(!cameraDesktop.matches)return;
  if(current!=='photos'||photoMode!=='show'||e.ctrlKey||!e.target.closest('.lcd-show-img'))return;
+ if(desktopZoom?.zoomed){e.preventDefault();return;}
  const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
  if(Math.abs(delta)<8)return;
  e.preventDefault();
@@ -406,7 +427,7 @@ document.addEventListener('wheel',e=>{
 let photoGesture=null;
 document.addEventListener('pointerdown',e=>{
  const viewer=e.target.closest('.lcd-show-img');
- if(!viewer||e.button!==0)return;
+ if(!viewer||e.button!==0||desktopZoom?.zoomed)return;
  photoGesture={x:e.clientX,y:e.clientY,pointerId:e.pointerId};
 });
 document.addEventListener('pointerup',e=>{

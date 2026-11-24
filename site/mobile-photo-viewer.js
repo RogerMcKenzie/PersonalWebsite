@@ -1,9 +1,11 @@
+import { createPhotoZoom } from './photo-zoom.js?v=4';
+
 // The contact sheet stays mounted behind a native modal, preserving its scroll position.
 export function createMobilePhotoViewer({photos,reducedMotion,onStep,onClose}){
  const dialog=document.createElement('dialog');
  dialog.className='mobile-photo-viewer';
  dialog.setAttribute('aria-labelledby','mobile-photo-title');
- dialog.innerHTML=`<header class="mobile-photo-top"><button type="button" class="mobile-photo-close" aria-label="Return to camera"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>All photos</button><span class="mobile-photo-count" aria-live="polite"></span></header><div class="mobile-photo-stage" role="region" aria-label="Photograph. Swipe left or right to browse"><span class="mobile-photo-status" role="status" hidden></span><button type="button" class="mobile-photo-retry" hidden>Try again</button></div><footer class="mobile-photo-bottom"><div class="mobile-photo-caption"><h1 id="mobile-photo-title"></h1><p></p></div><div class="mobile-photo-arrows"><button type="button" aria-label="Previous photograph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><button type="button" aria-label="Next photograph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button></div></footer>`;
+ dialog.innerHTML=`<header class="mobile-photo-top"><button type="button" class="mobile-photo-close" aria-label="Return to camera"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>All photos</button><span class="mobile-photo-count" aria-live="polite"></span><button type="button" class="mobile-photo-zoom" disabled>Zoom in</button></header><div class="mobile-photo-stage" tabindex="0" role="region" aria-label="Photograph. Swipe left or right to browse"><span class="mobile-photo-status" role="status" hidden></span><button type="button" class="mobile-photo-retry" hidden>Try again</button></div><footer class="mobile-photo-bottom"><div class="mobile-photo-caption"><h1 id="mobile-photo-title"></h1><p></p></div><div class="mobile-photo-arrows"><button type="button" aria-label="Previous photograph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><button type="button" aria-label="Next photograph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button></div></footer>`;
  document.body.append(dialog);
  const stage=dialog.querySelector('.mobile-photo-stage');
  const status=dialog.querySelector('.mobile-photo-status');
@@ -15,6 +17,10 @@ export function createMobilePhotoViewer({photos,reducedMotion,onStep,onClose}){
  let transition=null,transitionImage=null,photoAnimation=null,outgoingImage=null,outgoingAnimation=null;
  let surfaceAnimations=[];
  let openingOrigin=null,completeClose=null,closeRequested=false;
+ const zoom=createPhotoZoom({stage,button:dialog.querySelector('.mobile-photo-zoom'),pinch:true,onGesture(){
+  gesture=null;
+  stopMotion();
+ }});
 
  function stopMotion(){
   transition?.cancel();transition=null;
@@ -58,6 +64,7 @@ export function createMobilePhotoViewer({photos,reducedMotion,onStep,onClose}){
  function loadPhoto({origin=null,direction=0}={}){
   const token=++request,p=photos[index];
   stopMotion();
+  zoom.setImage(null);
   dialog.querySelector('h1').textContent=p.title;
   dialog.querySelector('.mobile-photo-caption p').textContent=[p.location,p.year].filter(Boolean).join(' · ');
   stage.setAttribute('aria-busy','true');
@@ -70,6 +77,7 @@ export function createMobilePhotoViewer({photos,reducedMotion,onStep,onClose}){
    const outgoing=image;
    outgoing?.setAttribute('aria-hidden','true');
    stage.prepend(incoming);image=incoming;displayedIndex=index;
+   zoom.setImage(incoming);
    if(origin){
     outgoing?.remove();
     const animation=sharedTransition(origin);
@@ -108,7 +116,7 @@ export function createMobilePhotoViewer({photos,reducedMotion,onStep,onClose}){
  }
  function close({animate=true,restoreFocus=true}={}){
   if(!dialog.open||closing)return;
-  closing=true;const closeRequest=++request;gesture=null;stopMotion();
+  closing=true;const closeRequest=++request;gesture=null;stopMotion();zoom.setImage(null);
   const origin=thumb()||openingOrigin;
   const finish=()=>{
    if(!closing||request!==closeRequest)return;
@@ -123,7 +131,7 @@ export function createMobilePhotoViewer({photos,reducedMotion,onStep,onClose}){
  }
  function requestClose(){if(closing||closeRequested)return;closeRequested=true;onClose();}
  closeButton.addEventListener('click',requestClose);
- dialog.addEventListener('cancel',event=>{event.preventDefault();requestClose();});
+ dialog.addEventListener('cancel',event=>{event.preventDefault();if(zoom.zoomed)zoom.reset();else requestClose();});
  previous.addEventListener('click',()=>{if(!closing)onStep(-1);});
  next.addEventListener('click',()=>{if(!closing)onStep(1);});
  retry.addEventListener('click',()=>loadPhoto({origin:image?null:thumb()}));
@@ -162,7 +170,9 @@ export function createMobilePhotoViewer({photos,reducedMotion,onStep,onClose}){
  }
  stage.addEventListener('pointerup',event=>endGesture(event));
  stage.addEventListener('pointercancel',event=>endGesture(event,true));
- stage.addEventListener('lostpointercapture',event=>endGesture(event,true));
+ stage.addEventListener('lostpointercapture',event=>{
+  if(event.target===stage)endGesture(event,true);
+ });
  window.addEventListener('resize',stopMotion);
  reducedMotion.addEventListener('change',stopMotion);
  return {get isOpen(){return dialog.open;},open,update,close};

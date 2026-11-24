@@ -8,6 +8,7 @@ class Element {
  fire(type,event={}){for(const listener of this.listeners.get(type)||[])listener(event);}
  setAttribute(name,value){this.attributes.set(name,value);}
  removeAttribute(name){this.attributes.delete(name);}
+ toggleAttribute(name,active){if(active)this.setAttribute(name,'');else this.removeAttribute(name);}
  append(child){this.children.push(child);child.parent=this;}
  prepend(child){this.children.unshift(child);child.parent=this;}
  remove(){if(this.parent)this.parent.children=this.parent.children.filter(child=>child!==this);}
@@ -24,7 +25,7 @@ class Element {
   animations.push(animation);return animation;
  }
 }
-const globals=['document','window','Image','innerHeight'];
+const globals=['document','window','Image','innerHeight','ResizeObserver'];
 const originals=new Map(globals.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
 const animations=[],images=[],nodes=new Map();
 const node=selector=>{if(!nodes.has(selector))nodes.set(selector,new Element());return nodes.get(selector);};
@@ -42,7 +43,7 @@ const stage=node('.mobile-photo-stage');
 stage.getBoundingClientRect=()=>({left:16,top:64,width:288,height:420,right:304,bottom:484});
 node('display-content').getBoundingClientRect=()=>({top:40,bottom:500});
 const reducedMotion=new Element();reducedMotion.matches=false;
-const values={document,window:new Element(),Image:TestImage,innerHeight:568};
+const values={document,window:new Element(),Image:TestImage,innerHeight:568,ResizeObserver:class {observe(){} disconnect(){}}};
 for(const [name,value] of Object.entries(values))Object.defineProperty(globalThis,name,{configurable:true,writable:true,value});
 const photos=[0,1].map(i=>({src:`photo-${i}.jpg`,title:`Photo ${i}`,alt:`Description ${i}`,year:'2026'}));
 let steps=[],closes=0;
@@ -80,6 +81,12 @@ try{
  viewer.open(1,{origin:node('[data-photo="1"]')});pending().onload();
  assert.equal(animations.length,before,'reduced motion skips the shared transition');
  assert.equal(node('[aria-label="Next photograph"]').disabled,true);
+ const zoom=node('.mobile-photo-zoom');
+ zoom.fire('click');
+ assert.equal(stage.children[0].style.scale,'2','zoom opens the loaded photograph at 2×');
+ dialog.fire('cancel',{preventDefault(){}});
+ assert.equal(stage.children[0].style.scale,'','Escape fits before closing');
+ assert.equal(closes,0);
  dialog.fire('cancel',{preventDefault(){}});
  node('.mobile-photo-close').fire('click');
  assert.equal(closes,1,'native Escape uses the application history close path');
