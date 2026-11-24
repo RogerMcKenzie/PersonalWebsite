@@ -1,3 +1,5 @@
+import { cardTravel, restPose } from './sd-card-motion.js?v=flight-1';
+
 // Live 3D camera body for desktop widths.
 //
 // Live HTML follows the LCD and control surfaces through camera-screen.js. A WebGL aperture
@@ -9,7 +11,7 @@
 
 const DESKTOP = window.matchMedia('(min-width: 1001px)');
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
-const MODEL_URL = 'assets/camera/zv-e10.glb?v=content-names-20261117-1';
+const MODEL_URL = 'assets/camera/zv-e10.glb?v=sd-card-1';
 
 // Orthographic rear framing in metres (Blender FRAME: cx 0, cz 3.35cm, width 13.6cm, 16:9).
 const FRAME = { cx: 0, cy: 0.0335, width: 0.136, height: 0.136 * 9 / 16 };
@@ -71,7 +73,7 @@ async function start({ intro }) {
   const [THREE, { GLTFLoader }, { attachCameraInterface }, { attachCameraExtras }] = await Promise.all([
     import('three'),
     import('three/addons/loaders/GLTFLoader.js'),
-    import('./camera-screen.js?v=extras-20261115-2'),
+    import('./camera-screen.js?v=sd-inline-2'),
     import('./camera-extras.js?v=content-gallery-20261117-1'),
   ]);
 
@@ -107,6 +109,22 @@ async function start({ intro }) {
 
   const gltf = await new GLTFLoader().loadAsync(MODEL_URL);
   const model = gltf.scene;
+  const hatch = model.getObjectByName('Battery_door_hinge');
+  const memoryCard = model.getObjectByName('Full-size_SD_card');
+  const cardShell = model.getObjectByName('SD_clipped-corner_shell');
+  const cardSeat = memoryCard?.position.clone();
+  const seatedCardRotation = memoryCard?.quaternion.clone();
+  const cardSpin = new THREE.Quaternion();
+  const cardSpinAxis = new THREE.Vector3(0, 0, 1);
+  const closedHatch = hatch?.quaternion.clone();
+  const openHatch = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), 103 * Math.PI / 180);
+  const shellMaterials = [];
+  cardShell?.traverse(node => {
+    if (node.isMesh && !Array.isArray(node.material)) {
+      node.material = node.material.clone();
+      shellMaterials.push(node.material);
+    }
+  });
   const printed = model.getObjectByName('ZV-E10')?.userData.portfolio_labels === true;
   camera.classList.toggle('camera-printed-model', printed);
   (printed ? ['Label_C2'] : HIDDEN_LABELS).forEach(n => {
@@ -153,6 +171,9 @@ async function start({ intro }) {
   // Orientation of the whole camera: yaw/pitch, eased toward a target.
   const turn = { yaw: 0, pitch: 0, targetYaw: 0, targetPitch: 0 };
   let introAnim = null;
+  let sdPose = null;
+  let sdStart;
+  const hatchPoint = new THREE.Vector3();
 
   // ---------------------------------------------------------------- render loop (on demand)
   let frame = 0;
@@ -181,7 +202,19 @@ async function start({ intro }) {
       busy ||= wheelAngle !== wheelTarget;
     }
 
-    if (introAnim) {
+    if (sdPose) {
+      turn.pitch = turn.targetPitch = THREE.MathUtils.lerp(sdStart.pitch, 1.02, sdPose.turn) + sdPose.rock;
+      turn.yaw = turn.targetYaw = THREE.MathUtils.lerp(sdStart.yaw, .18, sdPose.turn) + .040 * Math.sin(Math.PI * sdPose.turn);
+      hatch.quaternion.slerpQuaternions(closedHatch, openHatch, sdPose.hatch);
+      const air = sdPose.air;
+      memoryCard.position.set(
+        cardSeat.x - cardTravel.side * air,
+        cardSeat.y - cardTravel.slot * sdPose.slide - cardTravel.drop * air,
+        cardSeat.z + cardTravel.depth * air ** 2,
+      );
+      cardSpin.setFromAxisAngle(cardSpinAxis, cardTravel.roll * air);
+      memoryCard.quaternion.copy(seatedCardRotation).multiply(cardSpin);
+    } else if (introAnim) {
       const k = Math.min(1, (now - introAnim.start) / introAnim.duration);
       const e = easeInOutCubic(k);
       turn.yaw = turn.targetYaw = introAnim.yaw * (1 - e);
@@ -198,13 +231,27 @@ async function start({ intro }) {
     // XYZ: yaw about the body, then tilt about the viewer's horizontal, so the tilt arrow always
     // tips the top plate toward the visitor whichever way the body has been turned.
     pivot.rotation.set(turn.pitch, turn.yaw, 0, 'XYZ');
-    if (extras && extras.tick(dt, instant)) busy = true;
+    if (sdPose) {
+      const zoom = 1 - .20 * sdPose.turn;
+      if (view.zoom !== zoom) {
+        view.zoom = zoom;
+        view.position.x = FRAME.cx - .010 * sdPose.turn;
+        view.position.y = FRAME.cy - .009 * sdPose.turn;
+        view.updateProjectionMatrix();
+        view.updateMatrixWorld(true);
+      }
+    } else if (extras && extras.tick(dt, instant)) busy = true;
     camera.classList.toggle('camera-exploring', !introAnim &&
       (Math.abs(rest.yaw) > 1e-6 || rest.pitch !== 0 || !!extras?.away()));
     camera.classList.toggle('camera-3d-turned', !introAnim && (Math.abs(turn.yaw) > 0.02 || Math.abs(turn.pitch) > 0.02));
 
     scene.updateMatrixWorld(true);
     surfaces.update();
+    if (sdPose && sdPose.turn > .5) {
+      hatch.getWorldPosition(hatchPoint).project(view);
+      camera.style.setProperty('--sd-anchor-x', `${(hatchPoint.x * OVERSCAN + 1) * 50}%`);
+      camera.style.setProperty('--sd-anchor-y', `${(1 - hatchPoint.y * OVERSCAN) * 50}%`);
+    }
     renderer.render(scene, view);
     if (busy) request(); else last = 0;
   }
@@ -326,8 +373,8 @@ async function start({ intro }) {
   // into the pose chosen with the arrows (the rear view unless one was used).
   let dragging = null;
   camera.addEventListener('pointerdown', e => {
-    if (e.button !== 0 || introAnim || !DESKTOP.matches ||
-        e.target.closest('.screen-bezel, .controls, .camera-reading-view, .camera-explore, .camera-extras')) return;
+    if (e.button !== 0 || introAnim || sdPose || !DESKTOP.matches ||
+        e.target.closest('.screen-bezel, .controls, .camera-reading-view, .camera-explore, .camera-extras, .sd-see-underside, .sd-hatch-controls')) return;
     e.preventDefault();
     dragging = { x: e.clientX, y: e.clientY, yaw: turn.targetYaw, pitch: turn.targetPitch, id: e.pointerId };
     camera.setPointerCapture(e.pointerId);
@@ -370,16 +417,18 @@ async function start({ intro }) {
   // A pose chosen with the arrows is kept while tabbing, so its controls can be reached.
   const exploring = () => rest.yaw !== 0 || rest.pitch !== 0;
   document.addEventListener('keydown', e => {
+    if (sdPose) return;
     if (e.key === 'Escape') { readingPose(); return; }
     if (e.target.closest?.('.camera-explore, .camera-extras') || exploring()) return;
     if (['Tab', 'Enter', ' '].includes(e.key)) readingPose();
   }, true);
   camera.addEventListener('focusin', e => {
-    if (e.target.closest('.camera-explore, .camera-extras') || exploring()) return;
+    if (sdPose || e.target.closest('.camera-explore, .camera-extras, .sd-hatch-controls') || exploring()) return;
     if (document.documentElement.dataset.navigation === 'keyboard') readingPose();
   });
-  DESKTOP.addEventListener('change', () => { readingPose(); resize(); });
-  REDUCED.addEventListener('change', () => { readingPose(); request(); });
+  const endSDView = () => camera.dispatchEvent(new Event('sd-renderer-lost'));
+  DESKTOP.addEventListener('change', () => { endSDView(); readingPose(); resize(); });
+  REDUCED.addEventListener('change', () => { endSDView(); readingPose(); request(); });
   for (const type of ['pointerdown', 'click', 'wheel']) {
     camera.addEventListener(type, e => {
       if (surfaces.blocksScreenEvent(e)) { e.preventDefault(); e.stopImmediatePropagation(); }
@@ -388,6 +437,7 @@ async function start({ intro }) {
 
   canvas.addEventListener('webglcontextlost', e => {
     e.preventDefault();
+    endSDView();
     endBoot();
     camera.classList.remove('camera-3d-ready', 'camera-3d-intro', 'camera-3d-turned');
     surfaces.setEnabled(false);
@@ -395,6 +445,44 @@ async function start({ intro }) {
   canvas.addEventListener('webglcontextrestored', () => {
     camera.classList.add('camera-3d-ready'); readingPose(); resize();
   });
+
+  if (hatch && memoryCard) {
+    camera.sdCompartment = {
+      available: () => DESKTOP.matches && camera.classList.contains('camera-3d-ready') &&
+        !renderer.getContext().isContextLost(),
+      begin() {
+        const yaw = (((turn.yaw % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;
+        const pitch = turn.pitch;
+        readingPose();
+        sdStart = { yaw, pitch };
+        sdPose = restPose;
+        explore.inert = true;
+        request();
+      },
+      apply(pose) {
+        if (!sdPose) return;
+        if (pose.turn < sdPose.turn) sdStart = { yaw: 0, pitch: 0 };
+        sdPose = pose;
+        request();
+      },
+      setCard(card) {
+        for (const material of shellMaterials) material.color.setHex(card?.shellColor ?? 0x3c3e43);
+        request();
+      },
+      finish() {
+        sdPose = null;
+        hatch.quaternion.copy(closedHatch);
+        memoryCard.position.copy(cardSeat);
+        memoryCard.quaternion.copy(seatedCardRotation);
+        explore.inert = false;
+        view.zoom = 1;
+        view.position.set(FRAME.cx, FRAME.cy, view.position.z);
+        view.updateProjectionMatrix();
+        view.updateMatrixWorld(true);
+        readingPose();
+      },
+    };
+  }
 
   // ---------------------------------------------------------------- show it
   camera.querySelector('.camera-shell').after(canvas);

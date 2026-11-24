@@ -34,6 +34,18 @@ const photos=[
 const videos=[
  {id:'hrOAiSEx3Ww',title:'AfroTech 2025',location:'Houston, TX',year:'2025',vertical:true}
 ];
+const memoryCards=[
+ {id:'all',name:'Portfolio',photos:[...photos],videos:[...videos]},
+ {id:'high-school',name:'High School',photos:[],videos:[]}
+];
+let activeCard=memoryCards[0];
+function insertMemoryCard(id){
+ const card=memoryCards.find(item=>item.id===id);
+ if(!card)return;
+ activeCard=card;
+ photos.splice(0,photos.length,...card.photos);
+ videos.splice(0,videos.length,...card.videos);
+}
 const lists={
  projects:{label:sections.projects,items:[
   {"name":"Home Server","text":"A home-server build using a Dell OptiPlex. I’m documenting the hardware upgrades and exploring virtual machines, game storage and backups.","meta":"Intel Core i3-8100T, 16 GB RAM, 256 GB SATA SSD + 512 GB NVMe SSD","url":"https://github.com/RogerMcKenzie/home-server","cta":"View the build"},
@@ -95,11 +107,14 @@ function selectedContentIndex({photoTab,allIndex=0,videoIndex,photoIndex}){
 }
 function indexCaption(state){
  const items=contentItems(state),index=selectedContentIndex(state),p=items[index]?.item;
- if(!p)return 'No content yet';
+ if(!p)return '';
  return `<span>${p.title}</span><span class="lcd-dim">${p.year}</span><span class="lcd-dim">${index+1} / ${items.length}</span>`;
 }
 const videoThumb=v=>`https://i.ytimg.com/vi/${v.id}/${v.vertical?'oardefault':'maxresdefault'}.jpg`;
 function thumbsHTML(state){
+ if(!photos.length&&!videos.length)return '<p class="lcd-empty-media">This card is empty</p>';
+ if(state.photoTab==='photos'&&!photos.length)return '<p class="lcd-empty-media">No photos on this card</p>';
+ if(state.photoTab==='videos'&&!videos.length)return '<p class="lcd-empty-media">No videos on this card</p>';
  const tiles=contentItems(state).map(({type,index,item},i)=>{
   const movie=type==='video',src=movie?videoThumb(item):item.src;
   return `<button${movie?' class="lcd-video-tile"':''} data-${type}="${index}" data-content-index="${i}" aria-current="${i===selectedContentIndex(state)}" aria-label="${movie?'Play':'View'} ${item.title}"><img src="${src}" alt="" width="214" height="143" loading="lazy" draggable="false">${movie?`<span class="lcd-play-badge">${ICON.play}</span>`:''}</button>`;
@@ -109,7 +124,7 @@ function thumbsHTML(state){
 }
 function indexView(state){
  const {photoTab}=state,labels={all:'All content',videos:'Videos',photos:'Photos'},icons={all:ICON.grid,videos:ICON.video,photos:ICON.photo};
- return `<div class="lcd-page lcd-index" data-content-filter="${photoTab}"><h1 class="lcd-sr">${sections.photos}</h1><div class="lcd-tabs lcd-narrow" role="tablist" aria-label="Content type">${contentTabs.map(tab=>`<button id="content-tab-${tab}" role="tab" data-photo-tab="${tab}" aria-controls="content-panel" aria-selected="${photoTab===tab}" tabindex="${photoTab===tab?'0':'-1'}" class="${photoTab===tab?'is-on':''}">${icons[tab]}${labels[tab]}</button>`).join('')}</div><div id="content-panel" class="lcd-thumbs" role="tabpanel" aria-labelledby="content-tab-${photoTab}">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
+ return `<div class="lcd-page lcd-index" data-content-filter="${photoTab}"><h1 class="lcd-sr">${sections.photos}</h1><div class="lcd-tabs lcd-narrow" role="tablist" aria-label="Content type">${contentTabs.map(tab=>`<button id="content-tab-${tab}" role="tab" data-photo-tab="${tab}" aria-controls="content-panel" aria-selected="${photoTab===tab}" tabindex="${photoTab===tab?'0':'-1'}" class="${photoTab===tab?'is-on':''}">${icons[tab]}${labels[tab]}</button>`).join('')}</div><button type="button" class="lcd-sd-swap" data-swap-sd aria-expanded="false" aria-controls="sd-lcd-choices" aria-label="Swap SD card, ${activeCard.name} inserted" title="Swap SD card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H5V5l2-2Z"/><path d="M9 6v4m3-4v4m3-3v3"/></svg><span>SD<span class="lcd-sd-word"> card</span></span></button><div id="content-panel" class="lcd-thumbs" role="tabpanel" aria-labelledby="content-tab-${photoTab}">${thumbsHTML(state)}</div><div class="lcd-index-cap" aria-live="polite">${indexCaption(state)}</div></div>`;
 }
 function resumeView({mobile}){
  if(mobile)return `<section class="mobile-resume mobile-page"><h1>${sections.resume}</h1><div class="lcd-doc resume-viewer" data-loading><span class="resume-loading" role="status">Loading résumé</span><iframe class="resume-frame" src="${RESUME}/preview" title="Roger McKenzie’s résumé" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="mobile-resume-actions"><a class="lcd-plain" href="${RESUME}/edit" ${external}>Open résumé${ICON.out}</a><a class="lcd-cta" href="${RESUME}/export?format=pdf">Download PDF${ICON.download}</a></div></section>`;
@@ -132,4 +147,4 @@ function viewHTML(view,state){
 }
 
 
-export { contentTabs, contentItems, selectedContentIndex, contactProfiles, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML };
+export { activeCard, memoryCards, insertMemoryCard, contentTabs, contentItems, selectedContentIndex, contactProfiles, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML };

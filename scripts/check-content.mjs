@@ -1,6 +1,6 @@
 // Check mixed-media identity, order, selection and project-only lists.
 import assert from 'node:assert/strict';
-import {contentItems,selectedContentIndex,photos,videos,lists,viewHTML,indexCaption} from '../site/portfolio-views.js';
+import {activeCard,insertMemoryCard,contentItems,selectedContentIndex,photos,videos,lists,viewHTML,indexCaption} from '../site/portfolio-views.js';
 const base={mobile:false,listIndex:{projects:0},photoMode:'index',photoTab:'all',allIndex:0,photoIndex:0,videoIndex:0};
 const all=contentItems(base);
 assert.equal(all.length,videos.length+photos.length);
@@ -30,4 +30,11 @@ for(const mobile of [false,true]){
  assert.deepEqual(lists.projects.items.map(item=>item.name),['Home Server','Studio Stack','Jenna’s Recipes']);
  assert.equal((html.match(mobile?/<details data-project=/g:/<button data-item=/g)||[]).length,3);
 }
+insertMemoryCard('high-school');
+assert.equal(activeCard.id,'high-school');
+assert.equal(contentItems(base).length,0);
+assert.match(viewHTML('photos',base),/This card is empty/);
+assert.match(viewHTML('photos',base),/Swap SD card, High School inserted/);
+insertMemoryCard('all');
+assert.deepEqual(contentItems(base),all,'inserting the Portfolio card restores all original media');
 console.log('PASS: mixed media order/identity, filters, captions, selection, return labels and project-only lists.');
