@@ -1,5 +1,6 @@
 // Exercise the projection, depth hit-testing and fallback lifecycle against the shipped GLB.
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import * as THREE from '../site/vendor/three/three.module.min.js';
 import { attachCameraInterface } from '../site/camera-screen.js';
@@ -45,6 +46,18 @@ function attribute(index) {
   for (let i=0;i<a.count;i++) copy.set(bytes.subarray(offset+i*stride,offset+i*stride+width),i*width);
   return new THREE.BufferAttribute(new ArrayType(copy.buffer), size);
 }
+// The words and their UV coordinates must come from the same export.
+const wheelInk = asset.meshes[asset.nodes.find(n => n.name === 'Label_Wheel_Arrows').mesh].primitives[0];
+const wheelTexture = asset.materials[wheelInk.material].pbrMetallicRoughness.baseColorTexture.index;
+const wheelImage = asset.images[asset.textures[wheelTexture].source];
+const wheelImageView = asset.bufferViews[wheelImage.bufferView];
+const wheelImageStart = binaryStart + (wheelImageView.byteOffset || 0);
+const wheelPrint = createHash('sha256')
+  .update(bytes.subarray(wheelImageStart, wheelImageStart + wheelImageView.byteLength));
+for (const accessor of [wheelInk.attributes.POSITION, wheelInk.attributes.TEXCOORD_0, wheelInk.indices]) {
+  wheelPrint.update(Buffer.from(attribute(accessor).array.buffer));
+}
+assert.equal(wheelPrint.digest('hex'), '98cef501e29080f9c0956666c10e8206680c3a19099b53720a920b73d7065c3b', 'wheel atlas and geometry match the verified export');
 const nodes = asset.nodes.map(n => {
   let object;
   if (n.mesh !== undefined) {
