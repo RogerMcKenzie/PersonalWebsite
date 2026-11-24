@@ -1,5 +1,5 @@
 import { sections, sectionIds, sectionAliases, normaliseSection, browsingLabel } from './sections.js?v=content-names-20261117-1';
-import { activeCard, memoryCards, insertMemoryCard, contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=sd-card-1';
+import { activeCard, memoryCards, insertMemoryCard, contentTabs, contentItems, selectedContentIndex, contactIconsHTML, photos, videos, lists, menuPreviews, previewHTML, slideshowView, indexCaption, viewHTML } from './portfolio-views.js?v=card-collections-1';
 import { createCardSwap } from './sd-card-swap.js?v=sd-card-1';
 import { createPhotoZoom } from './photo-zoom.js?v=4';
 import { createMobilePhotoViewer } from './mobile-photo-viewer.js?v=photo-playback-1';
